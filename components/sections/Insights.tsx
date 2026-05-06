@@ -38,7 +38,7 @@ export default function Insights() {
             id="insights-heading"
             className="font-display text-3xl lg:text-5xl font-light text-[#F5F0E8] max-w-3xl leading-tight"
           >
-            We don&apos;t just produce evidence for our clients. We publish what we learn — because
+            We don&apos;t just produce evidence for our clients. We publish what we learn, because
             the sector needs better thinking, not just better reports.
           </h2>
         </RevealOnScroll>
@@ -76,7 +76,7 @@ export default function Insights() {
             </h3>
             <p className="text-[#F5F0E8]/50 text-sm mb-6 leading-relaxed">
               Monthly insights on evidence, behavioural science, and the decisions that shape
-              Africa&apos;s future — for funders, government, and impact leaders who want to stay
+              Africa&apos;s future, for funders, government, and impact leaders who want to stay
               ahead.
             </p>
             {!submitted ? (

@@ -3,7 +3,7 @@ import RevealOnScroll from "@/components/ui/RevealOnScroll";
 const PROBLEMS = [
   {
     title: "The Data Gap",
-    body: "The most important evidence in the world has never been captured — not because it doesn't exist, but because the tools to reach it don't operate where it lives. In communities. In practitioner networks. In a decade of programme data that no one has synthesised.",
+    body: "The most important evidence in the world has never been captured, not because it doesn't exist, but because the tools to reach it don't operate where it lives. In communities. In practitioner networks. In a decade of programme data that no one has synthesised.",
   },
   {
     title: "The Translation Gap",
@@ -11,7 +11,7 @@ const PROBLEMS = [
   },
   {
     title: "The Decision Gap",
-    body: "Misallocated resources. Missed policy windows. Programmes that don't scale because no one has built the economic case. The cost of this gap is borne by the communities that needed better decisions — and never got them.",
+    body: "Misallocated resources. Missed policy windows. Programmes that don't scale because no one has built the economic case. The cost of this gap is borne by the communities that needed better decisions, and never got them.",
   },
 ];
 
@@ -28,8 +28,8 @@ export default function CostOfGettingItWrong() {
           <blockquote className="max-w-4xl">
             <p className="font-display text-2xl lg:text-4xl font-light text-[#1A1A2A] leading-snug">
               &ldquo;Every day, governments allocate resources, funders make bets, and boards make
-              decisions — based on incomplete evidence. The impact that gets missed, the policy that
-              lands wrong, the funding that misses its mark — that cost is invisible. Until it
+              decisions, based on incomplete evidence. The impact that gets missed, the policy that
+              lands wrong, the funding that misses its mark, that cost is invisible. Until it
               isn&apos;t.&rdquo;
             </p>
           </blockquote>
@@ -64,7 +64,7 @@ export default function CostOfGettingItWrong() {
         </RevealOnScroll>
       </div>
 
-      {/* ROI Framing Block — navy, immediately below */}
+      {/* ROI Framing Block, navy, immediately below */}
       <div className="mt-20 bg-[#0A1628] py-20 lg:py-28">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <RevealOnScroll>
@@ -82,7 +82,7 @@ export default function CostOfGettingItWrong() {
               {
                 stat: "R10 Billion",
                 label: "The Bana Pele ECD investment on the table in South Africa.",
-                body: "Programmes that cannot demonstrate economic impact — not just child outcomes — will not be funded at that scale. The evidence gap is a funding gap.",
+                body: "Programmes that cannot demonstrate economic impact, not just child outcomes, will not be funded at that scale. The evidence gap is a funding gap.",
               },
               {
                 stat: "$2,000,000",

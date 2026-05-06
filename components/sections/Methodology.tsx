@@ -4,12 +4,12 @@ const PILLARS = [
   {
     number: "01",
     title: "Longitudinal Intelligence",
-    body: "We extract learning across multiple evaluations, datasets and reports over time — building a Sector Intelligence Machine that compounds in value. The longer we work in a sector, the more irreplaceable we become.",
+    body: "We extract learning across multiple evaluations, datasets and reports over time, building a Sector Intelligence Machine that compounds in value. The longer we work in a sector, the more irreplaceable we become.",
   },
   {
     number: "02",
     title: "Behavioural Science",
-    body: "We apply Thaler, Ariely and Kahneman principles to understand how decision-makers actually process evidence. Every knowledge product is architectured around the cognitive patterns of its target audience — not around researcher conventions.",
+    body: "We apply Thaler, Ariely and Kahneman principles to understand how decision-makers actually process evidence. Every knowledge product is architectured around the cognitive patterns of its target audience, not around researcher conventions.",
   },
   {
     number: "03",
@@ -19,7 +19,7 @@ const PILLARS = [
   {
     number: "04",
     title: "Data Science & Actuarial Analysis",
-    body: "Rigorous quantitative analysis underpins every claim we make — from SROI calculations to economic multiplier modelling to fiscal impact projection. Our actuarial foundation means our numbers are built to withstand scrutiny in Treasury, boardrooms and international funding reviews.",
+    body: "Rigorous quantitative analysis underpins every claim we make, from SROI calculations to economic multiplier modelling to fiscal impact projection. Our actuarial foundation means our numbers are built to withstand scrutiny in Treasury, boardrooms and international funding reviews.",
   },
   {
     number: "05",
@@ -46,7 +46,7 @@ export default function Methodology() {
             id="methodology-heading"
             className="font-display text-3xl lg:text-5xl font-light text-[#F5F0E8] max-w-3xl leading-tight"
           >
-            We didn&apos;t borrow our framework. We built it — from African fieldwork, Nobel
+            We didn&apos;t borrow our framework. We built it, from African fieldwork, Nobel
             Prize-winning research, and the hard lessons of evidence that never reached the people
             who needed it.
           </h2>

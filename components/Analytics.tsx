@@ -1,4 +1,4 @@
-// Analytics script injection — GTM + Microsoft Clarity
+// Analytics script injection, GTM + Microsoft Clarity
 // Replace GTM_ID and CLARITY_ID with real values before launch.
 // Both are loaded via next/script with strategy="afterInteractive"
 // so they never block the critical rendering path.
@@ -27,7 +27,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','${GTM_ID}');`,
             }}
           />
-          {/* GTM noscript fallback — rendered in body via layout */}
+          {/* GTM noscript fallback, rendered in body via layout */}
         </>
       )}
 

@@ -37,14 +37,14 @@ export default function HealthSectorPage() {
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <RevealOnScroll>
               <p className="text-[#C9A84C] text-xs uppercase tracking-[0.2em] font-medium mb-4">
-                SDG 3 — Health & Nutrition
+                SDG 3, Health & Nutrition
               </p>
               <h1 className="font-display text-4xl lg:text-6xl font-light text-[#F5F0E8] max-w-3xl leading-tight mb-6">
                 The evidence gap in African health systems is vast and costly.
               </h1>
               <p className="text-[#F5F0E8]/60 text-base lg:text-lg max-w-2xl leading-relaxed">
                 We are building the sector intelligence engine. Health is where the next major
-                African funding wave is going — and where the evidence infrastructure is most
+                African funding wave is going, and where the evidence infrastructure is most
                 urgently needed.
               </p>
             </RevealOnScroll>
@@ -60,7 +60,7 @@ export default function HealthSectorPage() {
               </h2>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 max-w-4xl">
                 <p className="text-[#1A1A2A]/70 text-base leading-relaxed">
-                  African health programmes generate enormous volumes of data — clinical outcomes,
+                  African health programmes generate enormous volumes of data, clinical outcomes,
                   community health worker performance, nutrition indicators, disease burden
                   estimates. Almost none of it is translated into the economic language that moves
                   health ministries, international funders, or development finance institutions.
@@ -68,7 +68,7 @@ export default function HealthSectorPage() {
                 <p className="text-[#1A1A2A]/70 text-base leading-relaxed">
                   The result: funding decisions are made on incomplete evidence. Programmes that
                   work don&apos;t scale. Interventions that fail continue to receive resources.
-                  The cost is borne by the communities that needed better decisions — and the
+                  The cost is borne by the communities that needed better decisions, and the
                   funders who deserved better intelligence.
                 </p>
               </div>
@@ -90,8 +90,8 @@ export default function HealthSectorPage() {
                 <p className="text-[#F5F0E8]/55 text-base leading-relaxed mb-10">
                   We are currently scoping the first health sector engagements and building the
                   evidence architecture that will underpin this sector&apos;s intelligence engine.
-                  If you work in African health — as a funder, programme operator, government
-                  agency, or development partner — we want to hear from you.
+                  If you work in African health, as a funder, programme operator, government
+                  agency, or development partner, we want to hear from you.
                 </p>
 
                 {/* Waitlist */}

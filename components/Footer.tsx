@@ -28,7 +28,7 @@ export default function Footer() {
               Bringing a billion data points online that the world doesn&apos;t know exist.
             </p>
             <p className="mt-2 text-sm text-[#F5F0E8]/50">
-              Johannesburg · London · New York — Global from Africa
+              Johannesburg · London · New York, Global from Africa
             </p>
           </div>
 

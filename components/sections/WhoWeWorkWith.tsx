@@ -5,12 +5,12 @@ const CLIENTS = [
   {
     type: "Foundations & Funders",
     description:
-      "You invest in evidence-driven organisations. We make that evidence visible — to government, to co-funders, to the sector.",
+      "You invest in evidence-driven organisations. We make that evidence visible, to government, to co-funders, to the sector.",
   },
   {
     type: "Impact Organisations & NGOs",
     description:
-      "You do the work. We build the story that earns the next round of support — and moves policy in your direction.",
+      "You do the work. We build the story that earns the next round of support, and moves policy in your direction.",
   },
   {
     type: "Government & Development Agencies",

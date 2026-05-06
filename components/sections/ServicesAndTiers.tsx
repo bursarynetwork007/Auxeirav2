@@ -43,10 +43,10 @@ const TIERS = [
   {
     number: "Tier 3",
     title: "Sector Intelligence Platform",
-    subtitle: "The long-term play — for funders and sector leaders serious about scale",
+    subtitle: "The long-term play, for funders and sector leaders serious about scale",
     description:
       "For foundations, development agencies, and sector bodies that want a continuously updated intelligence engine.",
-    deliverables: ["Bespoke — built around your sector and your decision architecture."],
+    deliverables: ["Bespoke, built around your sector and your decision architecture."],
     timeline: "Ongoing retainer",
     price: "Investment: By conversation",
     cta: "Talk to Us About This",

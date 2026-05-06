@@ -10,18 +10,18 @@ const HEADLINE_WORDS = [
 ];
 
 const DISSOLVING_STATEMENTS = [
-  "You've spent years building something that works. We build the evidence that proves it — and makes it impossible for funders and government to look away.",
-  "We surface the economic story inside your grantees' data — the SROI, the multiplier effect, the fiscal case — and translate it into the language that moves co-funders and government.",
-  "We build the economic case that justifies resource allocation — from community-level programme data to Treasury-ready fiscal impact analysis.",
+  "You've spent years building something that works. We build the evidence that proves it, and makes it impossible for funders and government to look away.",
+  "We surface the economic story inside your grantees' data, the SROI, the multiplier effect, the fiscal case, and translate it into the language that moves co-funders and government.",
+  "We build the economic case that justifies resource allocation, from community-level programme data to Treasury-ready fiscal impact analysis.",
   "You need to understand what's working in markets you can't reach. We go there, synthesise the evidence, and bring back intelligence that changes how you allocate.",
-  "We aggregate evidence across the sector — building the intelligence engine that no single organisation could build alone, and making it available to the decisions that drive systemic change.",
+  "We aggregate evidence across the sector, building the intelligence engine that no single organisation could build alone, and making it available to the decisions that drive systemic change.",
 ];
 
 const PROOF_ANCHORS = [
   { stat: "49", label: "Structured Interviews Conducted" },
   { stat: "207", label: "Quote Evidence Index Built" },
   { stat: "3.3×", label: "Independently Verified SROI" },
-  { stat: "$2M", label: "Skoll Award — 2026" },
+  { stat: "$2M", label: "Skoll Award, 2026" },
 ];
 
 export default function Hero() {
@@ -41,7 +41,7 @@ export default function Hero() {
     return () => clearTimeout(t);
   }, [visibleWords]);
 
-  // Dissolving statement crossfade — desktop only, starts after headline
+  // Dissolving statement crossfade, desktop only, starts after headline
   useEffect(() => {
     if (!headlineDone) return;
     const interval = setInterval(() => {
@@ -89,7 +89,7 @@ export default function Hero() {
           ))}
         </h1>
 
-        {/* Gold rule — animates in after headline */}
+        {/* Gold rule, animates in after headline */}
         <div
           className="mt-8 h-px bg-[#C9A84C] transition-all duration-700 ease-out"
           style={{ width: headlineDone ? "100%" : "0%" }}
@@ -102,7 +102,7 @@ export default function Hero() {
           governments and social sector organisations across Africa.
         </p>
 
-        {/* Dissolving statements — desktop only */}
+        {/* Dissolving statements, desktop only */}
         <div className="hidden lg:block mt-6 min-h-[4rem] max-w-2xl">
           <p
             className="text-[#F5F0E8]/55 text-base leading-relaxed transition-opacity duration-500"
@@ -122,7 +122,7 @@ export default function Hero() {
           </Button>
         </div>
 
-        {/* Proof anchors — animated stat counters */}
+        {/* Proof anchors, animated stat counters */}
         <div className="mt-16 lg:mt-20 grid grid-cols-2 lg:grid-cols-4 gap-0 border-t border-[#C9A84C]/20">
           {PROOF_ANCHORS.map((anchor, i) => (
             <StatCounter

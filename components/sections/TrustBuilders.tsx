@@ -4,7 +4,7 @@ const AFFILIATIONS = [
   "Mandela Washington Fellows Network",
   "YALI Alumni",
   "MIT Economics Community",
-  "Skoll Foundation — 2026 Award",
+  "Skoll Foundation, 2026 Award",
 ];
 
 const THOUGHT_LEADERSHIP = [
@@ -57,10 +57,10 @@ export default function TrustBuilders() {
         <RevealOnScroll delay={100}>
           <div className="mt-16 border-l-2 border-[#C9A84C] pl-8 max-w-2xl">
             <p className="font-display text-xl lg:text-2xl font-light text-[#1A1A2A]/80 italic leading-relaxed">
-              &ldquo;Case study testimonial — available following SmartStart&apos;s official
+              &ldquo;Case study testimonial, available following SmartStart&apos;s official
               release.&rdquo;
             </p>
-            <p className="mt-4 text-sm text-[#1A1A2A]/40">SmartStart South Africa — coming soon</p>
+            <p className="mt-4 text-sm text-[#1A1A2A]/40">SmartStart South Africa, coming soon</p>
           </div>
         </RevealOnScroll>
 

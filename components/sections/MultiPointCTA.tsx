@@ -70,7 +70,7 @@ export default function MultiPointCTA() {
         </RevealOnScroll>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
-          {/* 01 — Book a call */}
+          {/* 01, Book a call */}
           <RevealOnScroll delay={0}>
             <div className="flex flex-col h-full">
               <p className="text-[#0A1628]/40 text-xs uppercase tracking-[0.2em] font-medium mb-3">
@@ -95,7 +95,7 @@ export default function MultiPointCTA() {
             </div>
           </RevealOnScroll>
 
-          {/* 02 — Capability PDF */}
+          {/* 02, Capability PDF */}
           <RevealOnScroll delay={120}>
             <div className="flex flex-col h-full">
               <p className="text-[#0A1628]/40 text-xs uppercase tracking-[0.2em] font-medium mb-3">
@@ -135,13 +135,13 @@ export default function MultiPointCTA() {
                 </form>
               ) : (
                 <p className="text-[#0A1628] text-sm font-medium">
-                  ✓ Check your inbox — the Capability Overview is on its way.
+                  ✓ Check your inbox, the Capability Overview is on its way.
                 </p>
               )}
             </div>
           </RevealOnScroll>
 
-          {/* 03 — Subscribe */}
+          {/* 03, Subscribe */}
           <RevealOnScroll delay={240}>
             <div className="flex flex-col h-full">
               <p className="text-[#0A1628]/40 text-xs uppercase tracking-[0.2em] font-medium mb-3">
@@ -152,7 +152,7 @@ export default function MultiPointCTA() {
               </h3>
               <p className="text-[#0A1628]/65 text-sm leading-relaxed mb-6 flex-1">
                 Monthly. Free. No noise. Evidence, behavioural science insights, and sector
-                analysis — for funders, government, and impact leaders who want to stay ahead.
+                analysis, for funders, government, and impact leaders who want to stay ahead.
               </p>
               {!subSubmitted ? (
                 <form onSubmit={handleSubscribe} className="space-y-3">

@@ -7,14 +7,14 @@ import Button from "@/components/ui/Button";
 export const metadata: Metadata = {
   title: "Education & Early Childhood Development | Auxeira",
   description:
-    "Auxeira's sector intelligence engine for ECD — the evidence gap, the economic case, and what we built for SmartStart.",
+    "Auxeira's sector intelligence engine for ECD, the evidence gap, the economic case, and what we built for SmartStart.",
 };
 
 const METRICS = [
   { stat: "152,664", label: "Children reached" },
   { stat: "14,740", label: "Women-led micro-enterprises surfaced" },
   { stat: "3.3×", label: "Independently verified SROI" },
-  { stat: "$2M", label: "Skoll Award — 2026" },
+  { stat: "$2M", label: "Skoll Award, 2026" },
 ];
 
 export default function EducationSectorPage() {
@@ -27,21 +27,21 @@ export default function EducationSectorPage() {
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <RevealOnScroll>
               <p className="text-[#C9A84C] text-xs uppercase tracking-[0.2em] font-medium mb-4">
-                SDG 4 — Education & Early Childhood Development
+                SDG 4, Education & Early Childhood Development
               </p>
               <h1 className="font-display text-4xl lg:text-6xl font-light text-[#F5F0E8] max-w-3xl leading-tight mb-6">
                 Where we began. Where we proved the model.
               </h1>
               <p className="text-[#F5F0E8]/60 text-base lg:text-lg max-w-2xl leading-relaxed">
                 152,664 children. A Skoll Award. A methodology that works. ECD is Auxeira&apos;s
-                founding sector — and the proof that evidence, properly translated, changes what
+                founding sector, and the proof that evidence, properly translated, changes what
                 governments fund and what funders back.
               </p>
             </RevealOnScroll>
           </div>
         </section>
 
-        {/* Block 1 — The evidence gap */}
+        {/* Block 1, The evidence gap */}
         <section className="bg-[#F5F0E8] py-20 lg:py-28">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <RevealOnScroll>
@@ -50,7 +50,7 @@ export default function EducationSectorPage() {
               </h2>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 max-w-4xl">
                 <p className="text-[#1A1A2A]/70 text-base leading-relaxed">
-                  Early childhood development in Africa is chronically under-evidenced — not because
+                  Early childhood development in Africa is chronically under-evidenced, not because
                   the programmes don&apos;t work, but because the economic case has never been built.
                   Treasury sees ECD as social expenditure. Funders see it as charity. Neither sees
                   what the data actually shows: a multiplier effect, a workforce development engine,
@@ -59,7 +59,7 @@ export default function EducationSectorPage() {
                 <p className="text-[#1A1A2A]/70 text-base leading-relaxed">
                   The R10 billion Bana Pele ECD investment on the table in South Africa will not be
                   unlocked by good intentions. It will be unlocked by evidence that speaks the
-                  language of economic infrastructure — SROI, fiscal multipliers, workforce
+                  language of economic infrastructure, SROI, fiscal multipliers, workforce
                   participation rates. That evidence exists. It has almost never been surfaced.
                 </p>
               </div>
@@ -67,7 +67,7 @@ export default function EducationSectorPage() {
           </div>
         </section>
 
-        {/* Block 2 — Cost of the gap */}
+        {/* Block 2, Cost of the gap */}
         <section className="bg-[#0A1628] py-20 lg:py-28">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <RevealOnScroll>
@@ -90,7 +90,7 @@ export default function EducationSectorPage() {
                 {
                   stat: "14,740",
                   label: "Women-led enterprises uncounted",
-                  body: "The economic contribution of women-led micro-enterprises in the ECD sector was entirely absent from funding conversations — until Auxeira built the evidence.",
+                  body: "The economic contribution of women-led micro-enterprises in the ECD sector was entirely absent from funding conversations, until Auxeira built the evidence.",
                 },
               ].map((item, i) => (
                 <RevealOnScroll key={item.stat} delay={i * 100}>
@@ -107,7 +107,7 @@ export default function EducationSectorPage() {
           </div>
         </section>
 
-        {/* Block 3 — Our sector intelligence engine */}
+        {/* Block 3, Our sector intelligence engine */}
         <section className="bg-[#F5F0E8] py-20 lg:py-28">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <RevealOnScroll>
@@ -115,7 +115,7 @@ export default function EducationSectorPage() {
                 Auxeira&apos;s ECD intelligence engine
               </h2>
               <p className="text-[#1A1A2A]/65 text-base leading-relaxed max-w-2xl mb-10">
-                We have built the deepest evidence architecture in the African ECD sector — a
+                We have built the deepest evidence architecture in the African ECD sector, a
                 cross-referenced, auditable knowledge base drawn from a decade of programme data,
                 49 structured stakeholder interviews, and a 207-quote Master Evidence Index. This
                 is not a report. It is a living intelligence engine that compounds in value with
@@ -138,7 +138,7 @@ export default function EducationSectorPage() {
           </div>
         </section>
 
-        {/* Block 4 — SmartStart case study */}
+        {/* Block 4, SmartStart case study */}
         <section className="bg-[#0A1628] py-20 lg:py-28">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <RevealOnScroll>
@@ -160,7 +160,7 @@ export default function EducationSectorPage() {
           </div>
         </section>
 
-        {/* Block 5 — CTA */}
+        {/* Block 5, CTA */}
         <section className="bg-[#C9A84C] py-20 lg:py-28">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <RevealOnScroll>

@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@aws-sdk/client-amplify": "^3.1044.0",
     "@aws-sdk/client-dynamodb": "^3.1043.0",
     "@aws-sdk/client-iam": "^3.1043.0",
     "@aws-sdk/client-ses": "^3.1043.0",

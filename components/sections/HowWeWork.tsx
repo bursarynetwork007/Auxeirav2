@@ -4,17 +4,17 @@ const STEPS = [
   {
     number: "01",
     title: "Extract",
-    body: "We go deep. Into communities. Into longitudinal datasets. Into a decade of evaluations, financial records and programme data. Through structured stakeholder interviews, evidence mining, qualitative research and financial reconciliation — we surface the evidence that exists nowhere else. We build what we call a Sector Intelligence Machine: a cross-referenced, auditable knowledge base that no single organisation, algorithm or consulting firm could build alone.",
+    body: "We go deep. Into communities. Into longitudinal datasets. Into a decade of evaluations, financial records and programme data. Through structured stakeholder interviews, evidence mining, qualitative research and financial reconciliation, we surface the evidence that exists nowhere else. We build what we call a Sector Intelligence Machine: a cross-referenced, auditable knowledge base that no single organisation, algorithm or consulting firm could build alone.",
   },
   {
     number: "02",
     title: "Synthesise",
-    body: "We apply the full Auxeira methodology — AI, behavioural science, data science, actuarial analysis, systems thinking and qualitative synthesis — to find the signal in the complexity. We identify what the evidence actually means, which findings matter most, and what language will move the specific decision-makers who need to act. The output is not data. It is structured, verified, decision-ready intelligence.",
+    body: "We apply the full Auxeira methodology, AI, behavioural science, data science, actuarial analysis, systems thinking and qualitative synthesis, to find the signal in the complexity. We identify what the evidence actually means, which findings matter most, and what language will move the specific decision-makers who need to act. The output is not data. It is structured, verified, decision-ready intelligence.",
   },
   {
     number: "03",
     title: "Move",
-    body: "We produce knowledge products built to drive decisions — not sit in filing cabinets. 10-Year impact reports. Annual reports. Policy and funder briefs. Economic multiplier analyses. M&E frameworks. Practitioner narratives. Infographic systems. Evidence indexes. Sector publications in design-ready format. Each product is designed with one question in mind: what does this audience need to see, hear and feel to act? The result is always evidence that moves.",
+    body: "We produce knowledge products built to drive decisions, not sit in filing cabinets. 10-Year impact reports. Annual reports. Policy and funder briefs. Economic multiplier analyses. M&E frameworks. Practitioner narratives. Infographic systems. Evidence indexes. Sector publications in design-ready format. Each product is designed with one question in mind: what does this audience need to see, hear and feel to act? The result is always evidence that moves.",
   },
 ];
 

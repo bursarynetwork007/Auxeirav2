@@ -27,7 +27,7 @@ export default function Founder() {
                   <span className="font-display text-2xl text-[#C9A84C] font-semibold">LL</span>
                 </div>
                 <p className="text-[#1A1A2A]/30 text-xs tracking-widest uppercase">
-                  Headshot — coming soon
+                  Headshot, coming soon
                 </p>
               </div>
             </div>
@@ -49,14 +49,14 @@ export default function Founder() {
               <blockquote className="mb-8">
                 <p className="font-display text-xl lg:text-2xl font-light text-[#1A1A2A]/80 leading-relaxed italic">
                   &ldquo;I built Auxeira because I watched brilliant organisations do extraordinary
-                  work — and watched that work disappear into reports that nobody read, decisions
+                  work, and watched that work disappear into reports that nobody read, decisions
                   that never changed, and communities that waited for impact that never came.
                 </p>
                 <p className="font-display text-xl lg:text-2xl font-light text-[#1A1A2A]/80 leading-relaxed italic mt-4">
                   The problem was never the evidence. The problem was always the translation.
                 </p>
                 <p className="font-display text-xl lg:text-2xl font-light text-[#1A1A2A]/80 leading-relaxed italic mt-4">
-                  Auxeira is my answer to that problem — built on African entrepreneurship,
+                  Auxeira is my answer to that problem, built on African entrepreneurship,
                   MIT-trained behavioural economics, actuarial precision and the conviction that the
                   world&apos;s most important data is still waiting to be found.&rdquo;
                 </p>

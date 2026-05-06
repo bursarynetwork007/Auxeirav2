@@ -27,7 +27,7 @@ const SDGS = [
     status: "building" as const,
     badge: "BUILDING",
     description:
-      "From microenterprise to national fiscal policy — we translate economic evidence into the language of growth and scale.",
+      "From microenterprise to national fiscal policy, we translate economic evidence into the language of growth and scale.",
     href: "/sectors/health",
   },
   {
@@ -47,7 +47,7 @@ const SDGS = [
     description: "Policy change requires evidence that moves ministries. We build it.",
     href: "#sectors",
   },
-  // SDGs 1, 2, 5, 6, 7, 9, 10, 11, 12, 14, 15, 17 — pipeline
+  // SDGs 1, 2, 5, 6, 7, 9, 10, 11, 12, 14, 15, 17, pipeline
   ...([1, 2, 5, 6, 7, 9, 10, 11, 12, 14, 15, 17].map((n) => ({
     number: `SDG ${n}`,
     name: `SDG ${n}`,
@@ -102,7 +102,7 @@ export default function SectorGrid() {
             id="sectors-heading"
             className="font-display text-3xl lg:text-5xl font-light text-[#0A1628] max-w-3xl leading-tight mb-4"
           >
-            We start where the evidence gap is deepest — then expand. One sector at a time.
+            We start where the evidence gap is deepest, then expand. One sector at a time.
           </h2>
           <p className="text-[#1A1A2A]/55 text-base max-w-2xl leading-relaxed">
             Until no important decision in Africa is made without the best available evidence.

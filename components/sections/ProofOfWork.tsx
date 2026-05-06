@@ -5,10 +5,10 @@ import RevealOnScroll from "@/components/ui/RevealOnScroll";
 import Button from "@/components/ui/Button";
 
 const METRICS = [
-  { stat: "152,664", label: "Children reached — communicated for global funder audiences" },
+  { stat: "152,664", label: "Children reached, communicated for global funder audiences" },
   { stat: "14,740", label: "Women-led micro-enterprises surfaced for the first time" },
-  { stat: "3.3×", label: "SROI over five years — independently verified" },
-  { stat: "$2,000,000", label: "Skoll Award for Social Innovation — 2026" },
+  { stat: "3.3×", label: "SROI over five years, independently verified" },
+  { stat: "$2,000,000", label: "Skoll Award for Social Innovation, 2026" },
 ];
 
 export default function ProofOfWork() {
@@ -50,7 +50,7 @@ export default function ProofOfWork() {
           </h2>
         </RevealOnScroll>
 
-        {/* Case study card — navy */}
+        {/* Case study card, navy */}
         <RevealOnScroll delay={100}>
           <div className="mt-12 bg-[#0A1628] p-8 lg:p-12">
             {/* Header */}
@@ -68,7 +68,7 @@ export default function ProofOfWork() {
                   Engagement
                 </p>
                 <p className="text-[#F5F0E8] font-medium">
-                  10-Year Impact Report — Evidence Intelligence & Strategic Knowledge Products
+                  10-Year Impact Report, Evidence Intelligence & Strategic Knowledge Products
                 </p>
               </div>
             </div>
@@ -81,9 +81,9 @@ export default function ProofOfWork() {
                 </h3>
                 <p className="text-[#F5F0E8]/65 text-sm leading-relaxed">
                   SmartStart had a decade of rigorous programme data but a critical evidence gap:
-                  their broader economic contribution — 14,740 women-led micro-enterprises,
+                  their broader economic contribution, 14,740 women-led micro-enterprises,
                   household income effects, caregiver workforce participation, long-term fiscal
-                  savings — was unmeasured and absent from policy and funding conversations. Without
+                  savings, was unmeasured and absent from policy and funding conversations. Without
                   this framing, ECD investment is perceived by Treasury as social expenditure. Not
                   economic infrastructure.
                 </p>
@@ -96,7 +96,7 @@ export default function ProofOfWork() {
                   {[
                     "49 structured stakeholder interviews across South Africa",
                     "207-quote Master Evidence Index from a decade of programme data",
-                    "Full narrative architecture — from raw evidence to accessible story",
+                    "Full narrative architecture, from raw evidence to accessible story",
                     "10-Year Impact Report, policy and funder briefs, practitioner communications package",
                     "Economic snapshot, designed infographic systems, annual report contribution",
                     "Ten infographic corrections identified and resolved before publication",
@@ -131,11 +131,11 @@ export default function ProofOfWork() {
             {/* Skoll quote */}
             <p className="mt-8 text-[#F5F0E8]/50 text-sm italic border-t border-[#C9A84C]/15 pt-6">
               &ldquo;The Skoll Foundation&apos;s $2M Award for Social Innovation recognised
-              SmartStart&apos;s impact — and the evidence narrative that made it visible to a global
+              SmartStart&apos;s impact, and the evidence narrative that made it visible to a global
               audience.&rdquo;
             </p>
 
-            {/* Phase 1 CTA — notify me */}
+            {/* Phase 1 CTA, notify me */}
             <div className="mt-8 border-t border-[#C9A84C]/15 pt-8">
               {!notifySubmitted ? (
                 <>

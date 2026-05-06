@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
       );
     } catch (dbErr) {
       console.error("DynamoDB write failed:", dbErr);
-      // Continue — don't block the user
+      // Continue, don't block the user
     }
 
     // 2. Subscribe to ConvertKit (health-check form)
@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
       });
       await sendEmail({
         to: email,
-        subject: `Your Auxeira Evidence Health Check — Score: ${score}/100`,
+        subject: `Your Auxeira Evidence Health Check, Score: ${score}/100`,
         html: resultsHtml,
       });
     } catch (sesErr) {
@@ -99,7 +99,7 @@ export async function POST(req: NextRequest) {
       const notifyEmail = process.env.LEAD_NOTIFICATION_EMAIL ?? "info@auxeira.com";
       await sendEmail({
         to: notifyEmail,
-        subject: `New Health Check Lead — Score ${score}/100 — ${email}`,
+        subject: `New Health Check Lead, Score ${score}/100, ${email}`,
         html: buildLeadNotificationEmail({ email, firstName, score, answers, scoreBand, tierRec, topGaps }),
       });
     } catch (notifyErr) {
@@ -152,7 +152,7 @@ function buildResultsEmail({
         <!-- Body -->
         <tr><td style="background:#ffffff;padding:40px;">
           <p style="margin:0 0 24px;font-size:16px;line-height:1.6;color:#1A1A2A;">Hi${name},</p>
-          <p style="margin:0 0 24px;font-size:15px;line-height:1.7;color:#1A1A2A;opacity:0.8;">Here is your full Evidence Impact Report — your score, your two biggest gaps, and a recommended next step.</p>
+          <p style="margin:0 0 24px;font-size:15px;line-height:1.7;color:#1A1A2A;opacity:0.8;">Here is your full Evidence Impact Report, your score, your two biggest gaps, and a recommended next step.</p>
 
           ${topGaps.length > 0 ? `
           <p style="margin:0 0 12px;font-size:11px;text-transform:uppercase;letter-spacing:3px;color:#C9A84C;font-weight:600;">Your Two Biggest Gaps</p>
@@ -207,8 +207,8 @@ function buildLeadNotificationEmail({
 <html><body style="font-family:Arial,sans-serif;color:#1A1A2A;padding:32px;">
   <h2 style="color:#0A1628;">New Health Check Lead</h2>
   <p><strong>Email:</strong> ${email}</p>
-  <p><strong>Name:</strong> ${firstName ?? "—"}</p>
-  <p><strong>Score:</strong> ${score}/100 — ${scoreBand.label}</p>
+  <p><strong>Name:</strong> ${firstName ?? ","}</p>
+  <p><strong>Score:</strong> ${score}/100, ${scoreBand.label}</p>
   <p><strong>Tier Recommendation:</strong> ${tierRec.label}</p>
   <p><strong>Top Gaps:</strong></p>
   <ul>${topGaps.map(g => `<li>${g}</li>`).join("")}</ul>

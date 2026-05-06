@@ -28,7 +28,7 @@ export default function Team() {
           </h2>
         </RevealOnScroll>
 
-        {/* Founder card — large */}
+        {/* Founder card, large */}
         <RevealOnScroll delay={100}>
           <div className="mt-16 border border-[#C9A84C]/30 p-8 lg:p-10 max-w-2xl">
             <div className="flex items-start gap-6">
@@ -70,7 +70,7 @@ export default function Team() {
           <div className="mt-12 max-w-3xl">
             <p className="text-[#F5F0E8]/55 text-base leading-relaxed mb-8">
               We build dedicated project teams from a senior network of economists, data scientists,
-              qualitative researchers, and sector specialists — matched specifically to each
+              qualitative researchers, and sector specialists, matched specifically to each
               engagement.
             </p>
 

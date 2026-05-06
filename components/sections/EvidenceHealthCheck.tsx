@@ -80,7 +80,7 @@ const QUESTIONS = [
     id: "q7",
     question: "How often are you asked to 'make the report shorter' or 'simplify the findings'?",
     options: [
-      { value: "regularly", label: "Regularly — it's a constant request" },
+      { value: "regularly", label: "Regularly, it's a constant request" },
       { value: "occasionally", label: "Occasionally" },
       { value: "rarely", label: "Rarely" },
       { value: "never-still-dont-land", label: "Never, but our reports still don't seem to land" },
@@ -168,7 +168,7 @@ export default function EvidenceHealthCheck() {
     if (currentQ < totalQ - 1) {
       setCurrentQ((c) => c + 1);
     } else {
-      // All questions answered — go to email capture
+      // All questions answered, go to email capture
       setStep("email");
     }
   }
@@ -201,7 +201,7 @@ export default function EvidenceHealthCheck() {
         body: JSON.stringify({ answers: finalAnswers, score: calculatedScore, firstName, email }),
       });
     } catch {
-      // Non-blocking — results still shown even if API fails
+      // Non-blocking, results still shown even if API fails
     }
 
     setSubmitting(false);
@@ -244,7 +244,7 @@ export default function EvidenceHealthCheck() {
                 id="health-check-heading"
                 className="font-display text-3xl lg:text-5xl font-light text-[#0A1628] leading-tight mb-6"
               >
-                90 seconds. 8 questions. A clear picture of where your evidence is working — and
+                90 seconds. 8 questions. A clear picture of where your evidence is working, and
                 where it&apos;s costing you.
               </h2>
               <p className="text-[#1A1A2A]/65 text-base leading-relaxed mb-8">
@@ -330,7 +330,7 @@ export default function EvidenceHealthCheck() {
                   Your Evidence Health Check is ready.
                 </h3>
                 <p className="text-[#1A1A2A]/60 text-sm mb-8">
-                  Enter your email to receive your full Evidence Impact Report — including your
+                  Enter your email to receive your full Evidence Impact Report, including your
                   score, your two biggest gaps, and a recommended next step.
                 </p>
                 <form onSubmit={handleEmailSubmit} className="space-y-4">

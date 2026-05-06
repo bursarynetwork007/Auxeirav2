@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 interface StatCounterProps {
-  value: string; // e.g. "49", "3.3×", "$2M" — numeric prefix extracted automatically
+  value: string; // e.g. "49", "3.3×", "$2M", numeric prefix extracted automatically
   label: string;
   className?: string;
 }
