@@ -28,6 +28,8 @@ interface HealthCheckBody {
 
 // ── Manus research task ───────────────────────────────────────────────────────
 
+const MANUS_BASE = "https://api.manus.ai";
+
 async function triggerManusResearch(params: {
   submissionId: string;
   orgName: string;
@@ -35,51 +37,46 @@ async function triggerManusResearch(params: {
   primaryGap: string;
   score: number;
 }): Promise<string | null> {
-  const endpoint = process.env.MANUS_API_ENDPOINT;
   const apiKey = process.env.MANUS_API_KEY;
 
-  if (!endpoint || endpoint === "your_endpoint" || !apiKey) {
-    console.warn("Manus API not configured — skipping research task");
+  if (!apiKey) {
+    console.warn("MANUS_API_KEY not set — skipping research task");
     return null;
   }
 
-  try {
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        task: `Research the organisation "${params.orgName}" for an Evidence Risk Report.
-Website: ${params.orgUrl ?? "unknown"}
+  const prompt = `Research the organisation "${params.orgName}" and produce a structured Evidence Risk Report.
+Website: ${params.orgUrl ?? "not provided"}
 Primary evidence gap: ${params.primaryGap}
 Evidence Health Score: ${params.score}/100
 
-Provide:
-1. Organisation overview (mission, programmes, scale, geography)
-2. Current evidence and evaluation landscape
-3. Key funders and decision-maker audience
-4. Sector competitive context
-5. Specific risks related to the primary gap: ${params.primaryGap}
-6. 3-year funding risk estimate based on evidence gaps
+Return a JSON object with exactly these keys:
+- overview: organisation mission, programmes, scale, geography (2-3 sentences)
+- evidence_landscape: current evaluation and evidence activity (2-3 sentences)
+- funders: key funders and decision-maker audience (1-2 sentences)
+- sector_context: competitive landscape and sector benchmarks (2-3 sentences)
+- gap_risks: specific risks tied to the primary gap "${params.primaryGap}" (2-3 sentences)
+- funding_risk_estimate: 3-year funding risk estimate with a rand range (1-2 sentences)
 
-Return structured JSON with keys: overview, evidence_landscape, funders, sector_context, gap_risks, funding_risk_estimate`,
-        metadata: {
-          submission_id: params.submissionId,
-          webhook_url: `${process.env.NEXT_PUBLIC_SITE_URL ?? ""}/api/webhooks/manus`,
-        },
-      }),
+Be specific to this organisation. Use publicly available information only.`;
+
+  try {
+    const res = await fetch(`${MANUS_BASE}/v2/task.create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-manus-api-key": apiKey,
+      },
+      body: JSON.stringify({ prompt }),
     });
 
     if (!res.ok) {
-      console.error("Manus API error:", res.status, await res.text());
+      console.error("Manus task.create error:", res.status, await res.text());
       return null;
     }
 
     const data = await res.json() as Record<string, unknown>;
-    // Field name confirmed once Manus docs are available
-    return (data.task_id ?? data.id ?? data.taskId) as string | null;
+    // Manus v2 returns { task_id: "..." }
+    return (data.task_id ?? data.id) as string | null;
   } catch (err) {
     console.error("Manus trigger failed:", err);
     return null;
