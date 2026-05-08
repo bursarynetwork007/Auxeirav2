@@ -3,15 +3,8 @@
 import { useState } from "react";
 import Button from "@/components/ui/Button";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
-import {
-  calculateScore,
-  getScoreBand,
-  getTierRecommendation,
-  getTopGaps,
-  type HealthCheckAnswers,
-} from "@/lib/healthCheckScoring";
-
-// ─── Question definitions ────────────────────────────────────────────────────
+import { calculateScore, type HealthCheckAnswers } from "@/lib/healthCheckScoring";
+import HealthCheckResults from "@/components/sections/HealthCheckResults";
 
 const QUESTIONS = [
   {
@@ -100,40 +93,6 @@ const QUESTIONS = [
 
 type Step = "quiz" | "email" | "results";
 
-// ─── Score ring ───────────────────────────────────────────────────────────────
-
-function ScoreRing({ score }: { score: number }) {
-  const r = 54;
-  const circ = 2 * Math.PI * r;
-  const offset = circ - (score / 100) * circ;
-
-  return (
-    <div className="relative inline-flex items-center justify-center w-36 h-36">
-      <svg width="144" height="144" className="-rotate-90" aria-hidden="true">
-        <circle cx="72" cy="72" r={r} fill="none" stroke="#C9A84C22" strokeWidth="6" />
-        <circle
-          cx="72"
-          cy="72"
-          r={r}
-          fill="none"
-          stroke="#C9A84C"
-          strokeWidth="6"
-          strokeDasharray={circ}
-          strokeDashoffset={offset}
-          strokeLinecap="round"
-          style={{ transition: "stroke-dashoffset 1s ease" }}
-        />
-      </svg>
-      <div className="absolute text-center">
-        <p className="font-display text-4xl font-semibold text-[#C9A84C]">{score}</p>
-        <p className="text-xs text-[#F5F0E8]/50 tracking-widest">/ 100</p>
-      </div>
-    </div>
-  );
-}
-
-// ─── Main component ───────────────────────────────────────────────────────────
-
 export default function EvidenceHealthCheck() {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<Step>("quiz");
@@ -141,18 +100,15 @@ export default function EvidenceHealthCheck() {
   const [answers, setAnswers] = useState<Partial<HealthCheckAnswers>>({});
   const [selected, setSelected] = useState<string | null>(null);
 
-  // Email capture
   const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
-
-  // Results
-  const [score, setScore] = useState(0);
   const [privacyChecked, setPrivacyChecked] = useState(false);
+  const [score, setScore] = useState(0);
 
   const totalQ = QUESTIONS.length;
-  const progress = ((currentQ) / totalQ) * 100;
+  const progress = (currentQ / totalQ) * 100;
 
   function handleOptionSelect(value: string) {
     setSelected(value);
@@ -164,11 +120,9 @@ export default function EvidenceHealthCheck() {
     const updated = { ...answers, [q.id]: selected };
     setAnswers(updated);
     setSelected(null);
-
     if (currentQ < totalQ - 1) {
       setCurrentQ((c) => c + 1);
     } else {
-      // All questions answered, go to email capture
       setStep("email");
     }
   }
@@ -189,11 +143,9 @@ export default function EvidenceHealthCheck() {
     }
     setSubmitting(true);
     setSubmitError("");
-
     const finalAnswers = answers as HealthCheckAnswers;
     const calculatedScore = calculateScore(finalAnswers);
     setScore(calculatedScore);
-
     try {
       await fetch("/api/health-check", {
         method: "POST",
@@ -201,9 +153,8 @@ export default function EvidenceHealthCheck() {
         body: JSON.stringify({ answers: finalAnswers, score: calculatedScore, firstName, email }),
       });
     } catch {
-      // Non-blocking, results still shown even if API fails
+      // Non-blocking
     }
-
     setSubmitting(false);
     setStep("results");
   }
@@ -220,12 +171,6 @@ export default function EvidenceHealthCheck() {
     setSubmitError("");
   }
 
-  const finalAnswers = answers as HealthCheckAnswers;
-  const scoreBand = step === "results" ? getScoreBand(score) : null;
-  const tierRec = step === "results" ? getTierRecommendation(finalAnswers) : null;
-  const topGaps = step === "results" ? getTopGaps(finalAnswers) : [];
-  const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL ?? "#cta";
-
   return (
     <section
       id="health-check"
@@ -234,7 +179,6 @@ export default function EvidenceHealthCheck() {
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {!open ? (
-          /* ── Teaser ── */
           <RevealOnScroll>
             <div className="max-w-2xl">
               <p className="text-[#C9A84C] text-xs uppercase tracking-[0.2em] font-medium mb-4">
@@ -262,15 +206,12 @@ export default function EvidenceHealthCheck() {
             </div>
           </RevealOnScroll>
         ) : (
-          /* ── Modal / inline panel ── */
           <div className="max-w-2xl mx-auto">
             {/* Progress bar */}
             {step === "quiz" && (
               <div className="mb-8">
                 <div className="flex justify-between text-xs text-[#1A1A2A]/40 mb-2">
-                  <span>
-                    Question {currentQ + 1} of {totalQ}
-                  </span>
+                  <span>Question {currentQ + 1} of {totalQ}</span>
                   <span>{Math.round(progress)}% complete</span>
                 </div>
                 <div className="h-0.5 bg-[#1A1A2A]/10 rounded-full overflow-hidden">
@@ -282,7 +223,7 @@ export default function EvidenceHealthCheck() {
               </div>
             )}
 
-            {/* ── Quiz step ── */}
+            {/* Quiz */}
             {step === "quiz" && (
               <div>
                 <h3 className="font-display text-2xl lg:text-3xl font-light text-[#0A1628] mb-8 leading-snug">
@@ -323,7 +264,7 @@ export default function EvidenceHealthCheck() {
               </div>
             )}
 
-            {/* ── Email capture step ── */}
+            {/* Email capture */}
             {step === "email" && (
               <div>
                 <h3 className="font-display text-2xl lg:text-3xl font-light text-[#0A1628] mb-3">
@@ -366,79 +307,25 @@ export default function EvidenceHealthCheck() {
                       time.
                     </span>
                   </label>
-                  {submitError && (
-                    <p className="text-red-600 text-xs">{submitError}</p>
-                  )}
+                  {submitError && <p className="text-red-600 text-xs">{submitError}</p>}
                   <Button
                     variant="gold-filled"
                     className="w-full justify-center py-4 text-base"
                     disabled={submitting || !email}
                   >
-                    {submitting ? "Sending…" : "Send my results →"}
+                    {submitting ? "Sending..." : "See my results →"}
                   </Button>
                 </form>
               </div>
             )}
 
-            {/* ── Results step ── */}
-            {step === "results" && scoreBand && tierRec && (
-              <div>
-                <div className="flex flex-col sm:flex-row sm:items-center gap-8 mb-10">
-                  <ScoreRing score={score} />
-                  <div>
-                    <p className="font-display text-2xl font-semibold text-[#0A1628] mb-1">
-                      {scoreBand.label}
-                    </p>
-                    <p className="text-[#1A1A2A]/60 text-sm">{scoreBand.description}</p>
-                  </div>
-                </div>
-
-                {/* Top gaps */}
-                {topGaps.length > 0 && (
-                  <div className="mb-8">
-                    <p className="text-xs uppercase tracking-[0.2em] text-[#C9A84C] font-medium mb-4">
-                      Your Two Biggest Gaps
-                    </p>
-                    <div className="space-y-3">
-                      {topGaps.map((gap, i) => (
-                        <div
-                          key={i}
-                          className="border border-[#C9A84C]/30 p-4 text-sm text-[#1A1A2A]/80 leading-relaxed"
-                        >
-                          {gap}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Tier recommendation */}
-                <div className="bg-[#0A1628] p-6 mb-8">
-                  <p className="text-xs uppercase tracking-[0.2em] text-[#C9A84C] font-medium mb-2">
-                    Recommended Starting Point
-                  </p>
-                  <p className="font-display text-xl font-semibold text-[#F5F0E8] mb-1">
-                    {tierRec.label}
-                  </p>
-                  <p className="text-[#F5F0E8]/60 text-sm">{tierRec.description}</p>
-                </div>
-
-                {/* CTA */}
-                <Button
-                  variant="gold-filled"
-                  href={calendlyUrl}
-                  external
-                  className="w-full justify-center py-4 text-base mb-4"
-                >
-                  {scoreBand.ctaText}
-                </Button>
-                <button
-                  onClick={handleReset}
-                  className="w-full text-center text-sm text-[#1A1A2A]/40 hover:text-[#1A1A2A] transition-colors py-2"
-                >
-                  Start over
-                </button>
-              </div>
+            {/* Results */}
+            {step === "results" && (
+              <HealthCheckResults
+                score={score}
+                answers={answers as HealthCheckAnswers}
+                onReset={handleReset}
+              />
             )}
           </div>
         )}

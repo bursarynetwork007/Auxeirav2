@@ -12,19 +12,19 @@ const THOUGHT_LEADERSHIP = [
     type: "Long-form article",
     title: "The Translation Gap: Why Strong Evidence Doesn't Drive Strong Decisions",
     cta: "Read →",
-    href: "#insights",
+    href: "/insights/translation-gap",
   },
   {
     type: "Sector brief",
     title: "ECD as Economic Infrastructure: The Unmade Case for Treasury",
-    cta: "Download →",
-    href: "#cta",
+    cta: "Read →",
+    href: "/insights/ecd-economic-infrastructure",
   },
   {
     type: "Op-ed",
     title: "What the Skoll Award Tells Us About Evidence Communication in Africa",
     cta: "Read →",
-    href: "#insights",
+    href: "/insights/skoll-award-evidence",
   },
 ];
 

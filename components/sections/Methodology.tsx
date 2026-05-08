@@ -1,4 +1,5 @@
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
+import FrameworkDiagram from "@/components/ui/FrameworkDiagram";
 
 const PILLARS = [
   {
@@ -52,7 +53,14 @@ export default function Methodology() {
           </h2>
         </RevealOnScroll>
 
-        <div className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-[#C9A84C]/10">
+        {/* Framework diagram */}
+        <RevealOnScroll delay={100}>
+          <div className="mt-16 mb-4">
+            <FrameworkDiagram />
+          </div>
+        </RevealOnScroll>
+
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-[#C9A84C]/10">
           {PILLARS.map((p, i) => (
             <RevealOnScroll key={p.number} delay={i * 80}>
               <div className="bg-[#0A1628] p-8 lg:p-10 h-full hover:bg-[#0f1f3d] transition-colors duration-200">

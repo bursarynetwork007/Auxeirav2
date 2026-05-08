@@ -28,7 +28,7 @@ const SDGS = [
     badge: "BUILDING",
     description:
       "From microenterprise to national fiscal policy, we translate economic evidence into the language of growth and scale.",
-    href: "/sectors/health",
+    href: "/sectors/economic-development",
   },
   {
     number: "SDG 13",
@@ -47,15 +47,28 @@ const SDGS = [
     description: "Policy change requires evidence that moves ministries. We build it.",
     href: "#sectors",
   },
-  // SDGs 1, 2, 5, 6, 7, 9, 10, 11, 12, 14, 15, 17, pipeline
-  ...([1, 2, 5, 6, 7, 9, 10, 11, 12, 14, 15, 17].map((n) => ({
+  // SDGs 1, 2, 5, 6, 7, 9, 10, 11, 12, 14, 15, 17 — pipeline
+  ...[
+    { n: 1,  label: "No Poverty" },
+    { n: 2,  label: "Zero Hunger" },
+    { n: 5,  label: "Gender Equality" },
+    { n: 6,  label: "Clean Water & Sanitation" },
+    { n: 7,  label: "Affordable Clean Energy" },
+    { n: 9,  label: "Industry, Innovation & Infrastructure" },
+    { n: 10, label: "Reduced Inequalities" },
+    { n: 11, label: "Sustainable Cities & Communities" },
+    { n: 12, label: "Responsible Consumption" },
+    { n: 14, label: "Life Below Water" },
+    { n: 15, label: "Life on Land" },
+    { n: 17, label: "Partnerships for Goals" },
+  ].map(({ n, label }) => ({
     number: `SDG ${n}`,
-    name: `SDG ${n}`,
+    name: label,
     status: "pipeline" as const,
     badge: "PIPELINE",
     description: "Sector intelligence engine under development. Register your sector interest.",
     href: "#cta",
-  }))),
+  })),
 ];
 
 const statusStyles = {

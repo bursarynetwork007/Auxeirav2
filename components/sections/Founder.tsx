@@ -1,3 +1,4 @@
+import Image from "next/image";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 
 const CREDENTIALS = [
@@ -21,15 +22,15 @@ export default function Founder() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
           {/* Photo placeholder */}
           <RevealOnScroll>
-            <div className="aspect-[4/5] bg-[#0A1628]/8 border border-[#1A1A2A]/10 flex items-center justify-center max-w-sm">
-              <div className="text-center p-8">
-                <div className="w-20 h-20 rounded-full bg-[#C9A84C]/20 border border-[#C9A84C]/30 mx-auto mb-4 flex items-center justify-center">
-                  <span className="font-display text-2xl text-[#C9A84C] font-semibold">LL</span>
-                </div>
-                <p className="text-[#1A1A2A]/30 text-xs tracking-widest uppercase">
-                  Headshot, coming soon
-                </p>
-              </div>
+            <div className="relative aspect-[4/5] max-w-sm w-full overflow-hidden">
+              <Image
+                src="/images/lante-luthuli.jpg"
+                alt="Lante Emmanuel Luthuli, Founder and CEO of Auxeira"
+                fill
+                className="object-cover object-top"
+                sizes="(max-width: 768px) 100vw, 400px"
+                priority
+              />
             </div>
           </RevealOnScroll>
 

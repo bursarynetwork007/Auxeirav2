@@ -62,7 +62,7 @@ export default function Insights() {
                 solution.&rdquo;
               </p>
             </blockquote>
-            <Button variant="gold-outline" href="#insights" className="text-sm">
+            <Button variant="gold-outline" href="/insights/translation-gap" className="text-sm">
               Read the Article →
             </Button>
           </div>

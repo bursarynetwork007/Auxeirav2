@@ -1,3 +1,4 @@
+import Image from "next/image";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 
 const EXPERTISE_AREAS = [
@@ -32,8 +33,14 @@ export default function Team() {
         <RevealOnScroll delay={100}>
           <div className="mt-16 border border-[#C9A84C]/30 p-8 lg:p-10 max-w-2xl">
             <div className="flex items-start gap-6">
-              <div className="w-14 h-14 rounded-full bg-[#C9A84C]/15 border border-[#C9A84C]/30 flex items-center justify-center shrink-0">
-                <span className="font-display text-lg text-[#C9A84C] font-semibold">LL</span>
+              <div className="w-14 h-14 rounded-full overflow-hidden border border-[#C9A84C]/30 shrink-0 relative">
+                <Image
+                  src="/images/lante-luthuli.jpg"
+                  alt="Lante Emmanuel Luthuli"
+                  fill
+                  className="object-cover object-top"
+                  sizes="56px"
+                />
               </div>
               <div>
                 <h3 className="font-display text-xl font-semibold text-[#F5F0E8] mb-0.5">

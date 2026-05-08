@@ -35,13 +35,15 @@ export default function Nav() {
         className="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between h-16 lg:h-20"
         aria-label="Main navigation"
       >
-        {/* Wordmark */}
-        <Link
-          href="/"
-          className="font-display text-2xl font-semibold text-[#C9A84C] tracking-widest uppercase"
-          aria-label="Auxeira home"
-        >
-          Auxeira
+        {/* Wordmark + tagline */}
+        <Link href="/" className="flex flex-col" aria-label="Auxeira home">
+          <span className="font-display text-2xl font-semibold text-[#C9A84C] tracking-widest uppercase leading-none">
+            Auxeira
+          </span>
+          <span className="text-[#C9A84C]/70 tracking-wide leading-none mt-1 hidden lg:block"
+            style={{ fontSize: "11px" }}>
+            Bringing a billion data points online that the world doesn&apos;t know exist.
+          </span>
         </Link>
 
         {/* Desktop links */}
