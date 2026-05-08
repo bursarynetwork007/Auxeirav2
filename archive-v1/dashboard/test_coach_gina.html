@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Coach Gina Integration</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 40px;
+        }
+        .test-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .btn-test {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-test:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="test-card">
+        <h1 class="mb-4"><i class="fas fa-robot me-2"></i>Coach Gina Integration Test</h1>
+        <p class="mb-4">Click the button below to open Coach Gina chat:</p>
+        <button class="btn-test" id="openCoachGina">
+            <i class="fas fa-comments me-2"></i>Open Coach Gina Chat
+        </button>
+        
+        <div class="mt-4">
+            <h5>Test Context:</h5>
+            <ul>
+                <li>Stage: Series A</li>
+                <li>Industry: FinTech</li>
+                <li>MRR: $18,500</li>
+                <li>Customers: 1,247</li>
+                <li>Churn Rate: 2.3%</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Coach Gina Chat Integration -->
+    <script src="https://auxeira.com/js/coach-gina-chat.js"></script>
+    <script>
+        let coachGina;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Coach Gina
+            const COACH_GINA_API = 'https://9t3nivd6wg.execute-api.us-east-1.amazonaws.com/prod/api/coach-gina';
+            coachGina = new CoachGinaChat(null, COACH_GINA_API);
+            
+            // Set founder context
+            coachGina.updateFounderContext({
+                stage: 'Series A',
+                industry: 'FinTech',
+                geography: 'United States',
+                teamSize: 12,
+                runway: 14,
+                mrr: 18500,
+                customers: 1247,
+                cac: 127,
+                ltv: 1890,
+                churnRate: 2.3,
+                nps: 68
+            });
+            
+            // Button click handler
+            document.getElementById('openCoachGina').addEventListener('click', function() {
+                coachGina.openChat();
+            });
+            
+            console.log('Coach Gina initialized successfully!');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auxeira Admin Panel - System Control Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Bloomberg Terminal Aesthetic - Admin Panel */
+        :root {
+            --bloomberg-dark: #0d1117;
+            --bloomberg-charcoal: #161b22;
+            --bloomberg-blue: #007bff;
+            --bloomberg-accent: #ffd700;
+            --bloomberg-text: #f0f6fc;
+            --bloomberg-text-secondary: #8b949e;
+            --bloomberg-gray: #30363d;
+            --bloomberg-success: #28a745;
+            --bloomberg-warning: #ffc107;
+            --bloomberg-danger: #dc3545;
+            --bloomberg-info: #17a2b8;
+            --border-radius: 8px;
+            --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.2);
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bloomberg-dark);
+            color: var(--bloomberg-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .admin-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+            gap: 0;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            background: linear-gradient(180deg, var(--bloomberg-charcoal) 0%, var(--bloomberg-dark) 100%);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem 0;
+            position: fixed;
+            width: 280px;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--bloomberg-blue) 0%, var(--bloomberg-accent) 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: var(--bloomberg-dark);
+            font-size: 1.2rem;
+        }
+
+        .sidebar-logo-text {
+            font-weight: 700;
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, var(--bloomberg-blue) 0%, var(--bloomberg-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--bloomberg-text-secondary);
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            padding: 0 1.5rem;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin: 0.25rem 0;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: var(--bloomberg-text-secondary);
+            text-decoration: none;
+            transition: var(--transition-smooth);
+            position: relative;
+            font-weight: 500;
+        }
+
+        .sidebar-menu a:hover {
+            color: var(--bloomberg-text);
+            background: rgba(0, 123, 255, 0.1);
+            border-left: 3px solid var(--bloomberg-blue);
+            padding-left: calc(1.5rem - 3px);
+        }
+
+        .sidebar-menu a.active {
+            color: var(--bloomberg-blue);
+            background: rgba(0, 123, 255, 0.15);
+            border-left: 3px solid var(--bloomberg-blue);
+            padding-left: calc(1.5rem - 3px);
+        }
+
+        .sidebar-menu i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        /* Header */
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--bloomberg-blue) 0%, var(--bloomberg-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .admin-header-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-box {
+            background: var(--bloomberg-charcoal);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.75rem 1rem;
+            border-radius: var(--border-radius);
+            color: var(--bloomberg-text);
+            width: 300px;
+        }
+
+        .search-box::placeholder {
+            color: var(--bloomberg-text-secondary);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--bloomberg-blue) 0%, var(--bloomberg-accent) 100%);
+            color: var(--bloomberg-dark);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--bloomberg-charcoal);
+            color: var(--bloomberg-text);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-danger {
+            background: var(--bloomberg-danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-success {
+            background: var(--bloomberg-success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bloomberg-charcoal);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            transition: var(--transition-smooth);
+        }
+
+        .stat-card:hover {
+            border-color: var(--bloomberg-blue);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .stat-label {
+            color: var(--bloomberg-text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--bloomberg-accent);
+            margin-bottom: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-change {
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .stat-change.positive {
+            color: var(--bloomberg-success);
+        }
+
+        .stat-change.negative {
+            color: var(--bloomberg-danger);
+        }
+
+        /* Tabs */
+        .tab-container {
+            margin-bottom: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 1rem 1.5rem;
+            background: transparent;
+            border: none;
+            color: var(--bloomberg-text-secondary);
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition-smooth);
+            border-bottom: 3px solid transparent;
+            position: relative;
+        }
+
+        .tab:hover {
+            color: var(--bloomberg-text);
+        }
+
+        .tab.active {
+            color: var(--bloomberg-blue);
+            border-bottom-color: var(--bloomberg-blue);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Tables */
+        .table-container {
+            background: var(--bloomberg-charcoal);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: rgba(0, 123, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--bloomberg-blue);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--bloomberg-text);
+        }
+
+        tbody tr:hover {
+            background: rgba(0, 123, 255, 0.05);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-active {
+            background: rgba(40, 167, 69, 0.2);
+            color: var(--bloomberg-success);
+        }
+
+        .status-inactive {
+            background: rgba(220, 53, 69, 0.2);
+            color: var(--bloomberg-danger);
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: var(--bloomberg-warning);
+        }
+
+        .status-trial {
+            background: rgba(23, 162, 184, 0.2);
+            color: var(--bloomberg-info);
+        }
+
+        /* Charts */
+        .chart-container {
+            background: var(--bloomberg-charcoal);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--bloomberg-text);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--bloomberg-charcoal);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            color: var(--bloomberg-text);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--bloomberg-text-secondary);
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: var(--transition-smooth);
+        }
+
+        .modal-close:hover {
+            color: var(--bloomberg-text);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--bloomberg-text);
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bloomberg-charcoal); /* Changed from bloomberg-dark to bloomberg-charcoal for better contrast */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            color: var(--bloomberg-text);
+            font-family: 'Inter', sans-serif;
+            transition: var(--transition-smooth);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--bloomberg-blue);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .alert-success {
+            background: rgba(40, 167, 69, 0.15);
+            color: var(--bloomberg-success);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+
+        .alert-danger {
+            background: rgba(220, 53, 69, 0.15);
+            color: var(--bloomberg-danger);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+
+        .alert-warning {
+            background: rgba(255, 193, 7, 0.15);
+            color: var(--bloomberg-warning);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+
+        .alert-info {
+            background: rgba(23, 162, 184, 0.15);
+            color: var(--bloomberg-info);
+            border: 1px solid rgba(23, 162, 184, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .admin-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .search-box {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .admin-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .admin-header-controls {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                overflow-x: auto;
+            }
+
+            table {
+                font-size: 0.9rem;
+            }
+
+            th, td {
+                padding: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <div class="sidebar-logo-icon">A</div>
+                    <div class="sidebar-logo-text">Auxeira</div>
+                </div>
+                <p style="color: var(--bloomberg-text-secondary); font-size: 0.85rem; margin-top: 0.5rem;">Admin Control</p>
+            </div>
+
+            <div class="sidebar-title">Dashboard</div>
+            <ul class="sidebar-menu">
+                <li><a href="#" class="nav-link active" data-tab="overview"><i class="fas fa-chart-line"></i> Overview</a></li>
+                <li><a href="#" class="nav-link" data-tab="analytics"><i class="fas fa-analytics"></i> Analytics</a></li>
+                <li><a href="#" class="nav-link" data-tab="system"><i class="fas fa-server"></i> System Health</a></li>
+            </ul>
+
+            <div class="sidebar-title">Management</div>
+            <ul class="sidebar-menu">
+                <li><a href="#" class="nav-link" data-tab="users"><i class="fas fa-users"></i> Users</a></li>
+                <li><a href="#" class="nav-link" data-tab="subscriptions"><i class="fas fa-credit-card"></i> Subscriptions</a></li>
+                <li><a href="#" class="nav-link" data-tab="payments"><i class="fas fa-wallet"></i> Payments</a></li>
+                <li><a href="#" class="nav-link" data-tab="support"><i class="fas fa-headset"></i> Support Tickets</a></li>
+            </ul>
+
+            <div class="sidebar-title">Content</div>
+            <ul class="sidebar-menu">
+                <li><a href="#" class="nav-link" data-tab="startups"><i class="fas fa-rocket"></i> Startups</a></li>
+                <li><a href="#" class="nav-link" data-tab="reports"><i class="fas fa-file-alt"></i> Reports</a></li>
+                <li><a href="#" class="nav-link" data-tab="moderation"><i class="fas fa-shield-alt"></i> Moderation</a></li>
+            </ul>
+
+            <div class="sidebar-title">Configuration</div>
+            <ul class="sidebar-menu">
+                <li><a href="#" class="nav-link" data-tab="settings"><i class="fas fa-cog"></i> Settings</a></li>
+                <li><a href="#" class="nav-link" data-tab="security"><i class="fas fa-lock"></i> Security</a></li>
+                <li><a href="#" class="nav-link" data-tab="logs"><i class="fas fa-history"></i> Audit Logs</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <div class="admin-header">
+                <h1><i class="fas fa-tachometer-alt"></i> Admin Control Center</h1>
+                <div class="admin-header-controls">
+                    <input type="text" class="search-box" placeholder="Search users, startups, payments...">
+                    <button class="btn btn-secondary"><i class="fas fa-bell"></i> Alerts</button>
+                    <button class="btn btn-secondary"><i class="fas fa-user-circle"></i> Profile</button>
+                </div>
+            </div>
+
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-content active">
+                <!-- Key Metrics -->
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <div class="stat-label"><i class="fas fa-users"></i> Total Active Users</div>
+                        <div class="stat-value">12,847</div>
+                        <div class="stat-change positive"><i class="fas fa-arrow-up"></i> +8.2% this week</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-label"><i class="fas fa-dollar-sign"></i> Monthly Revenue</div>
+                        <div class="stat-value">$487.2K</div>
+                        <div class="stat-change positive"><i class="fas fa-arrow-up"></i> +12.5% MoM</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-label"><i class="fas fa-rocket"></i> Active Startups</div>
+                        <div class="stat-value">3,421</div>
+                        <div class="stat-change positive"><i class="fas fa-arrow-up"></i> +156 this month</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-label"><i class="fas fa-credit-card"></i> Active Subscriptions</div>
+                        <div class="stat-value">8,234</div>
+                        <div class="stat-change positive"><i class="fas fa-arrow-up"></i> +342 this month</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-label"><i class="fas fa-server"></i> System Uptime</div>
+                        <div class="stat-value">99.97%</div>
+                        <div class="stat-change positive"><i class="fas fa-check-circle"></i> Excellent</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-label"><i class="fas fa-clock"></i> Avg Response Time</div>
+                        <div class="stat-value">245ms</div>
+                        <div class="stat-change positive"><i class="fas fa-arrow-down"></i> -12ms vs last week</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-label"><i class="fas fa-exclamation-triangle"></i> Pending Issues</div>
+                        <div class="stat-value">23</div>
+                        <div class="stat-change negative"><i class="fas fa-arrow-up"></i> 3 critical</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-label"><i class="fas fa-chart-pie"></i> Trial Conversions</div>
+                        <div class="stat-value">34.2%</div>
+                        <div class="stat-change positive"><i class="fas fa-arrow-up"></i> +2.1% vs last month</div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                    <div class="chart-container">
+                        <div class="chart-title">Revenue Trend (Last 30 Days)</div>
+                        <canvas id="revenueChart" style="max-height: 300px;"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-title">User Growth</div>
+                        <canvas id="userChart" style="max-height: 300px;"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-title">Subscription Distribution</div>
+                        <canvas id="subscriptionChart" style="max-height: 300px;"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-title">System Performance</div>
+                        <canvas id="performanceChart" style="max-height: 300px;"></canvas>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="chart-container">
+                    <div class="chart-title">Recent Activity</div>
+                    <div style="max-height: 400px; overflow-y: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>User</th>
+                                    <th>Action</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2025-10-23 14:32:15</td>
+                                    <td>john.doe@example.com</td>
+                                    <td>Upgraded to Growth tier</td>
+                                    <td><span class="status-badge status-active">Completed</span></td>
+                                </tr>
+                                <tr>
+                                    <td>2025-10-23 14:28:42</td>
+                                    <td>sarah.smith@company.com</td>
+                                    <td>Payment failed - Retrying</td>
+                                    <td><span class="status-badge status-warning">Pending</span></td>
+                                </tr>
+                                <tr>
+                                    <td>2025-10-23 14:15:08</td>
+                                    <td>tech.startup@venture.io</td>
+                                    <td>New startup registered</td>
+                                    <td><span class="status-badge status-active">Completed</span></td>
+                                </tr>
+                                <tr>
+                                    <td>2025-10-23 13:52:33</td>
+                                    <td>investor@fund.com</td>
+                                    <td>Trial period started</td>
+                                    <td><span class="status-badge status-trial">Trial</span></td>
+                                </tr>
+                                <tr>
+                                    <td>2025-10-23 13:45:19</td>
+                                    <td>admin@auxeira.com</td>
+                                    <td>System configuration updated</td>
+                                    <td><span class="status-badge status-active">Completed</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Tab -->
+            <div id="users" class="tab-content">
+                <div style="margin-bottom: 1.5rem; display: flex; gap: 1rem;">
+                    <button class="btn btn-primary" onclick="openUserModal()"><i class="fas fa-plus"></i> Add User</button>
+                    <button class="btn btn-secondary"><i class="fas fa-download"></i> Export</button>
+                    <button class="btn btn-secondary"><i class="fas fa-filter"></i> Filter</button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Email</th>
+                                <th>User Type</th>
+                                <th>Status</th>
+                                <th>Subscription</th>
+                                <th>Joined</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#USR-001</td>
+                                <td>john.doe@example.com</td>
+                                <td>Startup Founder</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>Growth ($499/mo)</td>
+                                <td>2025-08-15</td>
+                                <td>
+                                    <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="editUser('#USR-001')"><i class="fas fa-edit"></i> Edit</button>
+                                    <button class="btn btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="suspendUser('#USR-001')"><i class="fas fa-ban"></i> Suspend</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#USR-002</td>
+                                <td>sarah.smith@company.com</td>
+                                <td>VC Investor</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>Scale ($999/mo)</td>
+                                <td>2025-07-22</td>
+                                <td>
+                                    <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="editUser('#USR-002')"><i class="fas fa-edit"></i> Edit</button>
+                                    <button class="btn btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="suspendUser('#USR-002')"><i class="fas fa-ban"></i> Suspend</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#USR-003</td>
+                                <td>alex.johnson@angel.io</td>
+                                <td>Angel Investor</td>
+                                <td><span class="status-badge status-trial">Trial</span></td>
+                                <td>Trial (30 days)</td>
+                                <td>2025-10-15</td>
+                                <td>
+                                    <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="editUser('#USR-003')"><i class="fas fa-edit"></i> Edit</button>
+                                    <button class="btn btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="suspendUser('#USR-003')"><i class="fas fa-ban"></i> Suspend</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#USR-004</td>
+                                <td>inactive.user@example.com</td>
+                                <td>Startup Founder</td>
+                                <td><span class="status-badge status-inactive">Inactive</span></td>
+                                <td>Free</td>
+                                <td>2025-05-10</td>
+                                <td>
+                                    <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="editUser('#USR-004')"><i class="fas fa-edit"></i> Edit</button>
+                                    <button class="btn btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="suspendUser('#USR-004')"><i class="fas fa-ban"></i> Suspend</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Subscriptions Tab -->
+            <div id="subscriptions" class="tab-content">
+                <div style="margin-bottom: 1.5rem; display: flex; gap: 1rem;">
+                    <button class="btn btn-primary" onclick="openSubscriptionModal()"><i class="fas fa-plus"></i> New Subscription</button>
+                    <button class="btn btn-secondary"><i class="fas fa-download"></i> Export</button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Subscription ID</th>
+                                <th>User</th>
+                                <th>Tier</th>
+                                <th>Monthly Cost</th>
+                                <th>Status</th>
+                                <th>Renewal Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#SUB-001</td>
+                                <td>john.doe@example.com</td>
+                                <td>Growth</td>
+                                <td>$499.00</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>2025-11-15</td>
+                                <td>
+                                    <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="editSubscription('#SUB-001')"><i class="fas fa-edit"></i> Edit</button>
+                                    <button class="btn btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="cancelSubscription('#SUB-001')"><i class="fas fa-times"></i> Cancel</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#SUB-002</td>
+                                <td>sarah.smith@company.com</td>
+                                <td>Scale</td>
+                                <td>$999.00</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>2025-11-22</td>
+                                <td>
+                                    <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="editSubscription('#SUB-002')"><i class="fas fa-edit"></i> Edit</button>
+                                    <button class="btn btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="cancelSubscription('#SUB-002')"><i class="fas fa-times"></i> Cancel</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#SUB-003</td>
+                                <td>alex.johnson@angel.io</td>
+                                <td>Trial</td>
+                                <td>$0.00</td>
+                                <td><span class="status-badge status-trial">Trial</span></td>
+                                <td>2025-11-14</td>
+                                <td>
+                                    <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="editSubscription('#SUB-003')"><i class="fas fa-edit"></i> Edit</button>
+                                    <button class="btn btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="cancelSubscription('#SUB-003')"><i class="fas fa-times"></i> Cancel</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Payments Tab -->
+            <div id="payments" class="tab-content">
+                <div style="margin-bottom: 1.5rem; display: flex; gap: 1rem;">
+                    <button class="btn btn-secondary"><i class="fas fa-download"></i> Export</button>
+                    <button class="btn btn-secondary"><i class="fas fa-filter"></i> Filter</button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Transaction ID</th>
+                                <th>User</th>
+                                <th>Amount</th>
+                                <th>Method</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#TXN-001</td>
+                                <td>john.doe@example.com</td>
+                                <td>$499.00</td>
+                                <td>Paystack</td>
+                                <td><span class="status-badge status-active">Completed</span></td>
+                                <td>2025-10-23</td>
+                                <td>
+                                    <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="viewTransaction('#TXN-001')"><i class="fas fa-eye"></i> View</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#TXN-002</td>
+                                <td>sarah.smith@company.com</td>
+                                <td>$999.00</td>
+                                <td>Paystack</td>
+                                <td><span class="status-badge status-active">Completed</span></td>
+                                <td>2025-10-22</td>
+                                <td>
+                                    <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="viewTransaction('#TXN-002')"><i class="fas fa-eye"></i> View</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#TXN-003</td>
+                                <td>investor@fund.com</td>
+                                <td>$149.00</td>
+                                <td>Paystack</td>
+                                <td><span class="status-badge status-warning">Failed</span></td>
+                                <td>2025-10-20</td>
+                                <td>
+                                    <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="retryPayment('#TXN-003')"><i class="fas fa-redo"></i> Retry</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Support Tickets Tab -->
+            <div id="support" class="tab-content">
+                <div style="margin-bottom: 1.5rem; display: flex; gap: 1rem;">
+                    <button class="btn btn-secondary"><i class="fas fa-filter"></i> Filter</button>
+                    <button class="btn btn-secondary"><i class="fas fa-download"></i> Export</button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ticket ID</th>
+                                <th>User</th>
+                                <th>Subject</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#TKT-001</td>
+                                <td>john.doe@example.com</td>
+                                <td>Cannot access dashboard</td>
+                                <td><span class="status-badge" style="background: rgba(220, 53, 69, 0.2); color: var(--bloomberg-danger);">High</span></td>
+                                <td><span class="status-badge status-warning">Open</span></td>
+                                <td>2025-10-23</td>
+                                <td>
+                                    <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="viewTicket('#TKT-001')"><i class="fas fa-eye"></i> View</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#TKT-002</td>
+                                <td>sarah.smith@company.com</td>
+                                <td>Billing inquiry</td>
+                                <td><span class="status-badge" style="background: rgba(255, 193, 7, 0.2); color: var(--bloomberg-warning);">Medium</span></td>
+                                <td><span class="status-badge status-active">Resolved</span></td>
+                                <td>2025-10-22</td>
+                                <td>
+                                    <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="viewTicket('#TKT-002')"><i class="fas fa-eye"></i> View</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Startups Tab -->
+            <div id="startups" class="tab-content">
+                <div style="margin-bottom: 1.5rem; display: flex; gap: 1rem;">
+                    <button class="btn btn-primary" onclick="openStartupModal()"><i class="fas fa-plus"></i> Add Startup</button>
+                    <button class="btn btn-secondary"><i class="fas fa-download"></i> Export</button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Startup ID</th>
+                                <th>Name</th>
+                                <th>Industry</th>
+                                <th>SSE Score</th>
+                                <th>Status</th>
+                                <th>Registered</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#STR-001</td>
+                                <td>TechVenture AI</td>
+                                <td>Artificial Intelligence</td>
+                                <td><span style="color: var(--bloomberg-success); font-weight: 600;">8.7/10</span></td>
+                                <td><span class="status-badge status-active">Verified</span></td>
+                                <td>2025-09-10</td>
+                                <td>
+                                    <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="viewStartup('#STR-001')"><i class="fas fa-eye"></i> View</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#STR-002</td>
+                                <td>GreenEnergy Solutions</td>
+                                <td>Clean Energy</td>
+                                <td><span style="color: var(--bloomberg-success); font-weight: 600;">7.2/10</span></td>
+                                <td><span class="status-badge status-active">Verified</span></td>
+                                <td>2025-08-25</td>
+                                <td>
+                                    <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="viewStartup('#STR-002')"><i class="fas fa-eye"></i> View</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#STR-003</td>
+                                <td>HealthTech Innovations</td>
+                                <td>Healthcare</td>
+                                <td><span style="color: var(--bloomberg-warning); font-weight: 600;">5.1/10</span></td>
+                                <td><span class="status-badge status-pending">Pending Review</span></td>
+                                <td>2025-10-20</td>
+                                <td>
+                                    <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="viewStartup('#STR-003')"><i class="fas fa-eye"></i> View</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Reports Tab -->
+            <div id="reports" class="tab-content">
+                <div style="margin-bottom: 1.5rem; display: flex; gap: 1rem;">
+                    <button class="btn btn-primary" onclick="generateReport()"><i class="fas fa-file-pdf"></i> Generate Report</button>
+                    <button class="btn btn-secondary"><i class="fas fa-download"></i> Export</button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Report ID</th>
+                                <th>Title</th>
+                                <th>Type</th>
+                                <th>Generated By</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#RPT-001</td>
+                                <td>Monthly Performance Report</td>
+                                <td>Performance</td>
+                                <td>admin@auxeira.com</td>
+                                <td>2025-10-01</td>
+                                <td>
+                                    <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;"><i class="fas fa-download"></i> Download</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#RPT-002</td>
+                                <td>User Growth Analysis</td>
+                                <td>Analytics</td>
+                                <td>admin@auxeira.com</td>
+                                <td>2025-09-15</td>
+                                <td>
+                                    <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;"><i class="fas fa-download"></i> Download</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Moderation Tab -->
+            <div id="moderation" class="tab-content">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>3 items flagged for review. 1 critical content violation detected.</span>
+                </div>
+
+                <div style="margin-bottom: 1.5rem; display: flex; gap: 1rem;">
+                    <button class="btn btn-secondary"><i class="fas fa-filter"></i> Filter</button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Content Type</th>
+                                <th>Reported By</th>
+                                <th>Reason</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#MOD-001</td>
+                                <td>User Profile</td>
+                                <td>user@example.com</td>
+                                <td>Inappropriate content</td>
+                                <td><span class="status-badge status-warning">Pending</span></td>
+                                <td>
+                                    <button class="btn btn-success" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;"><i class="fas fa-check"></i> Approve</button>
+                                    <button class="btn btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;"><i class="fas fa-times"></i> Reject</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#MOD-002</td>
+                                <td>Startup Description</td>
+                                <td>moderator@auxeira.com</td>
+                                <td>Spam detected</td>
+                                <td><span class="status-badge status-active">Reviewed</span></td>
+                                <td>
+                                    <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;"><i class="fas fa-eye"></i> View</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings" class="tab-content">
+                <div class="chart-container">
+                    <div class="chart-title">Platform Settings</div>
+                    <div class="form-group">
+                        <label>Platform Name</label>
+                        <input type="text" value="Auxeira - Startup Success Engine" />
+                    </div>
+                    <div class="form-group">
+                        <label>Support Email</label>
+                        <input type="email" value="support@auxeira.com" />
+                    </div>
+                    <div class="form-group">
+                        <label>Support Phone</label>
+                        <input type="tel" value="+1 (555) 123-4567" />
+                    </div>
+                    <div class="form-group">
+                        <label>Timezone</label>
+                        <select>
+                            <option>UTC</option>
+                            <option selected>GMT+2</option>
+                            <option>EST</option>
+                            <option>PST</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Maintenance Mode</label>
+                        <select>
+                            <option selected>Disabled</option>
+                            <option>Enabled</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 1rem;"><i class="fas fa-save"></i> Save Settings</button>
+                </div>
+            </div>
+
+            <!-- Security Tab -->
+            <div id="security" class="tab-content">
+                <div class="chart-container">
+                    <div class="chart-title">Security Configuration</div>
+                    <div class="alert alert-success">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>All security protocols are active and functioning normally.</span>
+                    </div>
+                    <div class="form-group">
+                        <label><input type="checkbox" checked /> Enable Two-Factor Authentication</label>
+                    </div>
+                    <div class="form-group">
+                        <label><input type="checkbox" checked /> Require HTTPS</label>
+                    </div>
+                    <div class="form-group">
+                        <label><input type="checkbox" checked /> Enable Rate Limiting</label>
+                    </div>
+                    <div class="form-group">
+                        <label><input type="checkbox" checked /> Enable DDoS Protection</label>
+                    </div>
+                    <div class="form-group">
+                        <label>Session Timeout (minutes)</label>
+                        <input type="number" value="30" />
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 1rem;"><i class="fas fa-save"></i> Update Security Settings</button>
+                </div>
+            </div>
+
+            <!-- Logs Tab -->
+            <div id="logs" class="tab-content">
+                <div style="margin-bottom: 1.5rem; display: flex; gap: 1rem;">
+                    <button class="btn btn-secondary"><i class="fas fa-filter"></i> Filter</button>
+                    <button class="btn btn-secondary"><i class="fas fa-download"></i> Export Logs</button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>User</th>
+                                <th>Action</th>
+                                <th>Resource</th>
+                                <th>Status</th>
+                                <th>IP Address</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2025-10-23 14:35:22</td>
+                                <td>admin@auxeira.com</td>
+                                <td>Updated user subscription</td>
+                                <td>#USR-001</td>
+                                <td><span class="status-badge status-active">Success</span></td>
+                                <td>192.168.1.100</td>
+                            </tr>
+                            <tr>
+                                <td>2025-10-23 14:32:15</td>
+                                <td>admin@auxeira.com</td>
+                                <td>Processed payment</td>
+                                <td>#TXN-001</td>
+                                <td><span class="status-badge status-active">Success</span></td>
+                                <td>192.168.1.100</td>
+                            </tr>
+                            <tr>
+                                <td>2025-10-23 14:28:42</td>
+                                <td>john.doe@example.com</td>
+                                <td>Login attempt</td>
+                                <td>Authentication</td>
+                                <td><span class="status-badge status-active">Success</span></td>
+                                <td>203.0.113.45</td>
+                            </tr>
+                            <tr>
+                                <td>2025-10-23 14:15:08</td>
+                                <td>admin@auxeira.com</td>
+                                <td>Suspended user account</td>
+                                <td>#USR-004</td>
+                                <td><span class="status-badge status-active">Success</span></td>
+                                <td>192.168.1.100</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="analytics" class="tab-content">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 1.5rem;">
+                    <div class="chart-container">
+                        <div class="chart-title">User Registration Trend</div>
+                        <canvas id="registrationChart" style="max-height: 300px;"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-title">Conversion Funnel</div>
+                        <canvas id="conversionChart" style="max-height: 300px;"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-title">Feature Usage</div>
+                        <canvas id="featureChart" style="max-height: 300px;"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-title">Geographic Distribution</div>
+                        <canvas id="geoChart" style="max-height: 300px;"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Health Tab -->
+            <div id="system" class="tab-content">
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <div class="stat-label"><i class="fas fa-server"></i> API Uptime</div>
+                        <div class="stat-value">99.98%</div>
+                        <div class="stat-change positive"><i class="fas fa-check-circle"></i> Excellent</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-label"><i class="fas fa-database"></i> Database Status</div>
+                        <div class="stat-value">Healthy</div>
+                        <div class="stat-change positive"><i class="fas fa-check-circle"></i> Connected</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-label"><i class="fas fa-memory"></i> Memory Usage</div>
+                        <div class="stat-value">64.2%</div>
+                        <div class="stat-change positive"><i class="fas fa-arrow-down"></i> Optimal</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-label"><i class="fas fa-hdd"></i> Storage Usage</div>
+                        <div class="stat-value">42.8%</div>
+                        <div class="stat-change positive"><i class="fas fa-check-circle"></i> Healthy</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-label"><i class="fas fa-network-wired"></i> Network Latency</div>
+                        <div class="stat-value">12ms</div>
+                        <div class="stat-change positive"><i class="fas fa-arrow-down"></i> Excellent</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-label"><i class="fas fa-exclamation-circle"></i> Active Alerts</div>
+                        <div class="stat-value">0</div>
+                        <div class="stat-change positive"><i class="fas fa-check-circle"></i> All Clear</div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 1.5rem;">
+                    <div class="chart-container">
+                        <div class="chart-title">Server Load (Last 24 Hours)</div>
+                        <canvas id="loadChart" style="max-height: 300px;"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-title">Error Rate</div>
+                        <canvas id="errorChart" style="max-height: 300px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New User</h2>
+                <button class="modal-close" onclick="closeModal('userModal')">&times;</button>
+            </div>
+            <form>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" placeholder="user@example.com" required />
+                </div>
+                <div class="form-group">
+                    <label>User Type</label>
+                    <select required>
+                        <option>Startup Founder</option>
+                        <option>VC Investor</option>
+                        <option>Angel Investor</option>
+                        <option>Corporate Partner</option>
+                        <option>Government</option>
+                        <option>ESG Funder</option>
+                        <option>Impact Investor</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Subscription Tier</label>
+                    <select required>
+                        <option>Free</option>
+                        <option>Startup ($149/mo)</option>
+                        <option>Growth ($499/mo)</option>
+                        <option>Scale ($999/mo)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" placeholder="John Doe" required />
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create User</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('userModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="subscriptionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create Subscription</h2>
+                <button class="modal-close" onclick="closeModal('subscriptionModal')">&times;</button>
+            </div>
+            <form>
+                <div class="form-group">
+                    <label>User Email</label>
+                    <input type="email" placeholder="user@example.com" required />
+                </div>
+                <div class="form-group">
+                    <label>Subscription Tier</label>
+                    <select required>
+                        <option>Startup ($149/mo)</option>
+                        <option>Growth ($499/mo)</option>
+                        <option>Scale ($999/mo)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Billing Cycle</label>
+                    <select required>
+                        <option>Monthly</option>
+                        <option>Annual</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Start Date</label>
+                    <input type="date" required />
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create Subscription</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('subscriptionModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="startupModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Register Startup</h2>
+                <button class="modal-close" onclick="closeModal('startupModal')">&times;</button>
+            </div>
+            <form>
+                <div class="form-group">
+                    <label>Startup Name</label>
+                    <input type="text" placeholder="Startup Name" required />
+                </div>
+                <div class="form-group">
+                    <label>Industry</label>
+                    <input type="text" placeholder="e.g., Artificial Intelligence" required />
+                </div>
+                <div class="form-group">
+                    <label>Founder Email</label>
+                    <input type="email" placeholder="founder@startup.com" required />
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea placeholder="Brief description of the startup" required></textarea>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Register Startup</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('startupModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Tab Navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const tabName = link.dataset.tab;
+                
+                // Remove active class from all links and tabs
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+                
+                // Add active class to clicked link and corresponding tab
+                link.classList.add('active');
+                document.getElementById(tabName).classList.add('active');
+            });
+        });
+
+        // Modal Functions
+        function openUserModal() {
+            document.getElementById('userModal').classList.add('active');
+        }
+
+        function openSubscriptionModal() {
+            document.getElementById('subscriptionModal').classList.add('active');
+        }
+
+        function openStartupModal() {
+            document.getElementById('startupModal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Action Functions
+        function editUser(userId) {
+            alert('Edit user: ' + userId);
+        }
+
+        function suspendUser(userId) {
+            if (confirm('Are you sure you want to suspend this user?')) {
+                alert('User suspended: ' + userId);
+            }
+        }
+
+        function editSubscription(subId) {
+            alert('Edit subscription: ' + subId);
+        }
+
+        function cancelSubscription(subId) {
+            if (confirm('Are you sure you want to cancel this subscription?')) {
+                alert('Subscription cancelled: ' + subId);
+            }
+        }
+
+        function viewTransaction(txnId) {
+            alert('View transaction: ' + txnId);
+        }
+
+        function retryPayment(txnId) {
+            alert('Retrying payment: ' + txnId);
+        }
+
+        function viewTicket(ticketId) {
+            alert('View ticket: ' + ticketId);
+        }
+
+        function viewStartup(startupId) {
+            alert('View startup: ' + startupId);
+        }
+
+        function generateReport() {
+            alert('Generating report...');
+        }
+
+        // Charts Initialization
+        function initCharts() {
+            const chartOptions = {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#f0f6fc'
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        ticks: { color: '#8b949e' },
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                    },
+                    x: {
+                        ticks: { color: '#8b949e' },
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                    }
+                }
+            };
+
+            // Revenue Chart
+            const revenueCtx = document.getElementById('revenueChart');
+            if (revenueCtx) {
+                new Chart(revenueCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Oct 1', 'Oct 5', 'Oct 10', 'Oct 15', 'Oct 20', 'Oct 23'],
+                        datasets: [{
+                            label: 'Revenue ($K)',
+                            data: [120, 145, 167, 189, 234, 487],
+                            borderColor: '#ffd700',
+                            backgroundColor: 'rgba(255, 215, 0, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: chartOptions
+                });
+            }
+
+            // User Chart
+            const userCtx = document.getElementById('userChart');
+            if (userCtx) {
+                new Chart(userCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                        datasets: [{
+                            label: 'New Users',
+                            data: [1200, 1900, 2100, 2847],
+                            backgroundColor: '#007bff'
+                        }]
+                    },
+                    options: chartOptions
+                });
+            }
+
+            // Subscription Chart
+            const subCtx = document.getElementById('subscriptionChart');
+            if (subCtx) {
+                new Chart(subCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Free', 'Startup', 'Growth', 'Scale'],
+                        datasets: [{
+                            data: [2100, 1500, 3200, 1434],
+                            backgroundColor: ['#28a745', '#17a2b8', '#007bff', '#ffd700']
+                        }]
+                    },
+                    options: {
+                        ...chartOptions,
+                        plugins: {
+                            ...chartOptions.plugins,
+                            legend: {
+                                position: 'bottom',
+                                labels: { color: '#f0f6fc' }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Performance Chart
+            const perfCtx = document.getElementById('performanceChart');
+            if (perfCtx) {
+                new Chart(perfCtx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['API', 'Database', 'Cache', 'Storage', 'Network'],
+                        datasets: [{
+                            label: 'Performance Score',
+                            data: [95, 92, 88, 85, 98],
+                            borderColor: '#007bff',
+                            backgroundColor: 'rgba(0, 123, 255, 0.1)'
+                        }]
+                    },
+                    options: chartOptions
+                });
+            }
+
+            // Registration Chart
+            const regCtx = document.getElementById('registrationChart');
+            if (regCtx) {
+                new Chart(regCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+                        datasets: [{
+                            label: 'Registrations',
+                            data: [450, 520, 680, 750, 920, 1100, 1350, 1520, 1890, 2847],
+                            borderColor: '#28a745',
+                            backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: chartOptions
+                });
+            }
+
+            // Conversion Chart
+            const convCtx = document.getElementById('conversionChart');
+            if (convCtx) {
+                new Chart(convCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Visitors', 'Signups', 'Trial', 'Paid'],
+                        datasets: [{
+                            label: 'Count',
+                            data: [50000, 12847, 8234, 5420],
+                            backgroundColor: ['#007bff', '#17a2b8', '#ffc107', '#28a745']
+                        }]
+                    },
+                    options: chartOptions
+                });
+            }
+
+            // Feature Chart
+            const featCtx = document.getElementById('featureChart');
+            if (featCtx) {
+                new Chart(featCtx, {
+                    type: 'horizontalBar',
+                    data: {
+                        labels: ['Dashboard', 'Analytics', 'Reports', 'AI Mentor', 'Valuation'],
+                        datasets: [{
+                            label: 'Usage %',
+                            data: [95, 87, 72, 68, 54],
+                            backgroundColor: '#007bff'
+                        }]
+                    },
+                    options: chartOptions
+                });
+            }
+
+            // Geo Chart
+            const geoCtx = document.getElementById('geoChart');
+            if (geoCtx) {
+                new Chart(geoCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Africa', 'Europe', 'Asia', 'Americas', 'Oceania'],
+                        datasets: [{
+                            data: [4200, 2100, 3500, 1800, 1247],
+                            backgroundColor: ['#ffd700', '#007bff', '#28a745', '#17a2b8', '#ffc107']
+                        }]
+                    },
+                    options: {
+                        ...chartOptions,
+                        plugins: {
+                            ...chartOptions.plugins,
+                            legend: {
+                                position: 'bottom',
+                                labels: { color: '#f0f6fc' }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Load Chart
+            const loadCtx = document.getElementById('loadChart');
+            if (loadCtx) {
+                new Chart(loadCtx, {
+                    type: 'area',
+                    data: {
+                        labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '23:59'],
+                        datasets: [{
+                            label: 'Server Load %',
+                            data: [25, 18, 45, 72, 68, 52, 30],
+                            borderColor: '#007bff',
+                            backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: chartOptions
+                });
+            }
+
+            // Error Chart
+            const errCtx = document.getElementById('errorChart');
+            if (errCtx) {
+                new Chart(errCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '23:59'],
+                        datasets: [{
+                            label: 'Error Rate %',
+                            data: [0.2, 0.15, 0.3, 0.25, 0.18, 0.12, 0.08],
+                            borderColor: '#dc3545',
+                            backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: chartOptions
+                });
+            }
+        }
+
+        // Initialize charts on page load
+        document.addEventListener('DOMContentLoaded', initCharts);
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
+

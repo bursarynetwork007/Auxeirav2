@@ -1,0 +1,1820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emmanuel Luthuli - Founder & CEO | Auxeira Leadership</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <meta name="description" content="Meet Emmanuel Luthuli, Founder & CEO of Auxeira. MIT-trained behavioral economist transforming startup success through scientific intervention.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Strategic Design System - Enhanced Bloomberg Terminal Aesthetic */
+        :root {
+            --bloomberg-dark: #0d1117;
+            --bloomberg-charcoal: #161b22;
+            --bloomberg-blue: #007bff;
+            --bloomberg-accent: #ffd700;
+            --bloomberg-text: #f0f6fc;
+            --bloomberg-text-secondary: #8b949e;
+            --bloomberg-gray: #30363d;
+            --bloomberg-success: #28a745;
+            --bloomberg-warning: #ffc107;
+            --border-radius: 8px;
+            --border-radius-lg: 12px;
+            --border-radius-xl: 16px;
+            --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.2);
+            --shadow-xl: 0 15px 35px rgba(0, 0, 0, 0.25);
+            --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.35);
+            --font-mono: 'JetBrains Mono', monospace;
+            --glass-bg: rgba(13, 17, 23, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --gradient-primary: linear-gradient(135deg, var(--bloomberg-blue) 0%, var(--bloomberg-accent) 100%);
+            --gradient-secondary: linear-gradient(135deg, var(--bloomberg-dark) 0%, var(--bloomberg-charcoal) 100%);
+            --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--bloomberg-text);
+            background-color: var(--bloomberg-dark);
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(0, 123, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 123, 255, 0.05) 0%, transparent 50%);
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Strategic Header Design */
+        .header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition-smooth);
+        }
+
+        .header.scrolled {
+            box-shadow: var(--shadow-xl);
+            background: rgba(13, 17, 23, 0.95);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo {
+            height: 40px;
+            width: auto;
+            transition: var(--transition-smooth);
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .brand-text {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: var(--transition-smooth);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: var(--bloomberg-text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition-smooth);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: var(--bloomberg-blue);
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--bloomberg-blue);
+            color: var(--bloomberg-blue);
+        }
+
+        .btn-outline:hover {
+            background: var(--bloomberg-blue);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary {
+            background: var(--bloomberg-blue);
+            border: 2px solid var(--bloomberg-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--bloomberg-accent);
+            border-color: var(--bloomberg-accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 25px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .mobile-menu-btn span {
+            width: 100%;
+            height: 2px;
+            background-color: var(--bloomberg-text);
+            transition: var(--transition-smooth);
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            padding: 1rem;
+            z-index: 999;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+        }
+
+        .mobile-menu a {
+            color: var(--bloomberg-text);
+            text-decoration: none;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--glass-border);
+            transition: var(--transition-smooth);
+        }
+
+        .mobile-menu a:hover {
+            color: var(--bloomberg-blue);
+            transform: translateX(10px);
+        }
+
+        .mobile-menu .btn {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        /* Strategic Hero Section - Leadership Focus */
+        .leadership-hero {
+            background: var(--gradient-secondary);
+            padding: 8rem 0 6rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .leadership-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.03"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            z-index: 1;
+        }
+
+        .leadership-hero .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 0.5rem 1.5rem;
+            margin-bottom: 2rem;
+            color: var(--bloomberg-blue);
+            font-weight: 600;
+            font-size: 0.9rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--bloomberg-text-secondary);
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+            font-weight: 500;
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            color: var(--bloomberg-text-secondary);
+            margin-bottom: 3rem;
+            line-height: 1.7;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+            animation: fadeInUp 0.8s ease-out 0.8s both;
+        }
+
+        .hero-stat {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: 1.5rem;
+            text-align: center;
+            transition: var(--transition-smooth);
+        }
+
+        .hero-stat:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--bloomberg-blue);
+        }
+
+        .hero-stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--bloomberg-blue);
+            font-family: var(--font-mono);
+            margin-bottom: 0.5rem;
+            transition: var(--transition-smooth);
+        }
+
+        .hero-stat:hover .hero-stat-value {
+            color: var(--bloomberg-accent);
+            transform: scale(1.1);
+        }
+
+        .hero-stat-label {
+            color: var(--bloomberg-text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Strategic Content Architecture */
+        .content-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-xl);
+            box-shadow: var(--shadow-lg);
+            padding: 3rem;
+            margin-bottom: 3rem;
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.02) 0%, rgba(255, 215, 0, 0.02) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 0;
+        }
+
+        .content-section:hover::before {
+            opacity: 1;
+        }
+
+        .content-section:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-2xl);
+            border-color: var(--bloomberg-blue);
+        }
+
+        .content-section > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--bloomberg-text);
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid transparent;
+            background: linear-gradient(to right, var(--bloomberg-blue), var(--bloomberg-accent)) bottom/100px 3px no-repeat;
+            position: relative;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--bloomberg-text-secondary);
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        /* Strategic Expertise Grid */
+        .expertise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .expertise-card {
+            background: var(--bloomberg-charcoal);
+            border-radius: var(--border-radius-lg);
+            padding: 2rem;
+            border-left: 4px solid var(--bloomberg-blue);
+            transition: var(--transition-bounce);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .expertise-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.1) 0%, rgba(255, 215, 0, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 0;
+        }
+
+        .expertise-card:hover::before {
+            opacity: 1;
+        }
+        
+        .expertise-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-xl);
+            border-left-color: var(--bloomberg-accent);
+        }
+
+        .expertise-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .expertise-icon {
+            font-size: 2.5rem;
+            color: var(--bloomberg-blue);
+            margin-bottom: 1rem;
+            transition: var(--transition-smooth);
+        }
+
+        .expertise-card:hover .expertise-icon {
+            color: var(--bloomberg-accent);
+            transform: scale(1.2);
+        }
+        
+        .expertise-title {
+            font-size: 1.3rem;
+            color: var(--bloomberg-text);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .expertise-description {
+            color: var(--bloomberg-text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Strategic Achievement Showcase */
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .achievement-card {
+            background: var(--bloomberg-charcoal);
+            border-radius: var(--border-radius-lg);
+            padding: 2rem;
+            text-align: center;
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--bloomberg-gray);
+        }
+
+        .achievement-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s ease;
+        }
+
+        .achievement-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--bloomberg-blue);
+        }
+
+        .achievement-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--bloomberg-blue);
+            margin-bottom: 0.5rem;
+            font-family: var(--font-mono);
+            transition: var(--transition-smooth);
+        }
+
+        .achievement-card:hover .achievement-number {
+            color: var(--bloomberg-accent);
+            transform: scale(1.1);
+        }
+
+        .achievement-label {
+            color: var(--bloomberg-text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .achievement-description {
+            color: var(--bloomberg-text);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Strategic Education Timeline */
+        .education-timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .education-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--gradient-primary);
+        }
+
+        .education-item {
+            position: relative;
+            margin-bottom: 3rem;
+            padding-left: 2rem;
+        }
+
+        .education-item::before {
+            content: '';
+            position: absolute;
+            left: -1.5rem;
+            top: 0.5rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--bloomberg-blue);
+            border: 3px solid var(--bloomberg-dark);
+            transition: var(--transition-smooth);
+        }
+
+        .education-item:hover::before {
+            background: var(--bloomberg-accent);
+            transform: scale(1.3);
+        }
+
+        .education-institution {
+            font-size: 1.4rem;
+            color: var(--bloomberg-text);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .education-program {
+            font-size: 1.1rem;
+            color: var(--bloomberg-blue);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .education-details {
+            color: var(--bloomberg-text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .education-description {
+            color: var(--bloomberg-text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Strategic Quote Section */
+        .leadership-quote {
+            background: var(--bloomberg-charcoal);
+            border-left: 6px solid var(--bloomberg-blue);
+            border-radius: 0 var(--border-radius-xl) var(--border-radius-xl) 0;
+            padding: 3rem;
+            margin: 3rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .leadership-quote::before {
+            content: '"';
+            position: absolute;
+            top: -10px;
+            left: 30px;
+            font-size: 8rem;
+            color: var(--bloomberg-blue);
+            opacity: 0.2;
+            font-family: serif;
+            line-height: 1;
+        }
+
+        .leadership-quote::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 123, 255, 0.05));
+        }
+        
+        .quote-text {
+            font-size: 1.6rem;
+            font-style: italic;
+            color: var(--bloomberg-text);
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+            line-height: 1.7;
+        }
+        
+        .quote-author {
+            font-weight: 600;
+            color: var(--bloomberg-accent);
+            position: relative;
+            z-index: 1;
+            font-size: 1.1rem;
+        }
+
+        /* Strategic Vision Section */
+        .vision-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .vision-item {
+            background: var(--bloomberg-charcoal);
+            border-radius: var(--border-radius-lg);
+            padding: 2rem;
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--bloomberg-gray);
+        }
+
+        .vision-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.1) 0%, rgba(255, 215, 0, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .vision-item:hover::after {
+            opacity: 1;
+        }
+
+        .vision-item:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--bloomberg-blue);
+        }
+
+        .vision-item > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .vision-icon {
+            font-size: 2rem;
+            color: var(--bloomberg-blue);
+            margin-bottom: 1rem;
+            transition: var(--transition-smooth);
+        }
+
+        .vision-item:hover .vision-icon {
+            color: var(--bloomberg-accent);
+            transform: scale(1.2);
+        }
+
+        .vision-title {
+            font-size: 1.2rem;
+            color: var(--bloomberg-text);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .vision-description {
+            color: var(--bloomberg-text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Strategic CTA Section */
+        .cta-section {
+            background: var(--gradient-secondary);
+            border-radius: var(--border-radius-xl);
+            padding: 4rem;
+            text-align: center;
+            margin: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.05"><circle cx="50" cy="50" r="40" fill="none" stroke="white" stroke-width="2"/></svg>');
+            z-index: 1;
+        }
+
+        .cta-section > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--bloomberg-text);
+            margin-bottom: 1rem;
+        }
+
+        .cta-description {
+            font-size: 1.2rem;
+            color: var(--bloomberg-text-secondary);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button-primary {
+            background: var(--bloomberg-blue);
+            color: white;
+            border: 2px solid var(--bloomberg-blue);
+        }
+
+        .cta-button-primary:hover {
+            background: var(--bloomberg-accent);
+            border-color: var(--bloomberg-accent);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .cta-button-secondary {
+            background: transparent;
+            color: var(--bloomberg-blue);
+            border: 2px solid var(--bloomberg-blue);
+        }
+
+        .cta-button-secondary:hover {
+            background: var(--bloomberg-blue);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+            padding: 4rem 0 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 3rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .footer-sections {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(200px, 1fr));
+            gap: 2rem;
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .footer-brand {
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            min-width: 280px;
+            max-width: 320px;
+        }
+
+        .footer-logo {
+            height: 40px;
+            width: auto;
+            margin-bottom: 1rem;
+        }
+
+        .footer h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .footer p {
+            color: var(--bloomberg-text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bloomberg-charcoal);
+            color: var(--bloomberg-text);
+            transition: var(--transition-smooth);
+        }
+
+        .social-links a:hover {
+            background: var(--bloomberg-blue);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .footer-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer-section h4 {
+            font-size: 1.2rem;
+            color: var(--bloomberg-text);
+            margin-bottom: 1rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-section h4::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background: var(--bloomberg-blue);
+        }
+
+        .footer-section a {
+            color: var(--bloomberg-text-secondary);
+            text-decoration: none;
+            margin-bottom: 0.75rem;
+            transition: var(--transition-smooth);
+        }
+
+        .footer-section a:hover {
+            color: var(--bloomberg-blue);
+            transform: translateX(5px);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--bloomberg-gray);
+            flex-wrap: wrap;
+        }
+
+        .footer-legal {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .footer-legal a {
+            color: var(--bloomberg-text-secondary);
+            text-decoration: none;
+            transition: var(--transition-smooth);
+        }
+
+        .footer-legal a:hover {
+            color: var(--bloomberg-blue);
+        }
+
+        .footer-legal span {
+            color: var(--bloomberg-text-secondary);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Scroll Reveal */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Enhanced Responsive Design - Desktop First Approach */
+        
+        /* Large Desktop (1200px and up) - Base styles already defined above */
+        
+        /* Desktop (1024px to 1199px) */
+        @media screen and (max-width: 1199px) {
+            .container {
+                max-width: 1024px;
+                padding: 0 2rem;
+            }
+            
+            .hero-title {
+                font-size: 3.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.4rem;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+            }
+        }
+        
+        /* Tablet Landscape (768px to 1023px) */
+        @media screen and (max-width: 1023px) {
+            .container {
+                max-width: 768px;
+                padding: 0 1.5rem;
+            }
+            
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.3rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .footer-content {
+                gap: 2rem;
+            }
+            
+            .footer-brand {
+                min-width: 250px;
+                max-width: 280px;
+            }
+            
+            .footer-sections {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.5rem;
+                max-width: 500px;
+            }
+        }
+
+        /* Tablet Portrait & Mobile Landscape (481px to 767px) */
+        @media screen and (max-width: 767px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .nav-buttons {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+            }
+            
+            .container {
+                padding: 0 1rem;
+            }
+
+            .leadership-hero {
+                padding: 5rem 0 4rem;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+                margin: 0 auto 2rem;
+            }
+
+            .content-section {
+                padding: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .quote-text {
+                font-size: 1.3rem;
+            }
+
+            .cta-section {
+                padding: 3rem 1rem;
+            }
+
+            .cta-title {
+                font-size: 2rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .cta-button {
+                width: 100%;
+                max-width: 300px;
+                text-align: center;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 2rem;
+                text-align: center;
+                align-items: center;
+            }
+            
+            .footer-brand {
+                min-width: auto;
+                max-width: 100%;
+                text-align: center;
+            }
+            
+            .footer-sections {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                max-width: 100%;
+                width: 100%;
+            }
+            
+            .footer-section {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                padding-bottom: 1.5rem;
+            }
+            
+            .footer-section:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: center;
+                text-align: center;
+            }
+
+            .footer-legal {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+        }
+        
+        /* Mobile Portrait (320px to 480px) */
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 0 0.75rem;
+            }
+            
+            .leadership-hero {
+                padding: 4rem 0 3rem;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+                line-height: 1.1;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .content-section {
+                padding: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.6rem;
+            }
+            
+            .quote-text {
+                font-size: 1.2rem;
+            }
+            
+            .cta-title {
+                font-size: 1.8rem;
+            }
+            
+            .btn {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+                width: 100%;
+                max-width: 280px;
+                justify-content: center;
+            }
+            
+            .nav {
+                padding: 0.75rem 0;
+            }
+            
+            .brand-text {
+                font-size: 1.25rem;
+            }
+        }
+        
+        /* Extra Small Mobile (up to 319px) */
+        @media screen and (max-width: 319px) {
+            .container {
+                padding: 0 0.5rem;
+            }
+            
+            .hero-title {
+                font-size: 1.75rem;
+            }
+            
+            .section-title {
+                font-size: 1.4rem;
+            }
+            
+            .cta-title {
+                font-size: 1.6rem;
+            }
+            
+            .quote-text {
+                font-size: 1.1rem;
+            }
+        }
+        
+        /* Cross-browser compatibility fixes */
+        @supports (-webkit-backdrop-filter: blur(20px)) {
+            .header, .content-section {
+                -webkit-backdrop-filter: blur(20px);
+            }
+        }
+        
+        @supports (backdrop-filter: blur(20px)) {
+            .header, .content-section {
+                backdrop-filter: blur(20px);
+            }
+        }
+        
+        /* High DPI displays */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .logo, .footer-logo {
+                image-rendering: -webkit-optimize-contrast;
+                image-rendering: crisp-edges;
+            }
+        }
+        
+        /* Print styles */
+        @media print {
+            .header, .footer, .mobile-menu-btn, .cta-section {
+                display: none;
+            }
+            
+            body {
+                background: white;
+                color: black;
+            }
+            
+            .leadership-hero, .content-section {
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* Focus styles for accessibility */
+        @media (prefers-reduced-motion: no-preference) {
+            .btn:focus-visible,
+            .footer-section a:focus-visible {
+                outline: 2px solid var(--bloomberg-blue);
+                outline-offset: 2px;
+            }
+        }
+        
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: var(--bloomberg-text);
+                --bg-color: var(--bloomberg-dark);
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <img src="images/auxeira-logo.png" alt="Auxeira Logo" class="logo">
+                <span class="brand-text">Auxeira</span>
+            </div>
+           
+            <ul class="nav-menu">
+                <li><a href="index.html#platform">Platform</a></li>
+                <li><a href="index.html#investors">For Investors</a></li>
+                <li><a href="partners.html">Partners</a></li>
+                <li><a href="index.html#pricing">Pricing</a></li>
+            </ul>
+
+            <div class="nav-buttons">
+                <button class="btn btn-outline" onclick="openAuthModal('login')">Login</button>
+                <button class="btn btn-primary" onclick="openAuthModal('signup')">Get Started</button>
+            </div>
+
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="index.html#platform">Platform</a>
+            <a href="index.html#investors">For Investors</a>
+            <a href="partners.html">Partners</a>
+            <a href="index.html#pricing">Pricing</a>
+            <button class="btn btn-outline" onclick="openAuthModal('login')">Login</button>
+            <button class="btn btn-primary" onclick="openAuthModal('signup')">Get Started</button>
+        </div>
+    </header>
+
+    <!-- Leadership Hero Section -->
+    <section class="leadership-hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-award"></i> Founder & CEO
+                </div>
+                <h1 class="hero-title">Emmanuel Luthuli</h1>
+                <p class="hero-subtitle">Transforming Startup Success Through Behavioral Science</p>
+                <p class="hero-description">A unique combination of academic rigor, investment expertise, and hands-on entrepreneurial experience focused on applying behavioral science to predictable business outcomes.</p>
+                
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">10+</div>
+                        <div class="hero-stat-label">Years Investment Experience</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">12+</div>
+                        <div class="hero-stat-label">Angel Investments</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">3</div>
+                        <div class="hero-stat-label">Successful Exits</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">18K+</div>
+                        <div class="hero-stat-label">Lives Impacted</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="container">
+        <!-- Core Expertise Section -->
+        <section class="content-section scroll-reveal">
+            <h2 class="section-title">Core Expertise & Foundation</h2>
+            <p class="section-subtitle">Direct study and application of Thaler, Ariely, and Kahneman principles combined with real-world entrepreneurial success</p>
+            
+            <div class="expertise-grid">
+                <div class="expertise-card">
+                    <div class="expertise-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <h3 class="expertise-title">Academic Foundation</h3>
+                    <p class="expertise-description">MIT Data Economics, Dartmouth Leadership (YALI) - rigorous training in behavioral economics and data-driven decision making</p>
+                </div>
+                
+                <div class="expertise-card">
+                    <div class="expertise-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3 class="expertise-title">Investment Mastery</h3>
+                    <p class="expertise-description">10+ years as managing director, 12+ angel investments with proven track record of identifying and scaling successful ventures</p>
+                </div>
+                
+                <div class="expertise-card">
+                    <div class="expertise-icon"><i class="fas fa-rocket"></i></div>
+                    <h3 class="expertise-title">Entrepreneurial Success</h3>
+                    <p class="expertise-description">Founded LanteOTC, BursaryNetwork (26 students funded), SeeADoctor (18,000+ patients served) - hands-on scaling experience</p>
+                </div>
+                
+                <div class="expertise-card">
+                    <div class="expertise-icon"><i class="fas fa-brain"></i></div>
+                    <h3 class="expertise-title">Behavioral Science Application</h3>
+                    <p class="expertise-description">Direct application of Nobel Prize-winning behavioral economics principles to systematic startup success intervention</p>
+                </div>
+                
+                <div class="expertise-card">
+                    <div class="expertise-icon"><i class="fas fa-globe"></i></div>
+                    <h3 class="expertise-title">Global Perspective</h3>
+                    <p class="expertise-description">South Africa and USA operational experience across emerging and developed markets with deep cultural understanding</p>
+                </div>
+                
+                <div class="expertise-card">
+                    <div class="expertise-icon"><i class="fas fa-cogs"></i></div>
+                    <h3 class="expertise-title">Systems Thinking</h3>
+                    <p class="expertise-description">Unique ability to design scalable behavioral intervention systems that work across diverse entrepreneurial ecosystems</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Achievement Metrics -->
+        <section class="content-section scroll-reveal">
+            <h2 class="section-title">Quantified Impact & Achievements</h2>
+            <p class="section-subtitle">Measurable results across investment, entrepreneurship, and social impact initiatives</p>
+            
+            <div class="achievement-grid">
+                <div class="achievement-card">
+                    <div class="achievement-number">10+</div>
+                    <div class="achievement-label">Years</div>
+                    <div class="achievement-description">Managing Director Investment Experience</div>
+                </div>
+                
+                <div class="achievement-card">
+                    <div class="achievement-number">12+</div>
+                    <div class="achievement-label">Portfolio</div>
+                    <div class="achievement-description">Angel Investments with Strategic Guidance</div>
+                </div>
+                
+                <div class="achievement-card">
+                    <div class="achievement-number">3</div>
+                    <div class="achievement-label">Exits</div>
+                    <div class="achievement-description">Successful Company Exits and Acquisitions</div>
+                </div>
+                
+                <div class="achievement-card">
+                    <div class="achievement-number">26</div>
+                    <div class="achievement-label">Students</div>
+                    <div class="achievement-description">Funded Through BursaryNetwork Initiative</div>
+                </div>
+                
+                <div class="achievement-card">
+                    <div class="achievement-number">18K+</div>
+                    <div class="achievement-label">Patients</div>
+                    <div class="achievement-description">Served Through SeeADoctor Platform</div>
+                </div>
+                
+                <div class="achievement-card">
+                    <div class="achievement-number">2</div>
+                    <div class="achievement-label">Markets</div>
+                    <div class="achievement-description">Cross-Continental Operational Experience</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Educational Background -->
+        <section class="content-section scroll-reveal">
+            <h2 class="section-title">Educational Foundation</h2>
+            <p class="section-subtitle">World-class academic preparation in behavioral economics, data science, and leadership</p>
+            
+            <div class="education-timeline">
+                <div class="education-item">
+                    <h3 class="education-institution">Massachusetts Institute of Technology (MIT)</h3>
+                    <p class="education-program">Data Economics Specialization</p>
+                    <p class="education-details">Advanced Program • Cambridge, MA</p>
+                    <p class="education-description">Intensive study of behavioral economics, data-driven decision making, and quantitative analysis methods. Direct exposure to cutting-edge research in behavioral intervention design and economic modeling.</p>
+                </div>
+                
+                <div class="education-item">
+                    <h3 class="education-institution">Dartmouth College</h3>
+                    <p class="education-program">Young African Leaders Initiative (YALI)</p>
+                    <p class="education-details">Leadership Development Program • Hanover, NH</p>
+                    <p class="education-description">Comprehensive leadership training focused on entrepreneurship, public policy, and civic engagement. Emphasis on scalable solutions for emerging market challenges and cross-cultural leadership effectiveness.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Leadership Philosophy -->
+        <section class="content-section scroll-reveal">
+            <div class="leadership-quote">
+                <p class="quote-text">The same cognitive biases that behavioral economists have identified in health, finance, and education are systematically killing startups every day. But unlike those sectors, entrepreneurship has never had a scientific solution. We're changing that.</p>
+                <p class="quote-author">— Emmanuel Luthuli, on the founding vision of Auxeira</p>
+            </div>
+        </section>
+
+        <!-- Strategic Vision -->
+        <section class="content-section scroll-reveal">
+            <h2 class="section-title">Strategic Vision & Commitment</h2>
+            <p class="section-subtitle">Building the infrastructure that transforms entrepreneurship from chance into predictable science</p>
+            
+            <div class="vision-grid">
+                <div class="vision-item">
+                    <div class="vision-icon"><i class="fas fa-microscope"></i></div>
+                    <h3 class="vision-title">Scientific Rigor</h3>
+                    <p class="vision-description">Every intervention backed by peer-reviewed behavioral research and statistical validation</p>
+                </div>
+                
+                <div class="vision-item">
+                    <div class="vision-icon"><i class="fas fa-expand-arrows-alt"></i></div>
+                    <h3 class="vision-title">Global Scale</h3>
+                    <p class="vision-description">Building systems that can support millions of entrepreneurs simultaneously across all markets</p>
+                </div>
+                
+                <div class="vision-item">
+                    <div class="vision-icon"><i class="fas fa-balance-scale"></i></div>
+                    <h3 class="vision-title">Equity Focus</h3>
+                    <p class="vision-description">Ensuring emerging markets achieve entrepreneurship success rates comparable to Silicon Valley</p>
+                </div>
+                
+                <div class="vision-item">
+                    <div class="vision-icon"><i class="fas fa-chart-bar"></i></div>
+                    <h3 class="vision-title">Measurable Impact</h3>
+                    <p class="vision-description">Reducing global startup failure rates from 90% to under 50% through systematic intervention</p>
+                </div>
+                
+                <div class="vision-item">
+                    <div class="vision-icon"><i class="fas fa-network-wired"></i></div>
+                    <h3 class="vision-title">Ecosystem Building</h3>
+                    <p class="vision-description">Creating virtuous cycles where every successful startup strengthens the entire ecosystem</p>
+                </div>
+                
+                <div class="vision-item">
+                    <div class="vision-icon"><i class="fas fa-lightbulb"></i></div>
+                    <h3 class="vision-title">Innovation Acceleration</h3>
+                    <p class="vision-description">Unlocking billions in economic value by preventing the waste of innovative human capital</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="cta-section scroll-reveal">
+            <h2 class="cta-title">Ready to Transform Entrepreneurship?</h2>
+            <p class="cta-description">Join the movement to make startup success predictable through scientific behavioral intervention</p>
+            <div class="cta-buttons">
+                <a href="demo.html" class="cta-button cta-button-primary">Experience the Platform</a>
+                <a href="mailto:emmanuel@auxeira.com" class="cta-button cta-button-secondary">Connect Directly</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="images/auxeira-logo.png" alt="Auxeira Logo" class="footer-logo">
+                    <h3>Auxeira</h3>
+                    <p>The Bloomberg Terminal for Entrepreneurship</p>
+                    <div class="social-links">
+                        <a href="https://x.com/auxeira" target="_blank" aria-label="Follow us on X">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                            </svg>
+                        </a>
+                        <a href="https://instagram.com/auxeira" target="_blank" aria-label="Follow us on Instagram">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-sections">
+                    <div class="footer-section">
+                        <h4>Platform</h4>
+                        <a href="dashboard.html">Dashboard Demo</a>
+                        <a href="api.html">API Documentation</a>
+                        <a href="partners.html">Partner Network</a>
+                        <a href="insights.html">Data Insights</a>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Research</h4>
+                        <a href="whitepaper.html">White-Paper</a>
+                        <a href="studies.html">Case Studies</a>
+                        <a href="reports.html">Industry Reports</a>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Company</h4>
+                        <a href="about.html">About Auxeira</a>
+                        <a href="team.html">Leadership Team</a>
+                        <a href="careers.html">Careers</a>
+                        <a href="press.html">Press Kit</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-legal">
+                    <a href="terms.html">Terms of Service</a>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <span>© 2025 Auxeira. All rights reserved.</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Authentication Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAuthModal()">&times;</span>
+            <div id="authContent">
+                <!-- Content will be dynamically loaded -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced strategic interactions and animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Header scroll effect
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+
+            // Scroll reveal animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all scroll reveal elements
+            document.querySelectorAll('.scroll-reveal').forEach(element => {
+                observer.observe(element);
+            });
+
+            // Enhanced hover effects for cards
+            document.querySelectorAll('.expertise-card, .achievement-card, .vision-item').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-12px) scale(1.02)';
+                    this.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Parallax effect for hero section
+            window.addEventListener('scroll', function() {
+                const scrolled = window.pageYOffset;
+                const hero = document.querySelector('.leadership-hero');
+                if (hero) {
+                    hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+                }
+            });
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Counter animation for achievement numbers
+            function animateCounters() {
+                const counters = document.querySelectorAll('.achievement-number, .hero-stat-value');
+                counters.forEach(counter => {
+                    const target = parseInt(counter.textContent.replace(/[^\d]/g, ''));
+                    const increment = target / 50;
+                    let current = 0;
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            counter.textContent = counter.textContent.replace(/[\d,]+/, target.toLocaleString());
+                            clearInterval(timer);
+                        } else {
+                            counter.textContent = counter.textContent.replace(/[\d,]+/, Math.floor(current).toLocaleString());
+                        }
+                    }, 30);
+                });
+            }
+
+            // Trigger counter animation when hero stats are visible
+            const statsObserver = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounters();
+                        statsObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            const heroStats = document.querySelector('.hero-stats');
+            if (heroStats) {
+                statsObserver.observe(heroStats);
+            }
+
+            // Mobile menu functionality
+            window.toggleMobileMenu = function() {
+                const mobileMenu = document.getElementById('mobileMenu');
+                mobileMenu.classList.toggle('active');
+            };
+
+            // Modal functionality
+            window.openAuthModal = function(type) {
+                const modal = document.getElementById('authModal');
+                const content = document.getElementById('authContent');
+                
+                if (type === 'login') {
+                    content.innerHTML = `
+                        <h2>Login to Auxeira</h2>
+                        <form>
+                            <input type="email" placeholder="Email" required>
+                            <input type="password" placeholder="Password" required>
+                            <button type="submit" class="btn btn-primary">Login</button>
+                        </form>
+                    `;
+                } else {
+                    content.innerHTML = `
+                        <h2>Get Started with Auxeira</h2>
+                        <form>
+                            <input type="text" placeholder="Full Name" required>
+                            <input type="email" placeholder="Email" required>
+                            <input type="password" placeholder="Password" required>
+                            <button type="submit" class="btn btn-primary">Get Started</button>
+                        </form>
+                    `;
+                }
+                
+                modal.style.display = 'block';
+            };
+
+            window.closeAuthModal = function() {
+                document.getElementById('authModal').style.display = 'none';
+            };
+
+            // Close modal when clicking outside
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('authModal');
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+<script src="js/recaptcha-fix.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Auxeira | The Startup Success Engine - Disrupting Silicon Valley's Failure Paradigm</title>
+    <meta name="description" content="Auxeira's AI-blockchain platform reduces startup failure rates by 50% through behavioral design. Featured at Davos, backed by MIT research, disrupting Silicon Valley's approach to entrepreneurship.">
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Enhanced CSS with unicorn venture positioning and premium design */
+        :root {
+            --primary-dark: #0a0e1a;
+            --secondary-dark: #1a1f2e;
+            --accent-blue: #0066ff;
+            --accent-gold: #ffd700;
+            --accent-purple: #6366f1;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a8b8;
+            --text-muted: #6b7280;
+            --glass-bg: rgba(26, 31, 46, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --gradient-primary: linear-gradient(135deg, #0066ff 0%, #6366f1 50%, #ffd700 100%);
+            --gradient-secondary: linear-gradient(135deg, #1a1f2e 0%, #0a0e1a 100%);
+            --shadow-premium: 0 25px 50px rgba(0, 102, 255, 0.15);
+            --shadow-elite: 0 35px 70px rgba(99, 102, 241, 0.2);
+            --border-radius: 12px;
+            --border-radius-lg: 20px;
+            --font-display: 'Playfair Display', serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Premium Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 14, 26, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+            transition: var(--transition-smooth);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 800;
+            font-size: 1.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-menu a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition-smooth);
+            position: relative;
+        }
+
+        .nav-menu a:hover {
+            color: var(--accent-blue);
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition-smooth);
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .btn-outline:hover {
+            background: var(--accent-blue);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-premium);
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-elite);
+        }
+
+        /* Hero Section - Unicorn Positioning */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: var(--gradient-secondary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="g" cx="50%" cy="50%"><stop offset="0%" stop-color="%230066ff" stop-opacity="0.1"/><stop offset="100%" stop-color="%230066ff" stop-opacity="0"/></radialGradient></defs><circle cx="200" cy="200" r="100" fill="url(%23g)"/><circle cx="800" cy="300" r="150" fill="url(%23g)"/><circle cx="400" cy="700" r="120" fill="url(%23g)"/></svg>') center/cover;
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 0.75rem 1.5rem;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--accent-gold);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.25rem, 3vw, 1.75rem);
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        .hero-stat {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: 2rem;
+            text-align: center;
+            transition: var(--transition-smooth);
+        }
+
+        .hero-stat:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-premium);
+            border-color: var(--accent-blue);
+        }
+
+        .hero-stat-value {
+            font-family: var(--font-mono);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 3rem;
+            animation: fadeInUp 0.8s ease-out 0.8s both;
+        }
+
+        /* Credibility Section */
+        .credibility-section {
+            padding: 6rem 0;
+            background: var(--secondary-dark);
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .credibility-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .credibility-item {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: 3rem;
+            text-align: center;
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .credibility-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .credibility-item:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-elite);
+        }
+
+        .credibility-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .credibility-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .credibility-description {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Technology Section */
+        .technology-section {
+            padding: 8rem 0;
+            background: var(--primary-dark);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .tech-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: 3rem;
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tech-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 102, 255, 0.05) 0%, rgba(99, 102, 241, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .tech-card:hover::before {
+            opacity: 1;
+        }
+
+        .tech-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-elite);
+            border-color: var(--accent-blue);
+        }
+
+        .tech-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tech-icon {
+            font-size: 2.5rem;
+            color: var(--accent-blue);
+        }
+
+        .tech-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .tech-description {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        .tech-specs {
+            list-style: none;
+        }
+
+        .tech-specs li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .tech-specs li::before {
+            content: '✓';
+            color: var(--accent-blue);
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        /* Impact Section */
+        .impact-section {
+            padding: 8rem 0;
+            background: var(--secondary-dark);
+        }
+
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .impact-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: 2.5rem;
+            text-align: center;
+            transition: var(--transition-smooth);
+            position: relative;
+        }
+
+        .impact-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-primary);
+            opacity: 0;
+            border-radius: var(--border-radius-lg);
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .impact-card:hover::after {
+            opacity: 0.1;
+        }
+
+        .impact-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-elite);
+        }
+
+        .impact-value {
+            font-family: var(--font-mono);
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 1rem;
+        }
+
+        .impact-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .impact-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Vision Section */
+        .vision-section {
+            padding: 8rem 0;
+            background: var(--primary-dark);
+            position: relative;
+        }
+
+        .vision-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .vision-text h2 {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .vision-text p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .vision-features {
+            list-style: none;
+        }
+
+        .vision-features li {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+        .vision-features li::before {
+            content: '→';
+            color: var(--accent-blue);
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .vision-visual {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: 3rem;
+            text-align: center;
+        }
+
+        .vision-chart {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 2;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 6rem 0;
+            background: var(--gradient-secondary);
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cta-description {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-large {
+            padding: 1.25rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: var(--border-radius-lg);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .mobile-menu-btn span {
+            width: 25px;
+            height: 3px;
+            background: var(--text-primary);
+            transition: var(--transition-smooth);
+        }
+
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 2rem;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .mobile-menu a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive Design - Desktop First */
+        @media (max-width: 1200px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+            
+            .tech-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .vision-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: flex;
+            }
+            
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .hero-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .credibility-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .impact-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .hero-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .impact-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Premium Header -->
+    <header class="header" id="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <img src="images/auxeira-logo.png" alt="Auxeira Logo" class="logo">
+                <span>Auxeira</span>
+            </div>
+           
+            <ul class="nav-menu">
+                <li><a href="index.html#platform">Platform</a></li>
+                <li><a href="index.html#investors">For Investors</a></li>
+                <li><a href="partners.html">Partners</a></li>
+                <li><a href="index.html#pricing">Pricing</a></li>
+            </ul>
+
+            <div class="nav-buttons">
+                <button class="btn btn-outline" onclick="openAuthModal('login')">Login</button>
+                <button class="btn btn-primary" onclick="openAuthModal('signup')">Join the Revolution</button>
+            </div>
+
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="index.html#platform">Platform</a>
+            <a href="index.html#investors">For Investors</a>
+            <a href="partners.html">Partners</a>
+            <a href="index.html#pricing">Pricing</a>
+            <button class="btn btn-outline" onclick="openAuthModal('login')">Login</button>
+            <button class="btn btn-primary" onclick="openAuthModal('signup')">Join the Revolution</button>
+        </div>
+    </header>
+
+    <!-- Hero Section - Unicorn Positioning -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-trophy"></i>
+                    Behavioral Science • AI-Powered • Blockchain Verified
+                </div>
+                
+                <h1 class="hero-title">The Startup Success Engine</h1>
+                
+                <p class="hero-subtitle">
+                    Auxeira's AI-blockchain platform reduces startup failure rates by 50% through behavioral design. 
+                    We're not just building a product—we're rewriting the rules of entrepreneurship.
+                </p>
+                
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">50%</div>
+                        <div class="hero-stat-label">Failure Rate Reduction Target</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">85.7%</div>
+                        <div class="hero-stat-label">AI Prediction Accuracy</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">2,000</div>
+                        <div class="hero-stat-label">Startups in Q3 2026 RCT</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">1B</div>
+                        <div class="hero-stat-label">AUX Token Supply</div>
+                    </div>
+                </div>
+                
+                <div class="hero-cta">
+                    <a href="#technology" class="btn btn-primary btn-large">Explore the Technology</a>
+                    <a href="#impact" class="btn btn-outline btn-large">See Our Impact</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Credibility Section -->
+    <section class="credibility-section scroll-reveal">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Redefining Entrepreneurship Through Science</h2>
+                <p class="section-subtitle">
+                    Built on rigorous academic research and powered by cutting-edge technology to transform how startups achieve sustainable success.
+                </p>
+            </div>
+            
+            <div class="credibility-grid">
+                <div class="credibility-item">
+                    <div class="credibility-icon">
+                        <i class="fas fa-microscope"></i>
+                    </div>
+                    <h3 class="credibility-title">Scientific Foundation</h3>
+                    <p class="credibility-description">
+                        Our behavioral economics framework applies proven principles from leading researchers like Thaler, Ariely, and Kahneman, 
+                        systematically addressing the cognitive biases that lead to startup failure.
+                    </p>
+                </div>
+                
+                <div class="credibility-item">
+                    <div class="credibility-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="credibility-title">Proven Results</h3>
+                    <p class="credibility-description">
+                        Simulation studies show success rate improvement from 15.2% to 35.6% (odds ratio 3.09), 
+                        with 32% reduction in failure risk and significant economic impact across multiple metrics.
+                    </p>
+                </div>
+                
+                <div class="credibility-item">
+                    <div class="credibility-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3 class="credibility-title">Technology Innovation</h3>
+                    <p class="credibility-description">
+                        Combining AI prediction models with blockchain verification and behavioral intervention, 
+                        we've created the world's first autonomous success platform for entrepreneurs.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Section -->
+    <section class="technology-section scroll-reveal" id="technology">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">The Technology Behind the Revolution</h2>
+                <p class="section-subtitle">
+                    Our Startup Success Engine (SSE) combines cutting-edge AI, blockchain infrastructure, 
+                    and behavioral economics to create the world's first autonomous intervention platform for entrepreneurs.
+                </p>
+            </div>
+            
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <div class="tech-header">
+                        <div class="tech-icon"><i class="fas fa-brain"></i></div>
+                        <h3 class="tech-title">AI-Powered Analytics</h3>
+                    </div>
+                    <p class="tech-description">
+                        Our machine learning algorithms monitor 150+ KPIs across integrated platforms, 
+                        providing predictive risk scoring with 85.7% accuracy and real-time behavioral insights.
+                    </p>
+                    <ul class="tech-specs">
+                        <li>Isolation Forests for fraud detection</li>
+                        <li>Logistic regression models (odds ratio 2.5)</li>
+                        <li>Real-time behavioral analytics</li>
+                        <li>Predictive risk assessment</li>
+                        <li>Automated investor monitoring (50% reduction)</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-card">
+                    <div class="tech-header">
+                        <div class="tech-icon"><i class="fas fa-link"></i></div>
+                        <h3 class="tech-title">Solana Blockchain Infrastructure</h3>
+                    </div>
+                    <p class="tech-description">
+                        Built on Solana for ultra-low transaction costs (~$0.0001/tx) with Anchor framework 
+                        smart contracts managing rewards, burns, and governance transparently.
+                    </p>
+                    <ul class="tech-specs">
+                        <li>AUX SPL token (1B supply)</li>
+                        <li>Smart contract automation</li>
+                        <li>1% token burns for deflation</li>
+                        <li>Verifiable performance records</li>
+                        <li>Chainlink oracles for data feeds</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-card">
+                    <div class="tech-header">
+                        <div class="tech-icon"><i class="fas fa-gamepad"></i></div>
+                        <h3 class="tech-title">Gamified Dashboard</h3>
+                    </div>
+                    <p class="tech-description">
+                        React/Next.js frontend with Tailwind CSS delivering an intuitive "fitness tracker for startups" 
+                        that monitors critical metrics and rewards positive behaviors.
+                    </p>
+                    <ul class="tech-specs">
+                        <li>150+ KPI monitoring (LTV:CAC >3, NPS >50)</li>
+                        <li>Behavioral reward system</li>
+                        <li>Corporate partnership discounts</li>
+                        <li>Real-time progress tracking</li>
+                        <li>Mobile-responsive design</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-card">
+                    <div class="tech-header">
+                        <div class="tech-icon"><i class="fas fa-plug"></i></div>
+                        <h3 class="tech-title">Enterprise Integrations</h3>
+                    </div>
+                    <p class="tech-description">
+                        Seamless API integrations with Stripe, HubSpot, QuickBooks, AWS, and other enterprise platforms 
+                        for 95% verification accuracy and automated data collection.
+                    </p>
+                    <ul class="tech-specs">
+                        <li>95% verification accuracy</li>
+                        <li>Automated data synchronization</li>
+                        <li>Corporate partner ecosystem</li>
+                        <li>36.3% discount rates at SSI 85</li>
+                        <li>Real-time KPI validation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Research Findings Section -->
+    <section class="impact-section scroll-reveal" id="research">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Rigorous Research Validation</h2>
+                <p class="section-subtitle">
+                    Our simulation studies employ rigorous academic methodologies and actuarial risk assessment principles 
+                    to evaluate SSE's effectiveness across 2,000 startups in addressing the 90% startup failure rate.
+                </p>
+            </div>
+            
+            <div class="impact-grid">
+                <div class="impact-card">
+                    <div class="impact-value">35.6%</div>
+                    <div class="impact-label">Treatment Success Rate</div>
+                    <div class="impact-description">vs. 15.2% control group</div>
+                </div>
+                
+                <div class="impact-card">
+                    <div class="impact-value">3.09</div>
+                    <div class="impact-label">Odds Ratio</div>
+                    <div class="impact-description">95% CI: 2.85-3.35, p<0.001</div>
+                </div>
+                
+                <div class="impact-card">
+                    <div class="impact-value">32%</div>
+                    <div class="impact-label">Risk Reduction</div>
+                    <div class="impact-description">Hazard ratio of 0.68 for startup failure</div>
+                </div>
+                
+                <div class="impact-card">
+                    <div class="impact-value">27%</div>
+                    <div class="impact-label">Job Creation Increase</div>
+                    <div class="impact-description">Significant economic impact</div>
+                </div>
+                
+                <div class="impact-card">
+                    <div class="impact-value">21%</div>
+                    <div class="impact-label">ESG Score Improvement</div>
+                    <div class="impact-description">Enhanced sustainability metrics</div>
+                </div>
+                
+                <div class="impact-card">
+                    <div class="impact-value">p<0.001</div>
+                    <div class="impact-label">Statistical Significance</div>
+                    <div class="impact-description">Robust effect sizes achieved</div>
+                </div>
+            </div>
+            
+            <div class="breakthrough" style="margin-top: 3rem;">
+                <p><strong>Critical Assessment:</strong> This evaluation synthesizes findings from two complementary simulation studies assessing the Startup Success Engine (SSE) platform's potential impact on early-stage startup outcomes across 2,000 startups. While simulation results are promising, several methodological limitations require acknowledgment before real-world implementation.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Section -->
+    <section class="impact-section scroll-reveal" id="impact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Platform Implementation Scale</h2>
+                <p class="section-subtitle">
+                    Our upcoming randomized controlled trial will demonstrate real-world effectiveness 
+                    at unprecedented scale in entrepreneurship research.
+                </p>
+            </div>
+            
+            <div class="impact-grid">
+                <div class="impact-card">
+                    <div class="impact-value">2,000</div>
+                    <div class="impact-label">Startups in RCT</div>
+                    <div class="impact-description">Q3 2026 randomized controlled trial</div>
+                </div>
+                
+                <div class="impact-card">
+                    <div class="impact-value">50%</div>
+                    <div class="impact-label">Failure Reduction</div>
+                    <div class="impact-description">Target reduction in startup failure rates</div>
+                </div>
+                
+                <div class="impact-card">
+                    <div class="impact-value">4</div>
+                    <div class="impact-label">Critical Domains</div>
+                    <div class="impact-description">Market Access, Management, Funding, Operations</div>
+                </div>
+                
+                <div class="impact-card">
+                    <div class="impact-value">150+</div>
+                    <div class="impact-label">KPIs Monitored</div>
+                    <div class="impact-description">Real-time behavioral and performance metrics</div>
+                </div>
+                
+                <div class="impact-card">
+                    <div class="impact-value">$0.0001</div>
+                    <div class="impact-label">Transaction Cost</div>
+                    <div class="impact-description">Ultra-low Solana blockchain fees</div>
+                </div>
+                
+                <div class="impact-card">
+                    <div class="impact-value">Q1 2026</div>
+                    <div class="impact-label">Soft Launch</div>
+                    <div class="impact-description">Platform beta release timeline</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vision Section -->
+    <section class="vision-section scroll-reveal">
+        <div class="container">
+            <div class="vision-content">
+                <div class="vision-text">
+                    <h2>A World Where Great Ideas Don't Die</h2>
+                    <p>
+                        We're building more than a platform—we're creating a new paradigm for entrepreneurship. 
+                        One where behavioral science, not luck, determines startup success.
+                    </p>
+                    <p>
+                        Our vision extends beyond Silicon Valley to emerging markets worldwide, 
+                        democratizing access to the behavioral insights that drive sustainable business growth.
+                    </p>
+                    <ul class="vision-features">
+                        <li>Transparent, process-oriented incentives across four critical domains</li>
+                        <li>AI-driven insights with 85.7% predictive accuracy</li>
+                        <li>Gamified rewards system with AUX tokens and corporate discounts</li>
+                        <li>Verifiable performance records via blockchain technology</li>
+                        <li>Automated investor monitoring reducing overhead by 50%</li>
+                    </ul>
+                </div>
+                
+                <div class="vision-visual">
+                    <h3 style="color: var(--accent-blue); margin-bottom: 2rem;">The SSE Framework</h3>
+                    <div class="vision-chart">
+                        ┌─ Market Access ────────────┐<br>
+                        │ Customer interviews        │<br>
+                        │ Product-market fit         │<br>
+                        │ Go-to-market strategy      │<br>
+                        └────────────────────────────┘<br><br>
+                        
+                        ┌─ Management Excellence ────┐<br>
+                        │ Team building              │<br>
+                        │ Leadership development     │<br>
+                        │ Decision-making processes  │<br>
+                        └────────────────────────────┘<br><br>
+                        
+                        ┌─ Funding Optimization ─────┐<br>
+                        │ Burn rate management       │<br>
+                        │ Investor relations         │<br>
+                        │ Financial planning         │<br>
+                        └────────────────────────────┘<br><br>
+                        
+                        ┌─ Operational Efficiency ───┐<br>
+                        │ Process automation         │<br>
+                        │ Resource allocation        │<br>
+                        │ Performance monitoring     │<br>
+                        └────────────────────────────┘
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">Join the Entrepreneurship Revolution</h2>
+                <p class="cta-description">
+                    Be part of the largest behavioral intervention study in startup history. 
+                    Help us prove that entrepreneurship can be a science, not a gamble.
+                </p>
+                <div class="cta-buttons">
+                    <a href="index.html" class="btn btn-primary btn-large">Apply for Early Access</a>
+                    <a href="partners.html" class="btn btn-outline btn-large">Partner With Us</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-brand">
+                        <img src="images/auxeira-logo.png" alt="Auxeira Logo" class="footer-logo">
+                        <span class="footer-brand-text">Auxeira</span>
+                    </div>
+                    <p class="footer-description">
+                        The Bloomberg Terminal for Entrepreneurship
+                    </p>
+                    <div class="social-links">
+                        <a href="https://x.com/auxeira" class="social-link" aria-label="Follow us on X"><i class="fab fa-twitter"></i></a>
+                        <a href="https://instagram.com/auxeira" class="social-link" aria-label="Follow us on Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/company/auxeira/" class="social-link" aria-label="Follow us on LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-title">Platform</h4>
+                    <ul class="footer-links">
+                        <li><a href="demo.html">Dashboard Demo</a></li>
+                        <li><a href="api.html">API Documentation</a></li>
+                        <li><a href="partners.html">Partner Network</a></li>
+                        <li><a href="insights.html">Data Insights</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-title">Research</h4>
+                    <ul class="footer-links">
+                        <li><a href="whitepaper.html">White-Paper</a></li>
+                        <li><a href="studies.html">Case Studies</a></li>
+                        <li><a href="reports.html">Industry Reports</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-title">Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Auxeira</a></li>
+                        <li><a href="team.html">Leadership Team</a></li>
+                        <li><a href="careers.html">Careers</a></li>
+                        <li><a href="press.html">Press Kit</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-disclaimer">
+                    <div class="disclosure-header" onclick="toggleDisclosures()" style="cursor: pointer; display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                        <h4 style="color: var(--text-primary); margin: 0; font-size: 1.1rem;">📄 Important Disclosures</h4>
+                        <span id="disclosure-arrow" style="color: var(--text-primary); font-size: 1.2rem; transition: transform 0.3s ease;">▼</span>
+                    </div>
+                    
+                    <div id="disclosure-content" style="display: none; overflow: hidden; transition: all 0.3s ease;">
+                        <p style="margin-bottom: 1.5rem;">
+                            <strong>Auxeira is a startup seeking institutional partners/clients for platform validation.</strong> 
+                            Platform projections are based on simulation studies (n=2,000 startups), not empirical results from actual users. 
+                            All assumptions are public and the protocol is registered on 
+                            <a href="#" style="color: var(--accent-blue);">socialscienceregistry.org/rct/auxeira-sse</a> 
+                            for transparency. <strong>Live pilot launching 2026.</strong>
+                        </p>
+
+                        <div style="margin-bottom: 1rem;">
+                            <h5 style="color: var(--text-primary); margin-bottom: 0.5rem; font-size: 1rem;">Forward-Looking Statements</h5>
+                            <p style="margin-bottom: 1rem;">Results based on simulation study designed to mirror real-world benchmarks (CB Insights, World Bank, web sentiment data).</p>
+                        </div>
+
+                        <div style="margin-bottom: 1rem;">
+                            <h5 style="color: var(--text-primary); margin-bottom: 0.5rem; font-size: 1rem;">Development Stage</h5>
+                            <p style="margin-bottom: 1rem;">Pricing and feature sets subject to change based on development program feedback.</p>
+                        </div>
+
+                        <div style="margin-bottom: 1rem;">
+                            <h5 style="color: var(--text-primary); margin-bottom: 0.5rem; font-size: 1rem;">No Investment Advice</h5>
+                            <p style="margin-bottom: 1rem;">Platform projections do not constitute investment advice. Institutional partners should conduct independent due diligence.</p>
+                        </div>
+
+                        <div style="margin-bottom: 1rem;">
+                            <h5 style="color: var(--text-primary); margin-bottom: 0.5rem; font-size: 1rem;">Risk Factors</h5>
+                            <p style="margin-bottom: 1rem;">Startup investments carry inherent risk of total loss. Platform effectiveness subject to market conditions and individual execution.</p>
+                        </div>
+
+                        <p>For complete disclosures, please contact us at <a href="mailto:hello@auxeira.com" style="color: var(--accent-blue);">hello@auxeira.com</a></p>
+                    </div>
+                </div>
+                <div class="footer-legal-links">
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Privacy Policy</a>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Auxeira. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        /* Footer Styles */
+        .footer {
+            background: var(--primary-dark);
+            border-top: 1px solid var(--glass-border);
+            padding: 4rem 0 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-logo {
+            width: 32px;
+            height: 32px;
+        }
+
+        .footer-brand-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .footer-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition-smooth);
+        }
+
+        .social-link:hover {
+            background: var(--accent-blue);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .footer-title {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition-smooth);
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-blue);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--glass-border);
+            padding-top: 2rem;
+        }
+
+        .footer-disclaimer {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-disclaimer p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .footer-legal-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-legal-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition-smooth);
+        }
+
+        .footer-legal-links a:hover {
+            color: var(--accent-blue);
+        }
+
+        .footer-copyright {
+            text-align: center;
+        }
+
+        .footer-copyright p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        @media (max-width: 1200px) {
+            .footer-content {
+                grid-template-columns: 2fr 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .footer {
+                padding: 3rem 0 1.5rem;
+            }
+
+            .footer-legal-links {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+        }
+    </style>
+
+    <script>
+        // Enhanced JavaScript for premium interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Header scroll effect
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 100) {
+                    header.style.background = 'rgba(10, 14, 26, 0.98)';
+                    header.style.boxShadow = '0 10px 30px rgba(0, 102, 255, 0.1)';
+                } else {
+                    header.style.background = 'rgba(10, 14, 26, 0.95)';
+                    header.style.boxShadow = 'none';
+                }
+            });
+
+            // Scroll reveal animation
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.scroll-reveal').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Mobile menu toggle
+            window.toggleMobileMenu = function() {
+                const mobileMenu = document.getElementById('mobileMenu');
+                const menuBtn = document.querySelector('.mobile-menu-btn');
+                
+                if (mobileMenu.style.display === 'flex') {
+                    mobileMenu.style.display = 'none';
+                    menuBtn.classList.remove('active');
+                } else {
+                    mobileMenu.style.display = 'flex';
+                    menuBtn.classList.add('active');
+                }
+            };
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Enhanced hover effects
+            document.querySelectorAll('.tech-card, .impact-card, .credibility-item').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-12px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Parallax effect for hero section
+            window.addEventListener('scroll', function() {
+                const scrolled = window.pageYOffset;
+                const hero = document.querySelector('.hero-section');
+                if (hero) {
+                    hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+                }
+            });
+
+            // Counter animation for stats
+            function animateCounter(element, target, duration = 2000) {
+                let start = 0;
+                const increment = target / (duration / 16);
+                
+                function updateCounter() {
+                    start += increment;
+                    if (start < target) {
+                        element.textContent = Math.floor(start);
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        element.textContent = target;
+                    }
+                }
+                updateCounter();
+            }
+
+            // Trigger counter animations when stats come into view
+            const statsObserver = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const value = entry.target.querySelector('.hero-stat-value, .impact-value');
+                        if (value && !value.classList.contains('animated')) {
+                            value.classList.add('animated');
+                            const target = parseInt(value.textContent);
+                            if (!isNaN(target)) {
+                                animateCounter(value, target);
+                            }
+                        }
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            document.querySelectorAll('.hero-stat, .impact-card').forEach(stat => {
+                statsObserver.observe(stat);
+            });
+        });
+
+        // Placeholder functions for auth modal
+        function openAuthModal(type) {
+            console.log(`Opening ${type} modal`);
+            // Implement auth modal logic here
+        }
+
+        // Toggle disclosures function
+        function toggleDisclosures() {
+            const content = document.getElementById('disclosure-content');
+            const arrow = document.getElementById('disclosure-arrow');
+            
+            if (content.style.display === 'none' || content.style.display === '') {
+                content.style.display = 'block';
+                arrow.style.transform = 'rotate(180deg)';
+                arrow.textContent = '▲';
+            } else {
+                content.style.display = 'none';
+                arrow.style.transform = 'rotate(0deg)';
+                arrow.textContent = '▼';
+            }
+        }
+    </script>
+</body>
+</html>
+

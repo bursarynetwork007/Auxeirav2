@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auxeira Dashboard</title>
+    <script>
+        // Check authentication first
+        const token = localStorage.getItem('auxeira_auth_token') || localStorage.getItem('authToken');
+        
+        console.log('Dashboard index.html - Checking authentication');
+        console.log('Token found:', token ? 'YES' : 'NO');
+        
+        if (!token) {
+            // No auth token, redirect to login
+            console.log('No authentication token, redirecting to login');
+            window.location.href = 'https://auxeira.com';
+        } else {
+            // Has token, check user type and redirect to appropriate dashboard
+            const userData = JSON.parse(localStorage.getItem('auxeira_user') || '{}');
+            console.log('User data:', userData);
+            
+            // Check both role and userType for backward compatibility
+            const userRole = userData.role || userData.userType || 'startup_founder';
+            console.log('User role:', userRole);
+            
+            const dashboardMap = {
+                'startup_founder': '/startup_founder.html',
+                'corporate_partner': '/corporate_partner.html',
+                'venture_capital': '/vc.html',
+                'angel_investor': '/angel_investor.html',
+                'government': '/government.html',
+                'esg_funder': '/esg_funder.html',
+                'admin': '/admin.html',
+                'founder': '/startup_founder.html'
+            };
+            
+            const dashboardUrl = dashboardMap[userRole] || '/startup_founder.html';
+            console.log(`Redirecting to ${dashboardUrl} for user role: ${userRole}`);
+            window.location.href = dashboardUrl;
+        }
+    </script>
+</head>
+<body style="background: #0d1117; color: #f0f6fc; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;">
+    <div style="text-align: center;">
+        <div style="font-size: 24px; margin-bottom: 20px;">🚀</div>
+        <p style="font-size: 18px; margin-bottom: 10px;">Redirecting to your dashboard...</p>
+        <p style="font-size: 14px; color: #8b949e;">If you're not redirected, <a href="https://auxeira.com" style="color: #007bff;">click here</a></p>
+    </div>
+</body>
+</html>

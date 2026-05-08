@@ -1,0 +1,1836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partner Program | Auxeira - Join Our Elite Community</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <meta name="description" content="Join Auxeira's partner community. Transform your customer acquisition with pre-validated startups and measurable ROI. Silver, Gold, and Platinum partnerships available.">
+    <meta name="keywords" content="Auxeira partners, startup ecosystem, partner community, revenue sharing, business partnerships, customer acquisition">
+    <meta property="og:title" content="Auxeira | Join Our Partner Community">
+    <meta property="og:description" content="Transform your customer acquisition strategy with pre-validated startups. Performance-based partnerships with measurable ROI.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://auxeira.com/partners.html">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Strategic Design System - Enhanced Bloomberg Terminal Aesthetic */
+        :root {
+            --bloomberg-dark: #0d1117;
+            --bloomberg-charcoal: #161b22;
+            --bloomberg-blue: #007bff;
+            --bloomberg-accent: #ffd700;
+            --bloomberg-text: #f0f6fc;
+            --bloomberg-text-secondary: #8b949e;
+            --bloomberg-gray: #30363d;
+            --bloomberg-success: #28a745;
+            --bloomberg-warning: #ffc107;
+            --bloomberg-danger: #dc3545;
+            --bloomberg-orange: #FF6B35;
+            --silver: #C0C0C0;
+            --gold: #FFD700;
+            --platinum: #E5E4E2;
+            --border-radius: 8px;
+            --border-radius-lg: 12px;
+            --border-radius-xl: 16px;
+            --border-radius-2xl: 20px;
+            --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.2);
+            --shadow-xl: 0 15px 35px rgba(0, 0, 0, 0.25);
+            --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.35);
+            --font-mono: 'JetBrains Mono', monospace;
+            --glass-bg: rgba(13, 17, 23, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --gradient-primary: linear-gradient(135deg, var(--bloomberg-blue) 0%, var(--bloomberg-accent) 100%);
+            --gradient-secondary: linear-gradient(135deg, var(--bloomberg-dark) 0%, var(--bloomberg-charcoal) 100%);
+            --gradient-hero: linear-gradient(135deg, var(--bloomberg-dark) 0%, var(--bloomberg-charcoal) 50%, var(--bloomberg-dark) 100%);
+            --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            --transition-spring: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 3rem;
+            --spacing-3xl: 4rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--bloomberg-text);
+            background-color: var(--bloomberg-dark);
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(0, 123, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 123, 255, 0.05) 0%, transparent 50%);
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Strategic Header Design */
+        .header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition-smooth);
+        }
+
+        .header.scrolled {
+            box-shadow: var(--shadow-2xl);
+            background: rgba(13, 17, 23, 0.95);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo {
+            height: 40px;
+            width: auto;
+            transition: var(--transition-smooth);
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .brand-text {
+            font-weight: 800;
+            font-size: 1.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: var(--transition-smooth);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: var(--bloomberg-text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition-smooth);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: var(--bloomberg-blue);
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border-color: var(--bloomberg-blue);
+            color: var(--bloomberg-blue);
+        }
+
+        .btn-outline:hover {
+            background: var(--bloomberg-blue);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary {
+            background: var(--bloomberg-blue);
+            border-color: var(--bloomberg-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--bloomberg-accent);
+            border-color: var(--bloomberg-accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-success {
+            background: var(--bloomberg-success);
+            border-color: var(--bloomberg-success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+            border-color: #218838;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-community {
+            background: linear-gradient(135deg, var(--bloomberg-blue) 0%, var(--bloomberg-accent) 100%);
+            border: none;
+            color: var(--bloomberg-dark);
+            font-weight: 700;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-community:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 25px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .mobile-menu-btn span {
+            width: 100%;
+            height: 2px;
+            background-color: var(--bloomberg-text);
+            transition: var(--transition-smooth);
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            padding: 1rem;
+            z-index: 999;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+        }
+
+        .mobile-menu a {
+            color: var(--bloomberg-text);
+            text-decoration: none;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--glass-border);
+            transition: var(--transition-smooth);
+        }
+
+        .mobile-menu a:hover {
+            color: var(--bloomberg-blue);
+            transform: translateX(10px);
+        }
+
+        .mobile-menu .btn {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        /* Strategic Hero Section */
+        .hero {
+            background: var(--gradient-hero);
+            padding: 8rem 0 6rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.03"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            z-index: 1;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(0, 123, 255, 0.1) 0%, transparent 70%);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 0.75rem 2rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .badge-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--bloomberg-blue);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge-text::before {
+            content: '🚀';
+            font-size: 1.2rem;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: var(--bloomberg-text-secondary);
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        /* Problem Statement */
+        .problem-section {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, rgba(220, 20, 60, 0.1) 0%, rgba(255, 69, 0, 0.1) 100%);
+            border-top: 1px solid rgba(220, 20, 60, 0.2);
+            border-bottom: 1px solid rgba(220, 20, 60, 0.2);
+        }
+
+        .problem-content {
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .problem-title {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--bloomberg-text);
+            margin-bottom: 2rem;
+        }
+
+        .problem-description {
+            font-size: 1.3rem;
+            color: var(--bloomberg-text-secondary);
+            margin-bottom: 3rem;
+            line-height: 1.7;
+        }
+
+        .problem-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .problem-stat {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            border-radius: var(--border-radius-lg);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .problem-stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #ff6b6b;
+            margin-bottom: 0.5rem;
+            font-family: var(--font-mono);
+        }
+
+        .problem-stat-label {
+            color: var(--bloomberg-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Value Propositions */
+        .value-props {
+            padding: 6rem 0;
+        }
+
+        .value-props-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .value-props-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--bloomberg-text);
+            margin-bottom: 1rem;
+        }
+
+        .value-props-subtitle {
+            font-size: 1.2rem;
+            color: var(--bloomberg-text-secondary);
+        }
+
+        .value-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .value-prop {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-xl);
+            padding: 2.5rem;
+            text-align: center;
+            transition: var(--transition-bounce);
+        }
+
+        .value-prop:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--bloomberg-blue);
+        }
+
+        .value-icon {
+            width: 4rem;
+            height: 4rem;
+            background: rgba(0, 123, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        .value-icon i {
+            font-size: 2rem;
+            color: var(--bloomberg-blue);
+        }
+
+        .value-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--bloomberg-text);
+            margin-bottom: 1rem;
+        }
+
+        .value-description {
+            color: var(--bloomberg-text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Partnership Tiers */
+        .tiers-section {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.05) 0%, rgba(255, 215, 0, 0.05) 100%);
+        }
+
+        .tiers-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .tiers-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--bloomberg-text);
+            margin-bottom: 1rem;
+        }
+
+        .tiers-subtitle {
+            font-size: 1.2rem;
+            color: var(--bloomberg-text-secondary);
+        }
+
+        .tier-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .tier-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 2px solid var(--glass-border);
+            border-radius: var(--border-radius-2xl);
+            padding: 3rem;
+            transition: var(--transition-bounce);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .tier-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .tier-card.silver::before {
+            background: linear-gradient(135deg, rgba(192, 192, 192, 0.1) 0%, rgba(169, 169, 169, 0.1) 100%);
+        }
+
+        .tier-card.gold::before {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 193, 7, 0.1) 100%);
+        }
+
+        .tier-card.platinum::before {
+            background: linear-gradient(135deg, rgba(229, 228, 226, 0.1) 0%, rgba(211, 211, 211, 0.1) 100%);
+        }
+
+        .tier-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-2xl);
+        }
+
+        .tier-card.silver:hover {
+            border-color: var(--silver);
+        }
+
+        .tier-card.gold:hover {
+            border-color: var(--gold);
+        }
+
+        .tier-card.platinum:hover {
+            border-color: var(--platinum);
+        }
+
+        .tier-card:hover::before {
+            opacity: 1;
+        }
+
+        .tier-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .tier-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .tier-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+        }
+
+        .tier-badge.silver {
+            background: rgba(192, 192, 192, 0.2);
+            color: var(--silver);
+            border: 1px solid var(--silver);
+        }
+
+        .tier-badge.gold {
+            background: rgba(255, 215, 0, 0.2);
+            color: var(--gold);
+            border: 1px solid var(--gold);
+        }
+
+        .tier-badge.platinum {
+            background: rgba(229, 228, 226, 0.2);
+            color: var(--platinum);
+            border: 1px solid var(--platinum);
+        }
+
+        .tier-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--bloomberg-text);
+            margin-bottom: 1rem;
+        }
+
+        .tier-pricing {
+            margin-bottom: 2rem;
+        }
+
+        .tier-price-annual {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--bloomberg-blue);
+            margin-bottom: 0.5rem;
+            font-family: var(--font-mono);
+        }
+
+        .tier-price-monthly {
+            font-size: 1.2rem;
+            color: var(--bloomberg-text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .tier-performance {
+            font-size: 0.9rem;
+            color: var(--bloomberg-text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .tier-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .tier-features li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            color: var(--bloomberg-text-secondary);
+        }
+
+        .tier-features i {
+            color: var(--bloomberg-success);
+            font-size: 1rem;
+        }
+
+        .tier-cta {
+            text-align: center;
+        }
+
+        .tier-btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            border-radius: var(--border-radius-lg);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            border: 2px solid;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .tier-btn.silver {
+            background: transparent;
+            border-color: var(--silver);
+            color: var(--silver);
+        }
+
+        .tier-btn.silver:hover {
+            background: var(--silver);
+            color: var(--bloomberg-dark);
+        }
+
+        .tier-btn.gold {
+            background: transparent;
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .tier-btn.gold:hover {
+            background: var(--gold);
+            color: var(--bloomberg-dark);
+        }
+
+        .tier-btn.platinum {
+            background: transparent;
+            border-color: var(--platinum);
+            color: var(--platinum);
+        }
+
+        .tier-btn.platinum:hover {
+            background: var(--platinum);
+            color: var(--bloomberg-dark);
+        }
+
+        /* ROI Calculator */
+        .roi-calculator {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-2xl);
+            padding: var(--spacing-3xl);
+            margin: var(--spacing-3xl) 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .roi-calculator::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.05) 0%, rgba(255, 215, 0, 0.05) 100%);
+        }
+
+        .calculator-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .calculator-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--bloomberg-text);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .calculator-subtitle {
+            font-size: 1.2rem;
+            color: var(--bloomberg-text-secondary);
+        }
+
+        .calculator-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .form-group {
+            background: rgba(22, 27, 34, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--bloomberg-text);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bloomberg-charcoal);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            color: var(--bloomberg-text);
+            font-family: var(--font-mono);
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--bloomberg-blue);
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .input-group input[type="range"] {
+            flex: 1;
+        }
+
+        .input-group .value-display {
+            background: var(--bloomberg-blue);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            font-family: var(--font-mono);
+            font-weight: 600;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .benchmark-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .benchmark-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 1px solid var(--bloomberg-blue);
+            color: var(--bloomberg-blue);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: var(--transition-smooth);
+        }
+
+        .benchmark-btn:hover {
+            background: var(--bloomberg-blue);
+            color: white;
+        }
+
+        .results-section {
+            background: rgba(40, 167, 69, 0.1);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+            border-radius: var(--border-radius-lg);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .result-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+        }
+
+        .result-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--bloomberg-success);
+            margin-bottom: 0.5rem;
+            font-family: var(--font-mono);
+        }
+
+        .result-label {
+            color: var(--bloomberg-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .chart-container {
+            margin-top: 2rem;
+            height: 300px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: 1rem;
+        }
+
+        /* Community CTA */
+        .community-cta {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, var(--bloomberg-blue) 0%, var(--bloomberg-accent) 100%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .community-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.1"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        }
+
+        .community-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .community-title {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--bloomberg-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .community-subtitle {
+            font-size: 1.3rem;
+            color: rgba(13, 17, 23, 0.8);
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bloomberg-dark);
+            border-top: 1px solid var(--glass-border);
+            padding: 3rem 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: var(--bloomberg-text);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--bloomberg-text-secondary);
+            text-decoration: none;
+            transition: var(--transition-smooth);
+            font-size: 0.9rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--bloomberg-blue);
+            transform: translateX(5px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--glass-border);
+            padding-top: 2rem;
+            text-align: center;
+        }
+
+        .footer-bottom p {
+            color: var(--bloomberg-text-secondary);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Scroll Reveal */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .problem-title,
+            .value-props-title,
+            .tiers-title {
+                font-size: 2rem;
+            }
+
+            .community-title {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .nav-buttons {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            .hero {
+                padding: 6rem 0 4rem;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .problem-stats,
+            .value-grid,
+            .tier-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .problem-title,
+            .value-props-title,
+            .tiers-title {
+                font-size: 1.8rem;
+            }
+
+            .community-title {
+                font-size: 2rem;
+            }
+
+            .tier-card {
+                padding: 2rem;
+            }
+
+            .calculator-form {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero {
+                padding: 4rem 0 3rem;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .problem-title,
+            .value-props-title,
+            .tiers-title {
+                font-size: 1.5rem;
+            }
+
+            .community-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <img src="images/auxeira-logo.png" alt="Auxeira Logo" class="logo">
+                <span class="brand-text">Auxeira</span>
+            </div>
+           
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="team.html">Team</a></li>
+                <li><a href="partners.html" aria-current="page">Partners</a></li>
+                <li><a href="careers.html">Careers</a></li>
+                <li><a href="studies.html">Studies</a></li>
+            </ul>
+
+            <div class="nav-buttons">
+                <a href="index.html" class="btn btn-outline">Back to Home</a>
+                <button class="btn btn-community" onclick="scrollToCommunity()">Join Community</button>
+            </div>
+
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="team.html">Team</a>
+            <a href="partners.html">Partners</a>
+            <a href="careers.html">Careers</a>
+            <a href="studies.html">Studies</a>
+            <a href="index.html" class="btn btn-outline">Back to Home</a>
+            <button class="btn btn-community" onclick="scrollToCommunity()">Join Community</button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="badge-text">Partner Community</span>
+            </div>
+            <h1 class="hero-title">Stop Losing Customers to Startup Failure</h1>
+            <p class="hero-subtitle">
+                Transform your customer acquisition strategy with pre-validated startups. Access companies with 85.7% success prediction accuracy and earn measurable ROI through strategic partnerships.
+            </p>
+            <div class="hero-buttons">
+                <button class="btn btn-community" onclick="scrollToCommunity()">
+                    <i class="fas fa-users"></i> Join Our Community
+                </button>
+                <button class="btn btn-outline" onclick="scrollToCalculator()">
+                    <i class="fas fa-calculator"></i> Calculate Your ROI
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <!-- Problem Statement -->
+        <section class="problem-section scroll-reveal">
+            <div class="problem-content">
+                <h2 class="problem-title">The $1 Trillion Customer Acquisition Crisis</h2>
+                <p class="problem-description">
+                    Every year, businesses lose billions investing in startups that fail within 36 months. 
+                    Your customer acquisition costs skyrocket while your portfolio companies struggle to survive. 
+                    <strong>What if you could predict success before it happens?</strong>
+                </p>
+                
+                <div class="problem-stats">
+                    <div class="problem-stat">
+                        <div class="problem-stat-value">90%</div>
+                        <div class="problem-stat-label">Startup Failure Rate</div>
+                    </div>
+                    <div class="problem-stat">
+                        <div class="problem-stat-value">$1T+</div>
+                        <div class="problem-stat-label">Annual Economic Loss</div>
+                    </div>
+                    <div class="problem-stat">
+                        <div class="problem-stat-value">156</div>
+                        <div class="problem-stat-label">Days Longer to Series A</div>
+                    </div>
+                    <div class="problem-stat">
+                        <div class="problem-stat-value">3x</div>
+                        <div class="problem-stat-label">Higher CAC for Failed Startups</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Value Propositions -->
+        <section class="value-props scroll-reveal">
+            <div class="value-props-header">
+                <h2 class="value-props-title">Why Partner with Auxeira</h2>
+                <p class="value-props-subtitle">Transform your customer acquisition with measurable, risk-adjusted returns</p>
+            </div>
+            
+            <div class="value-grid">
+                <div class="value-prop">
+                    <div class="value-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h3 class="value-title">Pre-Validated Startups</h3>
+                    <p class="value-description">
+                        Access startups with 85.7% success prediction accuracy. Our behavioral analytics identify high-potential 
+                        companies 6 months before traditional metrics show success.
+                    </p>
+                </div>
+                
+                <div class="value-prop">
+                    <div class="value-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="value-title">Risk-Adjusted Pricing</h3>
+                    <p class="value-description">
+                        Performance-based fee structure ensures you only pay for results. Built-in guarantees and transparent 
+                        ROI tracking with measurable return multiples.
+                    </p>
+                </div>
+                
+                <div class="value-prop">
+                    <div class="value-icon">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <h3 class="value-title">Growing Network Access</h3>
+                    <p class="value-description">
+                        Join our expanding community of partners building the future of startup success. 
+                        Collaborative ecosystem with shared insights and opportunities.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Partnership Tiers -->
+        <section class="tiers-section scroll-reveal">
+            <div class="tiers-header">
+                <h2 class="tiers-title">Choose Your Partnership Level</h2>
+                <p class="tiers-subtitle">Flexible tiers designed for businesses of all sizes with performance-based pricing</p>
+            </div>
+            
+            <div class="tier-grid">
+                <div class="tier-card silver" data-tier="silver">
+                    <div class="tier-header">
+                        <div class="tier-badge silver">Silver</div>
+                        <h3 class="tier-title">Emerging Partners</h3>
+                        <div class="tier-pricing">
+                            <div class="tier-price-annual">$25,000</div>
+                            <div class="tier-price-monthly">$2,083/month</div>
+                            <div class="tier-performance">+ 5% performance fee</div>
+                        </div>
+                    </div>
+                    <ul class="tier-features">
+                        <li><i class="fas fa-check"></i> Risk-adjusted pricing model</li>
+                        <li><i class="fas fa-check"></i> Performance guarantees included</li>
+                        <li><i class="fas fa-check"></i> Ecosystem access & networking</li>
+                        <li><i class="fas fa-check"></i> Mutual growth opportunities</li>
+                        <li><i class="fas fa-check"></i> Startups & emerging services</li>
+                        <li><i class="fas fa-check"></i> Quarterly performance reviews</li>
+                    </ul>
+                    <div class="tier-cta">
+                        <button class="tier-btn silver" onclick="joinCommunity('silver')">
+                            <i class="fas fa-rocket"></i> Start Silver Partnership
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="tier-card gold" data-tier="gold">
+                    <div class="tier-header">
+                        <div class="tier-badge gold">Gold</div>
+                        <h3 class="tier-title">Growth Partners</h3>
+                        <div class="tier-pricing">
+                            <div class="tier-price-annual">$55,000</div>
+                            <div class="tier-price-monthly">$4,583/month</div>
+                            <div class="tier-performance">+ 4% performance fee</div>
+                        </div>
+                    </div>
+                    <ul class="tier-features">
+                        <li><i class="fas fa-check"></i> Risk-adjusted pricing model</li>
+                        <li><i class="fas fa-check"></i> Performance guarantees included</li>
+                        <li><i class="fas fa-check"></i> Full ecosystem access</li>
+                        <li><i class="fas fa-check"></i> Revenue sharing opportunities</li>
+                        <li><i class="fas fa-check"></i> Mid-market SaaS providers</li>
+                        <li><i class="fas fa-check"></i> Monthly performance reviews</li>
+                        <li><i class="fas fa-check"></i> Priority startup access</li>
+                    </ul>
+                    <div class="tier-cta">
+                        <button class="tier-btn gold" onclick="joinCommunity('gold')">
+                            <i class="fas fa-star"></i> Start Gold Partnership
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="tier-card platinum" data-tier="platinum">
+                    <div class="tier-header">
+                        <div class="tier-badge platinum">Platinum</div>
+                        <h3 class="tier-title">Strategic Partners</h3>
+                        <div class="tier-pricing">
+                            <div class="tier-price-annual">$85,000</div>
+                            <div class="tier-price-monthly">$7,083/month</div>
+                            <div class="tier-performance">+ 3% performance fee</div>
+                        </div>
+                    </div>
+                    <ul class="tier-features">
+                        <li><i class="fas fa-check"></i> Risk-adjusted pricing model</li>
+                        <li><i class="fas fa-check"></i> Performance guarantees included</li>
+                        <li><i class="fas fa-check"></i> Full ecosystem access</li>
+                        <li><i class="fas fa-check"></i> Deep platform integration</li>
+                        <li><i class="fas fa-check"></i> Enterprise-level partnerships</li>
+                        <li><i class="fas fa-check"></i> Weekly performance reviews</li>
+                        <li><i class="fas fa-check"></i> Exclusive startup pipeline</li>
+                        <li><i class="fas fa-check"></i> Custom integration support</li>
+                    </ul>
+                    <div class="tier-cta">
+                        <button class="tier-btn platinum" onclick="joinCommunity('platinum')">
+                            <i class="fas fa-crown"></i> Start Platinum Partnership
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ROI Calculator -->
+        <section id="calculator" class="scroll-reveal">
+            <div class="roi-calculator">
+                <div class="calculator-content">
+                    <div class="calculator-header">
+                        <h2 class="calculator-title">
+                            <i class="fas fa-calculator"></i>
+                            Partnership ROI Calculator
+                        </h2>
+                        <p class="calculator-subtitle">Calculate your potential returns with real-time projections</p>
+                    </div>
+                    
+                    <div class="calculator-form">
+                        <div class="form-group">
+                            <label for="partnershipTier">Partnership Tier</label>
+                            <select id="partnershipTier" onchange="updateCalculations()">
+                                <option value="silver">Silver - $25K + 5% performance</option>
+                                <option value="gold">Gold - $55K + 4% performance</option>
+                                <option value="platinum">Platinum - $85K + 3% performance</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="currentCAC">Current Customer Acquisition Cost</label>
+                            <div class="input-group">
+                                <input type="range" id="currentCAC" min="100" max="1000" value="300" oninput="updateCalculations()">
+                                <div class="value-display" id="currentCACValue">$300</div>
+                            </div>
+                            <div class="benchmark-buttons">
+                                <button class="benchmark-btn" onclick="setBenchmark('currentCAC', 150)">SaaS Low</button>
+                                <button class="benchmark-btn" onclick="setBenchmark('currentCAC', 300)">SaaS Mid</button>
+                                <button class="benchmark-btn" onclick="setBenchmark('currentCAC', 500)">Enterprise</button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="startupVolume">Annual Startup Volume</label>
+                            <div class="input-group">
+                                <input type="range" id="startupVolume" min="100" max="5000" value="1000" oninput="updateCalculations()">
+                                <div class="value-display" id="startupVolumeValue">1000</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="avgLTV">Average Customer LTV</label>
+                            <div class="input-group">
+                                <input type="range" id="avgLTV" min="1000" max="20000" value="5000" step="100" oninput="updateCalculations()">
+                                <div class="value-display" id="avgLTVValue">$5,000</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="baselineSurvival">Current Success Rate</label>
+                            <div class="input-group">
+                                <input type="range" id="baselineSurvival" min="0" max="50" value="15" oninput="updateCalculations()">
+                                <div class="value-display" id="baselineSurvivalValue">15%</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="projectionHorizon">Projection Horizon</label>
+                            <select id="projectionHorizon" onchange="updateCalculations()">
+                                <option value="1">1 Year</option>
+                                <option value="3" selected>3 Years</option>
+                                <option value="5">5 Years</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="results-section">
+                        <div class="results-grid">
+                            <div class="result-item">
+                                <div class="result-value" id="totalROI">312%</div>
+                                <div class="result-label">Total ROI</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-value" id="roiMultiple">4.1x</div>
+                                <div class="result-label">ROI Multiple</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-value" id="paybackPeriod">18</div>
+                                <div class="result-label">Payback (Months)</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-value" id="annualBenefit">$847K</div>
+                                <div class="result-label">Annual Benefit</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-value" id="enhancedSurvival">35.6%</div>
+                                <div class="result-label">Enhanced Success Rate</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-value" id="netPresentValue">$2.1M</div>
+                                <div class="result-label">Net Present Value</div>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <canvas id="roiChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Community CTA -->
+    <section id="community" class="community-cta">
+        <div class="community-content">
+            <h2 class="community-title">Ready to Transform Your Customer Acquisition?</h2>
+            <p class="community-subtitle">
+                Join our growing partner community and start accessing pre-validated startups with 85.7% success prediction accuracy. 
+                Performance-based partnerships with measurable ROI and risk-adjusted pricing.
+            </p>
+            
+            <button class="btn" style="background: var(--bloomberg-dark); color: white; padding: 1.5rem 3rem; font-size: 1.2rem; font-weight: 800; border-radius: 12px; border: none; margin-top: 2rem;" onclick="joinCommunity('general')">
+                <i class="fas fa-users"></i> Join Our Partner Community
+            </button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Platform</h3>
+                    <ul class="footer-links">
+                        <li><a href="dashboard.html">Dashboard Demo</a></li>
+                        <li><a href="api.html">API Documentation</a></li>
+                        <li><a href="partners.html">Partner Network</a></li>
+                        <li><a href="insights.html">Data Insights</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Research</h3>
+                    <ul class="footer-links">
+                        <li><a href="whitepaper.html">White-Paper</a></li>
+                        <li><a href="studies.html">Case Studies</a></li>
+                        <li><a href="reports.html">Industry Reports</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Auxeira</a></li>
+                        <li><a href="team.html">Leadership Team</a></li>
+                        <li><a href="careers.html">Careers</a></li>
+                        <li><a href="press.html">Press Kit</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Auxeira. All rights reserved. The Startup Success Engine is a proprietary platform of Auxeira.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let roiChart = null;
+
+        // Scroll functions
+        function scrollToCommunity() {
+            document.getElementById('community').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function scrollToCalculator() {
+            document.getElementById('calculator').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function joinCommunity(tier) {
+            let message = `Join Community - ${tier.charAt(0).toUpperCase() + tier.slice(1)} Partnership`;
+            if (tier === 'general') {
+                message = 'Join Our Partner Community';
+            }
+            alert(`${message} application would open here - this could be a form modal or redirect to application page`);
+        }
+
+        // Calculator functions
+        function setBenchmark(inputId, value) {
+            document.getElementById(inputId).value = value;
+            updateCalculations();
+        }
+
+        function updateCalculations() {
+            // Get input values
+            const tier = document.getElementById('partnershipTier').value;
+            const currentCAC = parseInt(document.getElementById('currentCAC').value);
+            const startupVolume = parseInt(document.getElementById('startupVolume').value);
+            const avgLTV = parseInt(document.getElementById('avgLTV').value);
+            const baselineSurvival = parseInt(document.getElementById('baselineSurvival').value);
+            const projectionHorizon = parseInt(document.getElementById('projectionHorizon').value);
+
+            // Update display values
+            document.getElementById('currentCACValue').textContent = `$${currentCAC}`;
+            document.getElementById('startupVolumeValue').textContent = startupVolume.toLocaleString();
+            document.getElementById('avgLTVValue').textContent = `$${avgLTV.toLocaleString()}`;
+            document.getElementById('baselineSurvivalValue').textContent = `${baselineSurvival}%`;
+
+            // Tier-specific pricing
+            const tierPricing = {
+                silver: { base: 25000, performance: 0.05 },
+                gold: { base: 55000, performance: 0.04 },
+                platinum: { base: 85000, performance: 0.03 }
+            };
+
+            const pricing = tierPricing[tier];
+            
+            // Calculate improvements
+            const cacSavingsPercent = 40; // 40% CAC reduction
+            const failureReduction = 60; // 60% failure reduction
+            const loyaltyPercent = 25; // 25% loyalty improvement
+            const discountRate = 0.10; // 10% discount rate
+            const growthRate = 0.15; // 15% annual growth
+
+            // Core calculations
+            const auxeiraCAC = currentCAC * (1 - cacSavingsPercent / 100);
+            const cacSavings = startupVolume * (currentCAC - auxeiraCAC);
+            
+            const enhancedSurvivalRate = 100 - (100 - baselineSurvival) * (1 - failureReduction / 100);
+            const additionalSurvivors = startupVolume * (enhancedSurvivalRate - baselineSurvival) / 100;
+            const additionalLTV = additionalSurvivors * avgLTV * (loyaltyPercent / 100);
+            
+            const annualBenefit = cacSavings + additionalLTV;
+            const totalCost = pricing.base + (annualBenefit * pricing.performance);
+            
+            // Multi-year projections with growth
+            let totalBenefit = 0;
+            let totalCosts = 0;
+            
+            for (let year = 1; year <= projectionHorizon; year++) {
+                const yearlyBenefit = annualBenefit * Math.pow(1 + growthRate, year - 1);
+                const yearlyCost = pricing.base + (yearlyBenefit * pricing.performance);
+                
+                const discountFactor = Math.pow(1 + discountRate, year);
+                totalBenefit += yearlyBenefit / discountFactor;
+                totalCosts += yearlyCost / discountFactor;
+            }
+            
+            const netPresentValue = totalBenefit - totalCosts;
+            const totalROI = ((totalBenefit - totalCosts) / totalCosts) * 100;
+            const roiMultiple = totalBenefit / totalCosts;
+            const paybackPeriod = Math.ceil((pricing.base / (annualBenefit - pricing.base * pricing.performance)) * 12);
+
+            // Update results
+            document.getElementById('totalROI').textContent = `${Math.round(totalROI)}%`;
+            document.getElementById('roiMultiple').textContent = `${roiMultiple.toFixed(1)}x`;
+            document.getElementById('paybackPeriod').textContent = `${paybackPeriod}`;
+            document.getElementById('annualBenefit').textContent = `$${Math.round(annualBenefit / 1000)}K`;
+            document.getElementById('enhancedSurvival').textContent = `${enhancedSurvivalRate.toFixed(1)}%`;
+            document.getElementById('netPresentValue').textContent = `$${(netPresentValue / 1000000).toFixed(1)}M`;
+
+            // Update chart
+            updateChart(projectionHorizon, annualBenefit, pricing, growthRate);
+        }
+
+        function updateChart(years, annualBenefit, pricing, growthRate) {
+            const ctx = document.getElementById('roiChart').getContext('2d');
+            
+            if (roiChart) {
+                roiChart.destroy();
+            }
+
+            const labels = [];
+            const benefits = [];
+            const costs = [];
+            const netValues = [];
+
+            for (let year = 1; year <= years; year++) {
+                labels.push(`Year ${year}`);
+                const yearlyBenefit = annualBenefit * Math.pow(1 + growthRate, year - 1);
+                const yearlyCost = pricing.base + (yearlyBenefit * pricing.performance);
+                
+                benefits.push(Math.round(yearlyBenefit / 1000));
+                costs.push(Math.round(yearlyCost / 1000));
+                netValues.push(Math.round((yearlyBenefit - yearlyCost) / 1000));
+            }
+
+            roiChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Annual Benefits ($K)',
+                            data: benefits,
+                            backgroundColor: 'rgba(40, 167, 69, 0.8)',
+                            borderColor: 'rgba(40, 167, 69, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Annual Costs ($K)',
+                            data: costs,
+                            backgroundColor: 'rgba(220, 53, 69, 0.8)',
+                            borderColor: 'rgba(220, 53, 69, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Net Value ($K)',
+                            data: netValues,
+                            backgroundColor: 'rgba(0, 123, 255, 0.8)',
+                            borderColor: 'rgba(0, 123, 255, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#f0f6fc'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: '#8b949e'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: '#8b949e'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Mobile menu functionality
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('active');
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Header scroll effect
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+
+            // Scroll reveal animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all scroll reveal elements
+            document.querySelectorAll('.scroll-reveal').forEach(element => {
+                observer.observe(element);
+            });
+
+            // Enhanced hover effects for cards
+            document.querySelectorAll('.value-prop, .tier-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px) scale(1.02)';
+                    this.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(event) {
+                const mobileMenu = document.getElementById('mobileMenu');
+                const menuBtn = document.querySelector('.mobile-menu-btn');
+                
+                if (!mobileMenu.contains(event.target) && !menuBtn.contains(event.target)) {
+                    mobileMenu.classList.remove('active');
+                }
+            });
+
+            // Add floating animation to badges
+            document.querySelectorAll('.hero-badge, .tier-badge').forEach(element => {
+                element.classList.add('float');
+            });
+
+            // Initialize calculator
+            updateCalculations();
+        });
+    </script>
+<script src="js/recaptcha-fix.js"></script>
+</body>
+</html>
+

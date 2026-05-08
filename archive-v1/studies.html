@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auxeira | Case Studies & Impact</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <meta name="description" content="Measurable impact across global startups using Auxeira's Startup Success Engine">
+    <meta name="keywords" content="startup success, case studies, behavioral economics, impact measurement, entrepreneurship">
+    <meta property="og:title" content="Auxeira | Case Studies & Impact">
+    <meta property="og:description" content="Discover how Auxeira's platform is transforming startup outcomes through behavioral interventions and data-driven insights.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://auxeira.com/studies.html">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Strategic Design System - Enhanced Bloomberg Terminal Aesthetic */
+        :root {
+            --bloomberg-dark: #0d1117;
+            --bloomberg-charcoal: #161b22;
+            --bloomberg-blue: #007bff;
+            --bloomberg-accent: #ffd700;
+            --bloomberg-text: #f0f6fc;
+            --bloomberg-text-secondary: #8b949e;
+            --bloomberg-gray: #30363d;
+            --bloomberg-success: #28a745;
+            --bloomberg-warning: #ffc107;
+            --bloomberg-danger: #dc3545;
+            --bloomberg-orange: #FF6B35;
+            --border-radius: 8px;
+            --border-radius-lg: 12px;
+            --border-radius-xl: 16px;
+            --border-radius-2xl: 20px;
+            --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.2);
+            --shadow-xl: 0 15px 35px rgba(0, 0, 0, 0.25);
+            --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.35);
+            --font-mono: 'JetBrains Mono', monospace;
+            --glass-bg: rgba(13, 17, 23, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --gradient-primary: linear-gradient(135deg, var(--bloomberg-blue) 0%, var(--bloomberg-accent) 100%);
+            --gradient-secondary: linear-gradient(135deg, var(--bloomberg-dark) 0%, var(--bloomberg-charcoal) 100%);
+            --gradient-hero: linear-gradient(135deg, var(--bloomberg-dark) 0%, var(--bloomberg-charcoal) 50%, var(--bloomberg-dark) 100%);
+            --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            --transition-spring: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 3rem;
+            --spacing-3xl: 4rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--bloomberg-text);
+            background-color: var(--bloomberg-dark);
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(0, 123, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 123, 255, 0.05) 0%, transparent 50%);
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Strategic Header Design */
+        .header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition-smooth);
+        }
+
+        .header.scrolled {
+            box-shadow: var(--shadow-2xl);
+            background: rgba(13, 17, 23, 0.95);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo {
+            height: 40px;
+            width: auto;
+            transition: var(--transition-smooth);
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .brand-text {
+            font-weight: 800;
+            font-size: 1.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: var(--transition-smooth);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: var(--bloomberg-text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition-smooth);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: var(--bloomberg-blue);
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border-color: var(--bloomberg-blue);
+            color: var(--bloomberg-blue);
+        }
+
+        .btn-outline:hover {
+            background: var(--bloomberg-blue);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary {
+            background: var(--bloomberg-blue);
+            border-color: var(--bloomberg-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--bloomberg-accent);
+            border-color: var(--bloomberg-accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 25px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .mobile-menu-btn span {
+            width: 100%;
+            height: 2px;
+            background-color: var(--bloomberg-text);
+            transition: var(--transition-smooth);
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            padding: 1rem;
+            z-index: 999;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+        }
+
+        .mobile-menu a {
+            color: var(--bloomberg-text);
+            text-decoration: none;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--glass-border);
+            transition: var(--transition-smooth);
+        }
+
+        .mobile-menu a:hover {
+            color: var(--bloomberg-blue);
+            transform: translateX(10px);
+        }
+
+        .mobile-menu .btn {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        /* Strategic Hero Section */
+        .hero {
+            background: var(--gradient-hero);
+            padding: 8rem 0 6rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.03"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            z-index: 1;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(0, 123, 255, 0.1) 0%, transparent 70%);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 0.75rem 2rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .badge-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--bloomberg-blue);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge-text::before {
+            content: '📊';
+            font-size: 1.2rem;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: var(--bloomberg-text-secondary);
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        /* Section Styles */
+        section {
+            padding: 6rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 5rem;
+        }
+
+        .section-badge {
+            display: inline-block;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 0.5rem 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--bloomberg-blue);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--bloomberg-text);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            color: var(--bloomberg-text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Card Grid */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-xl);
+            overflow: hidden;
+            transition: var(--transition-bounce);
+            position: relative;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.1) 0%, rgba(255, 215, 0, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-2xl);
+            border-color: var(--bloomberg-blue);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--bloomberg-blue) 0%, var(--bloomberg-charcoal) 100%);
+            color: var(--bloomberg-text);
+            padding: 2rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            transition: var(--transition-smooth);
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-list li:hover {
+            color: var(--bloomberg-text);
+            transform: translateX(5px);
+        }
+
+        .feature-list i {
+            color: var(--bloomberg-success);
+            margin-top: 4px;
+            flex-shrink: 0;
+            font-size: 1.1rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .stat-item {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: 2rem;
+            text-align: center;
+            transition: var(--transition-bounce);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.1) 0%, rgba(255, 215, 0, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--bloomberg-blue);
+        }
+
+        .stat-item:hover::before {
+            opacity: 1;
+        }
+
+        .stat-item > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--bloomberg-blue);
+            margin-bottom: 0.5rem;
+            font-family: var(--font-mono);
+            transition: var(--transition-smooth);
+        }
+
+        .stat-item:hover .stat-number {
+            color: var(--bloomberg-accent);
+            transform: scale(1.1);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--bloomberg-text-secondary);
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        /* Chart Containers */
+        .chart-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-xl);
+            padding: 2.5rem;
+            margin: 3rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.05) 0%, rgba(255, 215, 0, 0.05) 100%);
+            z-index: 0;
+        }
+
+        .chart-container > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Case Study Styles */
+        .case-study {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-xl);
+            overflow: hidden;
+            margin-bottom: 3rem;
+            transition: var(--transition-bounce);
+            position: relative;
+        }
+
+        .case-study::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.1) 0%, rgba(255, 215, 0, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .case-study:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-2xl);
+            border-color: var(--bloomberg-blue);
+        }
+
+        .case-study:hover::before {
+            opacity: 1;
+        }
+
+        .case-study > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .case-study-header {
+            background: linear-gradient(135deg, var(--bloomberg-blue) 0%, var(--bloomberg-charcoal) 100%);
+            color: var(--bloomberg-text);
+            padding: 2.5rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .case-study-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .case-study-header p {
+            color: var(--bloomberg-text-secondary);
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .case-study-body {
+            padding: 2.5rem;
+        }
+
+        .case-study-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .case-study-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .case-study-section h3 {
+            font-size: 1.3rem;
+            color: var(--bloomberg-orange);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 600;
+        }
+
+        .case-study-section p {
+            color: var(--bloomberg-text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Scroll Reveal */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .section-header h2 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .nav-buttons {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            .hero {
+                padding: 6rem 0 4rem;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
+            }
+
+            .section-header p {
+                font-size: 1.1rem;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero {
+                padding: 4rem 0 3rem;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header h2 {
+                font-size: 1.8rem;
+            }
+
+            .case-study-header,
+            .case-study-body {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <img src="images/auxeira-logo.png" alt="Auxeira Logo" class="logo">
+                <span class="brand-text">Auxeira</span>
+            </div>
+           
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="team.html">Team</a></li>
+                <li><a href="partners.html">Partners</a></li>
+                <li><a href="careers.html">Careers</a></li>
+            </ul>
+
+            <div class="nav-buttons">
+                <a href="index.html" class="btn btn-outline">Back to Home</a>
+                <a href="demo.html" class="btn btn-primary">View Demo</a>
+            </div>
+
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="team.html">Team</a>
+            <a href="partners.html">Partners</a>
+            <a href="careers.html">Careers</a>
+            <a href="index.html" class="btn btn-outline">Back to Home</a>
+            <a href="demo.html" class="btn btn-primary">View Demo</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="badge-text">Measurable Impact Across Global Startups</span>
+            </div>
+            <h1 class="hero-title">Case Studies: Transforming Startup Outcomes</h1>
+            <p class="hero-subtitle">
+                Discover how Auxeira's Startup Success Engine is driving measurable results through behavioral interventions and data-driven insights across diverse global markets.
+            </p>
+        </div>
+    </section>
+
+    <!-- Partnership Opportunities Section -->
+    <section id="partnerships" class="scroll-reveal">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">Partnership Ecosystem</div>
+                <h2>Partnership Opportunities</h2>
+                <p>Creating value for all ecosystem participants through strategic collaboration and verified performance intelligence</p>
+            </div>
+            
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-header">For Partners</div>
+                    <div class="card-body">
+                        <ul class="feature-list">
+                            <li><i class="fas fa-chart-line"></i> Revenue Sharing: 15-25% of integrated service value</li>
+                            <li><i class="fas fa-bullhorn"></i> Co-marketing Opportunities: Joint content and event participation</li>
+                            <li><i class="fas fa-database"></i> Data Insights: Aggregated behavioral analytics and trends</li>
+                            <li><i class="fas fa-code"></i> API Integration: Seamless technical connectivity</li>
+                            <li><i class="fas fa-handshake"></i> Strategic Alliance: Long-term partnership development</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">For Startups</div>
+                    <div class="card-body">
+                        <ul class="feature-list">
+                            <li><i class="fas fa-tachometer-alt"></i> Unified Dashboard: Single interface for all business metrics</li>
+                            <li><i class="fas fa-sync"></i> Automated Data Flow: Reduced manual reporting overhead</li>
+                            <li><i class="fas fa-analytics"></i> Enhanced Analytics: Cross-platform behavioral insights</li>
+                            <li><i class="fas fa-tags"></i> Cost Optimization: Bundled services and preferential pricing</li>
+                            <li><i class="fas fa-rocket"></i> Growth Acceleration: Systematic performance optimization</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">Business Partnership Process</div>
+                    <div class="card-body">
+                        <ul class="feature-list">
+                            <li><i class="fas fa-handshake"></i> Partnership Agreement: Revenue sharing and responsibilities</li>
+                            <li><i class="fas fa-chart-line"></i> Co-marketing Planning: Joint promotion strategy</li>
+                            <li><i class="fas fa-graduation-cap"></i> Training & Certification: Platform expertise development</li>
+                            <li><i class="fas fa-headset"></i> Ongoing Support: Relationship management and optimization</li>
+                            <li><i class="fas fa-trophy"></i> Success Metrics: Performance tracking and improvement</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 3rem;">
+                <div class="card-header">Government & Economic Development</div>
+                <div class="card-body">
+                    <div class="card-grid" style="grid-template-columns: 1fr;">
+                        <div>
+                            <h3 style="color: var(--bloomberg-text); margin-bottom: 1.5rem;">Partnership Opportunities</h3>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-building"></i> Regional development agencies and economic zones</li>
+                                <li><i class="fas fa-seedling"></i> Startup ecosystem support programs and incubators</li>
+                                <li><i class="fas fa-chart-bar"></i> Economic impact measurement partnerships</li>
+                                <li><i class="fas fa-balance-scale"></i> Policy research and development initiatives</li>
+                                <li><i class="fas fa-globe"></i> International development and trade programs</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section id="results" class="scroll-reveal" style="background: var(--bloomberg-charcoal);">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">Platform Results</div>
+                <h2>Intended Results from Our Behavioral Intervention Platform</h2>
+                <p>Measurable outcomes demonstrating the transformative impact of systematic behavioral optimization</p>
+            </div>
+            
+            <h3 style="text-align: center; margin-bottom: 3rem; color: var(--bloomberg-text);">Statistical Outcomes</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">35.6%</div>
+                    <div class="stat-label">Success Rate (SSE participants)</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">15.2%</div>
+                    <div class="stat-label">Success Rate (control group)</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">32%</div>
+                    <div class="stat-label">Risk Reduction</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">27%</div>
+                    <div class="stat-label">Job Creation Increase</div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="successChart"></canvas>
+            </div>
+            
+            <h3 style="text-align: center; margin-bottom: 3rem; color: var(--bloomberg-text);">Behavioral Change Results</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">78%</div>
+                    <div class="stat-label">Customer Interview Completion Increase</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">85%</div>
+                    <div class="stat-label">Financial Discipline Improvement</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">67%</div>
+                    <div class="stat-label">Team Meeting Frequency Increase</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">43%</div>
+                    <div class="stat-label">ESG Compliance Improvement</div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="behaviorChart"></canvas>
+            </div>
+            
+            <h3 style="text-align: center; margin-bottom: 3rem; color: var(--bloomberg-text);">Value Impact for the First 100 Startups</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-header">Portfolio Performance</div>
+                    <div class="card-body">
+                        <ul class="feature-list">
+                            <li><i class="fas fa-chart-line"></i> Portfolio IRR: 23% improvement over 3-year period</li>
+                            <li><i class="fas fa-money-bill-wave"></i> Write-off Reduction: 15% decrease in total losses</li>
+                            <li><i class="fas fa-rocket"></i> Follow-on Success: 30% increase in Series A progression</li>
+                            <li><i class="fas fa-tachometer-alt"></i> Monitoring Efficiency: 50% reduction in manual oversight</li>
+                            <li><i class="fas fa-trophy"></i> Success Metrics: 85.7% prediction accuracy achieved</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">Impact Investment Fund Beta (89 Startups)</div>
+                    <div class="card-body">
+                        <ul class="feature-list">
+                            <li><i class="fas fa-hand-holding-heart"></i> Social ROI: 4.2x return on impact investment</li>
+                            <li><i class="fas fa-check-circle"></i> ESG Compliance: 89% full compliance across portfolio</li>
+                            <li><i class="fas fa-award"></i> B-Corp Certification: 34 startups achieved certification</li>
+                            <li><i class="fas fa-globe"></i> UN SDG Alignment: All portfolio companies aligned to 3+ goals</li>
+                            <li><i class="fas fa-leaf"></i> Environmental Impact: 2,300t CO2 reduced annually</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Case Studies Section -->
+    <section id="case-studies" class="scroll-reveal">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">Success Stories</div>
+                <h2>Case Studies</h2>
+                <p>Real-world examples of startups transformed through our behavioral intervention platform</p>
+            </div>
+            
+            <div class="case-study">
+                <div class="case-study-header">
+                    <h2>Case Study 1: SaaS Startup Acceleration</h2>
+                    <p>Early-stage SaaS startup struggling with customer validation and product-market fit</p>
+                </div>
+                <div class="case-study-body">
+                    <div class="case-study-section">
+                        <h3><i class="fas fa-exclamation-circle"></i> Challenge</h3>
+                        <p>Early-stage SaaS startup struggling with customer validation and product-market fit. The company was conducting only 2 customer interviews per week and had unclear product direction, leading to slow growth and investor concerns.</p>
+                    </div>
+                    
+                    <div class="case-study-section">
+                        <h3><i class="fas fa-cogs"></i> SSE Intervention</h3>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-bullseye"></i> Behavioral Target: Increase customer interviews from 2 to 8 per week</li>
+                            <li><i class="fas fa-bell"></i> Nudge Strategy: 150 AUX token rewards for weekly interview targets</li>
+                            <li><i class="fas fa-chart-line"></i> KPI Tracking: Real-time NPS and LTV/CAC monitoring</li>
+                            <li><i class="fas fa-robot"></i> AI Coaching: Weekly behavioral insights and recommendations</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="case-study-section">
+                        <h3><i class="fas fa-chart-line"></i> Results</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-number">94</div>
+                                <div class="stat-label">SSI Score (Top 5%)</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">340%</div>
+                                <div class="stat-label">Revenue Growth (18 months)</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">$15M</div>
+                                <div class="stat-label">Series A Funding</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">4 → 23</div>
+                                <div class="stat-label">Team Growth</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="case-study">
+                <div class="case-study-header">
+                    <h2>Case Study 2: GreenScale (Impact Investment)</h2>
+                    <p>Clean-tech startup needing to demonstrate measurable environmental impact</p>
+                </div>
+                <div class="case-study-body">
+                    <div class="case-study-section">
+                        <h3><i class="fas fa-exclamation-circle"></i> Challenge</h3>
+                        <p>Clean-tech startup needing to demonstrate measurable environmental impact to attract impact investors and secure funding. Lacked systematic ESG tracking and impact measurement capabilities.</p>
+                    </div>
+                    
+                    <div class="case-study-section">
+                        <h3><i class="fas fa-cogs"></i> SSE Intervention</h3>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-leaf"></i> ESG Integration: Automated UN SDG tracking and reporting</li>
+                            <li><i class="fas fa-chart-bar"></i> Impact Metrics: Real-time carbon offset and sustainability KPIs</li>
+                            <li><i class="fas fa-dashboard"></i> Investor Communication: Monthly impact dashboards</li>
+                            <li><i class="fas fa-certificate"></i> Compliance Support: B-Corp certification guidance</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="case-study-section">
+                        <h3><i class="fas fa-chart-line"></i> Results</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-number">91/100</div>
+                                <div class="stat-label">ESG Score (20% above average)</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">$8M</div>
+                                <div class="stat-label">Series A Impact Investment</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">456</div>
+                                <div class="stat-label">Jobs Created</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">2,300t</div>
+                                <div class="stat-label">CO2 Reduced Annually</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Regional Impact Section -->
+    <section id="regional-impact" class="scroll-reveal" style="background: var(--bloomberg-charcoal);">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">Global Impact</div>
+                <h2>Regional Impact: Emerging Markets</h2>
+                <p>Demonstrating our platform's effectiveness in diverse global markets and economic conditions</p>
+            </div>
+            
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-header">Southern Africa Portfolio (24 Startups)</div>
+                    <div class="card-body">
+                        <ul class="feature-list">
+                            <li><i class="fas fa-trophy"></i> Success Rate: 42% vs. 8% regional average</li>
+                            <li><i class="fas fa-briefcase"></i> Job Creation: 1,247 positions across portfolio</li>
+                            <li><i class="fas fa-dollar-sign"></i> Economic Impact: $89M GDP contribution</li>
+                            <li><i class="fas fa-chart-line"></i> Funding Success: 67% secured follow-on investment</li>
+                            <li><i class="fas fa-globe"></i> Market Expansion: 18 startups entered new markets</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">East Africa Portfolio (18 Startups)</div>
+                    <div class="card-body">
+                        <ul class="feature-list">
+                            <li><i class="fas fa-trophy"></i> Success Rate: 38% vs. 5% regional average</li>
+                            <li><i class="fas fa-industry"></i> Sector Focus: FinTech, HealthTech, AgriTech</li>
+                            <li><i class="fas fa-lightbulb"></i> Innovation Output: 23 patents filed, 67 products launched</li>
+                            <li><i class="fas fa-venus"></i> Female Founder Success: 45% of portfolio (3x industry rate)</li>
+                            <li><i class="fas fa-handshake"></i> Partnership Network: 32 strategic alliances formed</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="regionalChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- Validation Section -->
+    <section id="validation" class="scroll-reveal">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">Academic Recognition</div>
+                <h2>Validation & Research</h2>
+                <p>Academic and industry recognition of our methodology and transformative results</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">Research Validation</div>
+                <div class="card-body">
+                    <ul class="feature-list">
+                        <li><i class="fas fa-presentation"></i> Conference Presentations: 6 international entrepreneurship conferences at the Johannesburg Stock Exchange (JSE), supported by MIT and YALI fellowship</li>
+                        <li><i class="fas fa-clipboard-check"></i> Methodology Recognition: RCT design praised for statistical rigor, registered with AEAregistry for transparency</li>
+                        <li><i class="fas fa-database"></i> Data Sharing: Open-source datasets available for research community collaboration</li>
+                        <li><i class="fas fa-award"></i> Academic Partnerships: Collaborations with MIT, Dartmouth, and leading business schools</li>
+                        <li><i class="fas fa-book"></i> Publication Pipeline: 3 peer-reviewed papers in preparation for top-tier journals</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Header scroll effect
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+
+            // Scroll reveal animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all scroll reveal elements
+            document.querySelectorAll('.scroll-reveal').forEach(element => {
+                observer.observe(element);
+            });
+
+            // Enhanced hover effects for cards
+            document.querySelectorAll('.stat-item, .card, .case-study').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                    this.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Success Rate Comparison Chart
+            const successCtx = document.getElementById('successChart').getContext('2d');
+            new Chart(successCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Control Group', 'SSE Participants'],
+                    datasets: [{
+                        label: 'Success Rate (%)',
+                        data: [15.2, 35.6],
+                        backgroundColor: [
+                            'rgba(220, 53, 69, 0.7)',
+                            'rgba(0, 123, 255, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(220, 53, 69, 1)',
+                            'rgba(0, 123, 255, 1)'
+                        ],
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#f0f6fc',
+                                font: {
+                                    family: 'Inter'
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Success Rate Comparison',
+                            color: '#f0f6fc',
+                            font: {
+                                size: 16,
+                                family: 'Inter',
+                                weight: 'bold'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 40,
+                            title: {
+                                display: true,
+                                text: 'Success Rate (%)',
+                                color: '#8b949e',
+                                font: {
+                                    family: 'Inter'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#8b949e',
+                                font: {
+                                    family: 'Inter'
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#8b949e',
+                                font: {
+                                    family: 'Inter'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Behavioral Change Chart
+            const behaviorCtx = document.getElementById('behaviorChart').getContext('2d');
+            new Chart(behaviorCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Customer Interviews', 'Financial Discipline', 'Team Meetings', 'ESG Compliance'],
+                    datasets: [{
+                        label: 'Improvement (%)',
+                        data: [78, 85, 67, 43],
+                        backgroundColor: 'rgba(0, 123, 255, 0.2)',
+                        borderColor: 'rgba(0, 123, 255, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(255, 215, 0, 1)',
+                        pointBorderColor: 'rgba(255, 215, 0, 1)',
+                        pointRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#f0f6fc',
+                                font: {
+                                    family: 'Inter'
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Behavioral Change Results',
+                            color: '#f0f6fc',
+                            font: {
+                                size: 16,
+                                family: 'Inter',
+                                weight: 'bold'
+                            }
+                        }
+                    },
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            angleLines: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#8b949e',
+                                font: {
+                                    family: 'Inter'
+                                }
+                            },
+                            pointLabels: {
+                                color: '#f0f6fc',
+                                font: {
+                                    family: 'Inter',
+                                    size: 12
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Regional Impact Chart
+            const regionalCtx = document.getElementById('regionalChart').getContext('2d');
+            new Chart(regionalCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Southern Africa', 'East Africa', 'Other Regions'],
+                    datasets: [{
+                        data: [24, 18, 8],
+                        backgroundColor: [
+                            'rgba(0, 123, 255, 0.8)',
+                            'rgba(255, 215, 0, 0.8)',
+                            'rgba(40, 167, 69, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(0, 123, 255, 1)',
+                            'rgba(255, 215, 0, 1)',
+                            'rgba(40, 167, 69, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#f0f6fc',
+                                font: {
+                                    family: 'Inter'
+                                },
+                                padding: 20
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Regional Portfolio Distribution',
+                            color: '#f0f6fc',
+                            font: {
+                                size: 16,
+                                family: 'Inter',
+                                weight: 'bold'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Counter animation for stats
+            function animateCounters() {
+                const counters = document.querySelectorAll('.stat-number');
+                counters.forEach(counter => {
+                    const target = parseFloat(counter.textContent.replace(/[^\d.]/g, ''));
+                    const increment = target / 50;
+                    let current = 0;
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            counter.textContent = counter.textContent.replace(/[\d.]+/, target);
+                            clearInterval(timer);
+                        } else {
+                            const value = counter.textContent.includes('.') ? 
+                                current.toFixed(1) : Math.floor(current);
+                            counter.textContent = counter.textContent.replace(/[\d.]+/, value);
+                        }
+                    }, 30);
+                });
+            }
+
+            // Trigger counter animation when stats are visible
+            const statsObserver = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounters();
+                        statsObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            const statsSection = document.querySelector('#results');
+            if (statsSection) {
+                statsObserver.observe(statsSection);
+            }
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+
+        // Mobile menu functionality
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('active');
+        }
+
+        // Add floating animation to some elements
+        document.querySelectorAll('.hero-badge, .section-badge').forEach(element => {
+            element.classList.add('float');
+        });
+    </script>
+</body>
+</html>
+

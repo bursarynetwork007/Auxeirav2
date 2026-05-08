@@ -1,0 +1,1992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auxeira | Industry Reports: Comprehensive Market Intelligence & Trend Analysis</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <meta name="description" content="In-depth analysis of startup ecosystem dynamics and intervention opportunities">
+    <meta name="keywords" content="startup reports, market intelligence, venture capital, economic development, behavioral economics">
+    <meta property="og:title" content="Auxeira | Industry Reports: Comprehensive Market Intelligence">
+    <meta property="og:description" content="Access comprehensive analysis of startup ecosystem dynamics, investor challenges, and government impact opportunities.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://auxeira.com/reports.html">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Strategic Design System - Enhanced Bloomberg Terminal Aesthetic */
+        :root {
+            --bloomberg-dark: #0d1117;
+            --bloomberg-charcoal: #161b22;
+            --bloomberg-blue: #007bff;
+            --bloomberg-accent: #ffd700;
+            --bloomberg-text: #f0f6fc;
+            --bloomberg-text-secondary: #8b949e;
+            --bloomberg-gray: #30363d;
+            --bloomberg-success: #28a745;
+            --bloomberg-warning: #ffc107;
+            --bloomberg-danger: #dc3545;
+            --bloomberg-orange: #FF6B35;
+            --border-radius: 8px;
+            --border-radius-lg: 12px;
+            --border-radius-xl: 16px;
+            --border-radius-2xl: 20px;
+            --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.2);
+            --shadow-xl: 0 15px 35px rgba(0, 0, 0, 0.25);
+            --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.35);
+            --font-mono: 'JetBrains Mono', monospace;
+            --glass-bg: rgba(13, 17, 23, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --gradient-primary: linear-gradient(135deg, var(--bloomberg-blue) 0%, var(--bloomberg-accent) 100%);
+            --gradient-secondary: linear-gradient(135deg, var(--bloomberg-dark) 0%, var(--bloomberg-charcoal) 100%);
+            --gradient-hero: linear-gradient(135deg, var(--bloomberg-dark) 0%, var(--bloomberg-charcoal) 50%, var(--bloomberg-dark) 100%);
+            --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            --transition-spring: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 3rem;
+            --spacing-3xl: 4rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--bloomberg-text);
+            background-color: var(--bloomberg-dark);
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(0, 123, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 123, 255, 0.05) 0%, transparent 50%);
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Strategic Header Design */
+        .header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition-smooth);
+        }
+
+        .header.scrolled {
+            box-shadow: var(--shadow-2xl);
+            background: rgba(13, 17, 23, 0.95);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo {
+            height: 40px;
+            width: auto;
+            transition: var(--transition-smooth);
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .brand-text {
+            font-weight: 800;
+            font-size: 1.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: var(--transition-smooth);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: var(--bloomberg-text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition-smooth);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: var(--bloomberg-blue);
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border-color: var(--bloomberg-blue);
+            color: var(--bloomberg-blue);
+        }
+
+        .btn-outline:hover {
+            background: var(--bloomberg-blue);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary {
+            background: var(--bloomberg-blue);
+            border-color: var(--bloomberg-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--bloomberg-accent);
+            border-color: var(--bloomberg-accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 25px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .mobile-menu-btn span {
+            width: 100%;
+            height: 2px;
+            background-color: var(--bloomberg-text);
+            transition: var(--transition-smooth);
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            padding: 1rem;
+            z-index: 999;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+        }
+
+        .mobile-menu a {
+            color: var(--bloomberg-text);
+            text-decoration: none;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--glass-border);
+            transition: var(--transition-smooth);
+        }
+
+        .mobile-menu a:hover {
+            color: var(--bloomberg-blue);
+            transform: translateX(10px);
+        }
+
+        .mobile-menu .btn {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        /* Strategic Hero Section */
+        .hero {
+            background: var(--gradient-hero);
+            padding: 8rem 0 6rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.03"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            z-index: 1;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(0, 123, 255, 0.1) 0%, transparent 70%);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 0.75rem 2rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .badge-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--bloomberg-blue);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge-text::before {
+            content: '📊';
+            font-size: 1.2rem;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: var(--bloomberg-text-secondary);
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        /* Section Styles */
+        section {
+            padding: 6rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 5rem;
+        }
+
+        .section-badge {
+            display: inline-block;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 0.5rem 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--bloomberg-blue);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--bloomberg-text);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            color: var(--bloomberg-text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Tabs Navigation */
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            margin: var(--spacing-2xl) 0;
+            border-bottom: 1px solid var(--bloomberg-gray);
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+        }
+
+        .tab-btn {
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--bloomberg-text-secondary);
+            position: relative;
+            transition: var(--transition-smooth);
+            font-family: 'Inter', sans-serif;
+            flex: 1;
+            text-align: center;
+            border-right: 1px solid var(--glass-border);
+        }
+
+        .tab-btn:last-child {
+            border-right: none;
+        }
+
+        .tab-btn:hover {
+            color: var(--bloomberg-text);
+            background: rgba(0, 123, 255, 0.1);
+        }
+
+        .tab-btn.active {
+            color: var(--bloomberg-text);
+            background: var(--bloomberg-blue);
+        }
+
+        /* Report Sections */
+        .report-section {
+            display: none;
+            padding: var(--spacing-2xl) 0;
+        }
+
+        .report-section.active {
+            display: block;
+        }
+
+        /* Stats Overview */
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-xl);
+            margin: var(--spacing-2xl) 0;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-xl);
+            text-align: center;
+            transition: var(--transition-bounce);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.1) 0%, rgba(255, 215, 0, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--bloomberg-blue);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--bloomberg-blue);
+            margin-bottom: 0.5rem;
+            font-family: var(--font-mono);
+            transition: var(--transition-smooth);
+        }
+
+        .stat-card:hover .stat-value {
+            color: var(--bloomberg-accent);
+            transform: scale(1.1);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--bloomberg-text-secondary);
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        /* Card Grid */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-xl);
+            overflow: hidden;
+            transition: var(--transition-bounce);
+            position: relative;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.1) 0%, rgba(255, 215, 0, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-2xl);
+            border-color: var(--bloomberg-blue);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--bloomberg-blue) 0%, var(--bloomberg-charcoal) 100%);
+            color: var(--bloomberg-text);
+            padding: 2rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            transition: var(--transition-smooth);
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-list li:hover {
+            color: var(--bloomberg-text);
+            transform: translateX(5px);
+        }
+
+        .feature-list i {
+            color: var(--bloomberg-success);
+            margin-top: 4px;
+            flex-shrink: 0;
+            font-size: 1.1rem;
+        }
+
+        /* Chart Containers */
+        .chart-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-xl);
+            padding: 2.5rem;
+            margin: 3rem 0;
+            position: relative;
+            overflow: hidden;
+            height: 400px;
+        }
+
+        .chart-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.05) 0%, rgba(255, 215, 0, 0.05) 100%);
+            z-index: 0;
+        }
+
+        .chart-container > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Regional Analysis */
+        .regional-analysis {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-xl);
+            margin: var(--spacing-2xl) 0;
+        }
+
+        .region-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-xl);
+            transition: var(--transition-bounce);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .region-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.1) 0%, rgba(255, 215, 0, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .region-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--bloomberg-orange);
+        }
+
+        .region-card:hover::before {
+            opacity: 1;
+        }
+
+        .region-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .region-card h4 {
+            color: var(--bloomberg-text);
+            margin-bottom: var(--spacing-md);
+            border-bottom: 1px solid var(--bloomberg-gray);
+            padding-bottom: var(--spacing-sm);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .region-card h4::before {
+            content: '🌍';
+            font-size: 1.2rem;
+        }
+
+        .region-card p {
+            color: var(--bloomberg-text-secondary);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* Download Button */
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            background: var(--bloomberg-blue);
+            color: white;
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            transition: var(--transition-smooth);
+            border: none;
+            cursor: pointer;
+            margin-top: var(--spacing-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .download-btn:hover::before {
+            left: 100%;
+        }
+
+        .download-btn:hover {
+            background: var(--bloomberg-orange);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bloomberg-dark);
+            border-top: 1px solid var(--glass-border);
+            padding: 3rem 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: var(--bloomberg-text);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--bloomberg-text-secondary);
+            text-decoration: none;
+            transition: var(--transition-smooth);
+            font-size: 0.9rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--bloomberg-blue);
+            transform: translateX(5px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--glass-border);
+            padding-top: 2rem;
+            text-align: center;
+        }
+
+        .footer-bottom p {
+            color: var(--bloomberg-text-secondary);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Scroll Reveal */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .section-header h2 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .nav-buttons {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            .hero {
+                padding: 6rem 0 4rem;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
+            }
+
+            .section-header p {
+                font-size: 1.1rem;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .regional-analysis {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                flex-direction: column;
+                border-bottom: none;
+            }
+            
+            .tab-btn {
+                border-bottom: 1px solid var(--glass-border);
+                border-right: none;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero {
+                padding: 4rem 0 3rem;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .stats-overview {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header h2 {
+                font-size: 1.8rem;
+            }
+
+            .chart-container {
+                padding: 1.5rem;
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <img src="images/auxeira-logo.png" alt="Auxeira Logo" class="logo">
+                <span class="brand-text">Auxeira</span>
+            </div>
+           
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="team.html">Team</a></li>
+                <li><a href="partners.html">Partners</a></li>
+                <li><a href="careers.html">Careers</a></li>
+                <li><a href="studies.html">Studies</a></li>
+            </ul>
+
+            <div class="nav-buttons">
+                <a href="index.html" class="btn btn-outline">Back to Home</a>
+                <a href="demo.html" class="btn btn-primary">View Demo</a>
+            </div>
+
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="team.html">Team</a>
+            <a href="partners.html">Partners</a>
+            <a href="careers.html">Careers</a>
+            <a href="studies.html">Studies</a>
+            <a href="index.html" class="btn btn-outline">Back to Home</a>
+            <a href="demo.html" class="btn btn-primary">View Demo</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="badge-text">Market Intelligence & Trend Analysis</span>
+            </div>
+            <h1 class="hero-title">Industry Reports: Comprehensive Market Intelligence</h1>
+            <p class="hero-subtitle">
+                In-depth analysis of startup ecosystem dynamics, investor challenges, government impact opportunities, and behavioral economics applications in entrepreneurship.
+            </p>
+            <button class="download-btn">
+                <i class="fas fa-download"></i> Download Full Report Suite
+            </button>
+        </div>
+    </section>
+
+    <div class="container">
+        <!-- Tabs Navigation -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="report1">Global Startup Failure</button>
+            <button class="tab-btn" data-tab="report2">Investor Challenges</button>
+            <button class="tab-btn" data-tab="report3">Government Impact</button>
+            <button class="tab-btn" data-tab="report4">Behavioral Economics</button>
+            <button class="tab-btn" data-tab="report5">Competitive Landscape</button>
+        </div>
+
+        <!-- Report 1: The Global Startup Failure Crisis -->
+        <section id="report1" class="report-section active scroll-reveal">
+            <div class="section-header">
+                <div class="section-badge">Crisis Analysis</div>
+                <h2>The Global Startup Failure Crisis - Quantitative Analysis</h2>
+                <p>Comprehensive analysis of startup failure patterns across 305 million annual global launches, identifying systematic causes and intervention opportunities.</p>
+            </div>
+            
+            <h3 style="text-align: center; margin-bottom: var(--spacing-xl); color: var(--bloomberg-text);">Key Statistics</h3>
+            <div class="stats-overview">
+                <div class="stat-card">
+                    <div class="stat-value">90%</div>
+                    <div class="stat-label">Failure Rate (3 years, developed markets)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">95%</div>
+                    <div class="stat-label">Failure Rate (3 years, emerging markets)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">$1.02T</div>
+                    <div class="stat-label">Annual Economic Impact</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">30%</div>
+                    <div class="stat-label">VC Success Rate (Seed to Series A)</div>
+                </div>
+            </div>
+
+            <h3 style="text-align: center; margin-bottom: var(--spacing-xl); color: var(--bloomberg-text);">Failure Domain Analysis</h3>
+            <div class="chart-container">
+                <canvas id="failureDomainChart"></canvas>
+            </div>
+            
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-header"><i class="fas fa-chart-line"></i> Market Misalignment (65% of failures)</div>
+                    <div class="card-body">
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> No Market Need: 42% cite lack of customer demand</li>
+                            <li><i class="fas fa-check"></i> Poor Timing: 13% launch too early or late for market readiness</li>
+                            <li><i class="fas fa-check"></i> Pricing Issues: 10% fail due to unsustainable pricing models</li>
+                            <li><i class="fas fa-check"></i> Geographic Patterns: 73% failure rate in rural/secondary markets vs 52% in major cities</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><i class="fas fa-money-bill-wave"></i> Financial Mismanagement (38% of failures)</div>
+                    <div class="card-body">
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Cash Flow Crisis: 29% run out of capital before revenue sustainability</li>
+                            <li><i class="fas fa-check"></i> Poor Unit Economics: 23% never achieve positive contribution margins</li>
+                            <li><i class="fas fa-check"></i> Funding Gaps: 18% fail between funding rounds</li>
+                            <li><i class="fas fa-check"></i> Capital Efficiency: Average $1.3M burn per $1M revenue (unsustainable ratio)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><i class="fas fa-users"></i> Management Deficiencies (35% of failures)</div>
+                    <div class="card-body">
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Inexperienced Teams: 28% led by first-time entrepreneurs without mentorship</li>
+                            <li><i class="fas fa-check"></i> Co-founder Conflicts: 15% dissolve due to partnership disputes</li>
+                            <li><i class="fas fa-check"></i> Scaling Challenges: 12% fail during rapid growth phases</li>
+                            <li><i class="fas fa-check"></i> Leadership Development: 71% of founders report feeling unprepared for CEO role</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><i class="fas fa-cogs"></i> Operational Weaknesses (29% of failures)</div>
+                    <div class="card-body">
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Technical Debt: 19% fail due to unsustainable technology infrastructure</li>
+                            <li><i class="fas fa-check"></i> Legal/Regulatory: 14% shut down due to compliance failures</li>
+                            <li><i class="fas fa-check"></i> Supply Chain: 8% fail due to operational disruptions</li>
+                            <li><i class="fas fa-check"></i> Quality Control: 6% lose customer confidence due to product issues</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="text-align: center; margin-bottom: var(--spacing-xl); color: var(--bloomberg-text);">Regional Failure Pattern Analysis</h3>
+            <div class="chart-container">
+                <canvas id="regionalFailureChart"></canvas>
+            </div>
+            
+            <div class="regional-analysis">
+                <div class="region-card">
+                    <h4>North America</h4>
+                    <p><strong>Failure Rate:</strong> 87% (3-year)</p>
+                    <p><strong>Primary Causes:</strong> Market saturation (34%), funding competition (28%)</p>
+                    <p><strong>Average Lifespan:</strong> 2.1 years</p>
+                    <p><strong>Recovery Factors:</strong> Strong ecosystem support, abundant capital</p>
+                </div>
+                <div class="region-card">
+                    <h4>Europe</h4>
+                    <p><strong>Failure Rate:</strong> 91% (3-year)</p>
+                    <p><strong>Primary Causes:</strong> Regulatory complexity (31%), market fragmentation (26%)</p>
+                    <p><strong>Average Lifespan:</strong> 1.8 years</p>
+                    <p><strong>Recovery Factors:</strong> Government support programs, EU market access</p>
+                </div>
+                <div class="region-card">
+                    <h4>Asia-Pacific</h4>
+                    <p><strong>Failure Rate:</strong> 94% (3-year)</p>
+                    <p><strong>Primary Causes:</strong> Cultural barriers (29%), capital access (27%)</p>
+                    <p><strong>Average Lifespan:</strong> 1.6 years</p>
+                    <p><strong>Recovery Factors:</strong> Mobile-first adoption, large domestic markets</p>
+                </div>
+                <div class="region-card">
+                    <h4>Emerging Markets</h4>
+                    <p><strong>Failure Rate:</strong> 96% (3-year)</p>
+                    <p><strong>Primary Causes:</strong> Infrastructure limitations (41%), capital scarcity (38%)</p>
+                    <p><strong>Average Lifespan:</strong> 1.2 years</p>
+                    <p><strong>Recovery Factors:</strong> High impact potential, government prioritization</p>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: var(--spacing-2xl);">
+                <button class="download-btn">
+                    <i class="fas fa-download"></i> Download Full Startup Failure Report
+                </button>
+            </div>
+        </section>
+
+        <!-- Report 2: Investor Challenges in Portfolio Management -->
+        <section id="report2" class="report-section scroll-reveal">
+            <div class="section-header">
+                <div class="section-badge">Investment Analysis</div>
+                <h2>Investor Challenges in Portfolio Management</h2>
+                <p>Analysis of the information asymmetry problem and portfolio management inefficiencies in venture capital.</p>
+            </div>
+            
+            <h3 style="text-align: center; margin-bottom: var(--spacing-xl); color: var(--bloomberg-text);">The Information Asymmetry Problem</h3>
+            <div class="chart-container">
+                <canvas id="infoAsymmetryChart"></canvas>
+            </div>
+            
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-header"><i class="fas fa-chart-bar"></i> Current Due Diligence Limitations</div>
+                    <div class="card-body">
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Data Frequency: 67% of VCs receive updates quarterly or less</li>
+                            <li><i class="fas fa-check"></i> Self-Reporting Bias: 89% of startup metrics are self-reported without verification</li>
+                            <li><i class="fas fa-check"></i> Standardization Gap: Only 23% of VCs use consistent KPI frameworks across portfolio</li>
+                            <li><i class="fas fa-check"></i> Predictive Capability: Traditional metrics show 34% accuracy in predicting success</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><i class="fas fa-tachometer-alt"></i> Portfolio Monitoring Inefficiencies</div>
+                    <div class="card-body">
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Manual Overhead: Average 8 hours per company per month for portfolio management</li>
+                            <li><i class="fas fa-check"></i> Scalability Limits: Most VCs can effectively monitor <50 companies</li>
+                            <li><i class="fas fa-check"></i> Early Warning Gaps: 78% of portfolio failures come as surprises to investors</li>
+                            <li><i class="fas fa-check"></i> Intervention Timing: Average 6-month delay between problem identification and action</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="text-align: center; margin-bottom: var(--spacing-xl); color: var(--bloomberg-text);">ESG and Impact Measurement Gaps</h3>
+            <div class="chart-container">
+                <canvas id="esgChart"></canvas>
+            </div>
+
+            <div style="text-align: center; margin-top: var(--spacing-2xl);">
+                <button class="download-btn">
+                    <i class="fas fa-download"></i> Download Investor Challenges Report
+                </button>
+            </div>
+        </section>
+
+        <!-- Report 3: Government & Economic Development Impact Analysis -->
+        <section id="report3" class="report-section scroll-reveal">
+            <div class="section-header">
+                <div class="section-badge">Economic Impact</div>
+                <h2>Government & Economic Development Impact Analysis</h2>
+                <p>Comprehensive analysis of startup ecosystem economic impact and government program effectiveness.</p>
+            </div>
+            
+            <h3 style="text-align: center; margin-bottom: var(--spacing-xl); color: var(--bloomberg-text);">Startup Ecosystem Economic Impact</h3>
+            <div class="stats-overview">
+                <div class="stat-card">
+                    <div class="stat-value">12.3</div>
+                    <div class="stat-label">Jobs per startup (first 3 years)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">2.4x</div>
+                    <div class="stat-label">Job multiplier effect</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">23%</div>
+                    <div class="stat-label">Higher wages than traditional employment</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">4.7x</div>
+                    <div class="stat-label">Government ROI on startup investment</div>
+                </div>
+            </div>
+
+            <h3 style="text-align: center; margin-bottom: var(--spacing-xl); color: var(--bloomberg-text);">Government Program Effectiveness</h3>
+            <div class="chart-container">
+                <canvas id="govProgramChart"></canvas>
+            </div>
+
+            <div style="text-align: center; margin-top: var(--spacing-2xl);">
+                <button class="download-btn">
+                    <i class="fas fa-download"></i> Download Government Impact Report
+                </button>
+            </div>
+        </section>
+
+        <!-- Report 4: Behavioral Economics Applications -->
+        <section id="report4" class="report-section scroll-reveal">
+            <div class="section-header">
+                <div class="section-badge">Behavioral Science</div>
+                <h2>Behavioral Economics Applications in Entrepreneurship</h2>
+                <p>Research findings on how behavioral interventions can systematically improve startup success rates.</p>
+            </div>
+            
+            <h3 style="text-align: center; margin-bottom: var(--spacing-xl); color: var(--bloomberg-text);">Behavioral Intervention Effectiveness</h3>
+            <div class="chart-container">
+                <canvas id="behavioralChart"></canvas>
+            </div>
+
+            <div style="text-align: center; margin-top: var(--spacing-2xl);">
+                <button class="download-btn">
+                    <i class="fas fa-download"></i> Download Behavioral Economics Report
+                </button>
+            </div>
+        </section>
+
+        <!-- Report 5: Competitive Landscape Analysis -->
+        <section id="report5" class="report-section scroll-reveal">
+            <div class="section-header">
+                <div class="section-badge">Market Analysis</div>
+                <h2>Competitive Landscape Analysis</h2>
+                <p>Comprehensive analysis of existing solutions and market opportunities in the startup success optimization space.</p>
+            </div>
+            
+            <h3 style="text-align: center; margin-bottom: var(--spacing-xl); color: var(--bloomberg-text);">Market Opportunity</h3>
+            <div class="chart-container">
+                <canvas id="marketOpportunityChart"></canvas>
+            </div>
+
+            <div style="text-align: center; margin-top: var(--spacing-2xl);">
+                <button class="download-btn">
+                    <i class="fas fa-download"></i> Download Competitive Analysis Report
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Auxeira</a></li>
+                        <li><a href="team.html">Leadership Team</a></li>
+                        <li><a href="careers.html">Careers</a></li>
+                        <li><a href="studies.html">Case Studies</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Platform</h3>
+                    <ul class="footer-links">
+                        <li><a href="demo.html">Dashboard Demo</a></li>
+                        <li><a href="api.html">API Documentation</a></li>
+                        <li><a href="insights.html">Data Insights</a></li>
+                        <li><a href="partners.html">Partner Network</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="reports.html">Industry Reports</a></li>
+                        <li><a href="#">Research Papers</a></li>
+                        <li><a href="#">Developer Docs</a></li>
+                        <li><a href="#">Support Center</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <ul class="footer-links">
+                        <li><a href="mailto:hello@auxeira.com">hello@auxeira.com</a></li>
+                        <li><a href="tel:+1-555-0123">+1 (555) 012-3456</a></li>
+                        <li><a href="#">LinkedIn</a></li>
+                        <li><a href="#">Twitter</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Auxeira. All rights reserved. The Startup Success Engine is a proprietary platform of Auxeira.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Header scroll effect
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+
+            // Scroll reveal animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all scroll reveal elements
+            document.querySelectorAll('.scroll-reveal').forEach(element => {
+                observer.observe(element);
+            });
+
+            // Tab functionality
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const reportSections = document.querySelectorAll('.report-section');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove active class from all tabs and sections
+                    tabBtns.forEach(tab => tab.classList.remove('active'));
+                    reportSections.forEach(section => section.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    btn.classList.add('active');
+                    
+                    // Show corresponding section
+                    const targetSection = document.getElementById(btn.dataset.tab);
+                    if (targetSection) {
+                        targetSection.classList.add('active');
+                    }
+                });
+            });
+
+            // Enhanced hover effects for cards
+            document.querySelectorAll('.stat-card, .card, .region-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                    this.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Failure Domain Chart
+            const failureDomainCtx = document.getElementById('failureDomainChart').getContext('2d');
+            new Chart(failureDomainCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Market Misalignment', 'Financial Mismanagement', 'Management Deficiencies', 'Operational Weaknesses'],
+                    datasets: [{
+                        data: [65, 38, 35, 29],
+                        backgroundColor: [
+                            'rgba(220, 53, 69, 0.8)',
+                            'rgba(255, 107, 53, 0.8)',
+                            'rgba(255, 193, 7, 0.8)',
+                            'rgba(108, 117, 125, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(220, 53, 69, 1)',
+                            'rgba(255, 107, 53, 1)',
+                            'rgba(255, 193, 7, 1)',
+                            'rgba(108, 117, 125, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#f0f6fc',
+                                font: {
+                                    family: 'Inter'
+                                },
+                                padding: 20
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Primary Failure Domains (% of startups affected)',
+                            color: '#f0f6fc',
+                            font: {
+                                size: 16,
+                                family: 'Inter',
+                                weight: 'bold'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Regional Failure Chart
+            const regionalFailureCtx = document.getElementById('regionalFailureChart').getContext('2d');
+            new Chart(regionalFailureCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['North America', 'Europe', 'Asia-Pacific', 'Emerging Markets'],
+                    datasets: [{
+                        label: '3-Year Failure Rate (%)',
+                        data: [87, 91, 94, 96],
+                        backgroundColor: [
+                            'rgba(0, 123, 255, 0.7)',
+                            'rgba(255, 215, 0, 0.7)',
+                            'rgba(40, 167, 69, 0.7)',
+                            'rgba(220, 53, 69, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(0, 123, 255, 1)',
+                            'rgba(255, 215, 0, 1)',
+                            'rgba(40, 167, 69, 1)',
+                            'rgba(220, 53, 69, 1)'
+                        ],
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#f0f6fc',
+                                font: {
+                                    family: 'Inter'
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Regional Startup Failure Rates',
+                            color: '#f0f6fc',
+                            font: {
+                                size: 16,
+                                family: 'Inter',
+                                weight: 'bold'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Failure Rate (%)',
+                                color: '#8b949e',
+                                font: {
+                                    family: 'Inter'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#8b949e',
+                                font: {
+                                    family: 'Inter'
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#8b949e',
+                                font: {
+                                    family: 'Inter'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Information Asymmetry Chart
+            const infoAsymmetryCtx = document.getElementById('infoAsymmetryChart').getContext('2d');
+            new Chart(infoAsymmetryCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Data Frequency', 'Verification', 'Standardization', 'Predictive Accuracy', 'Real-time Monitoring', 'Early Warning'],
+                    datasets: [
+                        {
+                            label: 'Current State',
+                            data: [33, 11, 23, 34, 15, 22],
+                            backgroundColor: 'rgba(220, 53, 69, 0.2)',
+                            borderColor: 'rgba(220, 53, 69, 1)',
+                            pointBackgroundColor: 'rgba(220, 53, 69, 1)',
+                            pointRadius: 4
+                        },
+                        {
+                            label: 'With SSE Platform',
+                            data: [95, 87, 92, 85, 89, 78],
+                            backgroundColor: 'rgba(0, 123, 255, 0.2)',
+                            borderColor: 'rgba(0, 123, 255, 1)',
+                            pointBackgroundColor: 'rgba(255, 215, 0, 1)',
+                            pointRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#f0f6fc',
+                                font: {
+                                    family: 'Inter'
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Portfolio Management Effectiveness (%)',
+                            color: '#f0f6fc',
+                            font: {
+                                size: 16,
+                                family: 'Inter',
+                                weight: 'bold'
+                            }
+                        }
+                    },
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: true,
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            pointLabels: {
+                                color: '#f0f6fc',
+                                font: {
+                                    family: 'Inter',
+                                    size: 12
+                                }
+                            },
+                            ticks: {
+                                backdropColor: 'transparent',
+                                color: '#8b949e',
+                                font: {
+                                    family: 'Inter'
+                                }
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    }
+                }
+            });
+
+            // ESG Chart
+            const esgCtx = document.getElementById('esgChart').getContext('2d');
+            new Chart(esgCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['ESG Reporting', 'Impact Measurement', 'Sustainability Tracking', 'Social ROI', 'Carbon Footprint', 'Governance Metrics'],
+                    datasets: [{
+                        label: 'Current Capability (%)',
+                        data: [23, 18, 15, 12, 8, 31],
+                        backgroundColor: 'rgba(220, 53, 69, 0.7)',
+                        borderColor: 'rgba(220, 53, 69, 1)',
+                        borderWidth: 2,
+                        borderRadius: 4
+                    }, {
+                        label: 'With SSE Platform (%)',
+                        data: [89, 92, 87, 85, 78, 94],
+                        backgroundColor: 'rgba(0, 123, 255, 0.7)',
+                        borderColor: 'rgba(0, 123, 255, 1)',
+                        borderWidth: 2,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#f0f6fc',
+                                font: {
+                                    family: 'Inter'
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'ESG and Impact Measurement Capabilities',
+                            color: '#f0f6fc',
+                            font: {
+                                size: 16,
+                                family: 'Inter',
+                                weight: 'bold'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Capability Score (%)',
+                                color: '#8b949e',
+                                font: {
+                                    family: 'Inter'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#8b949e',
+                                font: {
+                                    family: 'Inter'
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#8b949e',
+                                font: {
+                                    family: 'Inter',
+                                    size: 10
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Government Program Chart
+            const govProgramCtx = document.getElementById('govProgramChart').getContext('2d');
+            new Chart(govProgramCtx, {
+                type: 'horizontalBar',
+                data: {
+                    labels: ['Tax Incentives', 'Grant Programs', 'Incubator Support', 'Regulatory Sandboxes', 'Procurement Programs', 'Export Assistance'],
+                    datasets: [{
+                        label: 'Effectiveness Score',
+                        data: [7.2, 6.8, 5.9, 8.1, 4.3, 5.7],
+                        backgroundColor: [
+                            'rgba(0, 123, 255, 0.8)',
+                            'rgba(255, 215, 0, 0.8)',
+                            'rgba(40, 167, 69, 0.8)',
+                            'rgba(255, 107, 53, 0.8)',
+                            'rgba(220, 53, 69, 0.8)',
+                            'rgba(108, 117, 125, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(0, 123, 255, 1)',
+                            'rgba(255, 215, 0, 1)',
+                            'rgba(40, 167, 69, 1)',
+                            'rgba(255, 107, 53, 1)',
+                            'rgba(220, 53, 69, 1)',
+                            'rgba(108, 117, 125, 1)'
+                        ],
+                        borderWidth: 2,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Government Program Effectiveness (1-10 scale)',
+                            color: '#f0f6fc',
+                            font: {
+                                size: 16,
+                                family: 'Inter',
+                                weight: 'bold'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 10,
+                            title: {
+                                display: true,
+                                text: 'Effectiveness Score',
+                                color: '#8b949e',
+                                font: {
+                                    family: 'Inter'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#8b949e',
+                                font: {
+                                    family: 'Inter'
+                                }
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#8b949e',
+                                font: {
+                                    family: 'Inter',
+                                    size: 11
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Behavioral Chart
+            const behavioralCtx = document.getElementById('behavioralChart').getContext('2d');
+            new Chart(behavioralCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Baseline', '3 Months', '6 Months', '12 Months', '18 Months', '24 Months'],
+                    datasets: [
+                        {
+                            label: 'Control Group Success Rate',
+                            data: [15.2, 14.8, 13.9, 12.1, 10.8, 9.2],
+                            borderColor: 'rgba(220, 53, 69, 1)',
+                            backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                            tension: 0.4,
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        },
+                        {
+                            label: 'Behavioral Intervention Group',
+                            data: [15.2, 22.1, 28.7, 32.4, 34.8, 35.6],
+                            borderColor: 'rgba(0, 123, 255, 1)',
+                            backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                            tension: 0.4,
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            pointBackgroundColor: 'rgba(255, 215, 0, 1)'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#f0f6fc',
+                                font: {
+                                    family: 'Inter'
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Behavioral Intervention Impact Over Time',
+                            color: '#f0f6fc',
+                            font: {
+                                size: 16,
+                                family: 'Inter',
+                                weight: 'bold'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 40,
+                            title: {
+                                display: true,
+                                text: 'Success Rate (%)',
+                                color: '#8b949e',
+                                font: {
+                                    family: 'Inter'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#8b949e',
+                                font: {
+                                    family: 'Inter'
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#8b949e',
+                                font: {
+                                    family: 'Inter'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Market Opportunity Chart
+            const marketOpportunityCtx = document.getElementById('marketOpportunityChart').getContext('2d');
+            new Chart(marketOpportunityCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Auxeira TAM', 'Competitive Solutions', 'Unaddressed Market'],
+                    datasets: [{
+                        data: [50, 15, 935],
+                        backgroundColor: [
+                            'rgba(0, 123, 255, 0.8)',
+                            'rgba(255, 107, 53, 0.8)',
+                            'rgba(108, 117, 125, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(0, 123, 255, 1)',
+                            'rgba(255, 107, 53, 1)',
+                            'rgba(108, 117, 125, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#f0f6fc',
+                                font: {
+                                    family: 'Inter'
+                                },
+                                padding: 20
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Total Addressable Market ($B)',
+                            color: '#f0f6fc',
+                            font: {
+                                size: 16,
+                                family: 'Inter',
+                                weight: 'bold'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Counter animation for stats
+            function animateCounters() {
+                const counters = document.querySelectorAll('.stat-value');
+                counters.forEach(counter => {
+                    const target = parseFloat(counter.textContent.replace(/[^\d.]/g, ''));
+                    const increment = target / 50;
+                    let current = 0;
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            counter.textContent = counter.textContent.replace(/[\d.]+/, target);
+                            clearInterval(timer);
+                        } else {
+                            const value = counter.textContent.includes('.') ? 
+                                current.toFixed(1) : Math.floor(current);
+                            counter.textContent = counter.textContent.replace(/[\d.]+/, value);
+                        }
+                    }, 30);
+                });
+            }
+
+            // Trigger counter animation when stats are visible
+            const statsObserver = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounters();
+                        statsObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            const statsSection = document.querySelector('.stats-overview');
+            if (statsSection) {
+                statsObserver.observe(statsSection);
+            }
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+
+        // Mobile menu functionality
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('active');
+        }
+
+        // Add floating animation to some elements
+        document.querySelectorAll('.hero-badge, .section-badge').forEach(element => {
+            element.classList.add('float');
+        });
+    </script>
+</body>
+</html>
+

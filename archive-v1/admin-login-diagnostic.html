@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login Diagnostic</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .step {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .step h3 {
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+        .credentials {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 2px solid #ffc107;
+        }
+        .credentials h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        .credentials code {
+            background: #fff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        .final-action {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 30px;
+        }
+        .final-action h3 {
+            margin-bottom: 15px;
+        }
+        .final-action button {
+            background: white;
+            color: #667eea;
+            font-size: 18px;
+            padding: 15px 40px;
+        }
+        .final-action button:hover {
+            background: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Admin Login Diagnostic Tool</h1>
+        <p class="subtitle">This tool will help diagnose why you can't access the admin dashboard</p>
+
+        <div class="credentials">
+            <h4>🔐 Admin Credentials</h4>
+            <p><strong>Email:</strong> <code>gina@auxeira.com</code></p>
+            <p><strong>Password:</strong> <code>SSEngine@25</code></p>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="step">
+            <h3>
+                <span class="step-number">1</span>
+                Check localStorage Capability
+            </h3>
+            <button onclick="testLocalStorage()">Test localStorage</button>
+            <div id="step1-result"></div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step">
+            <h3>
+                <span class="step-number">2</span>
+                Check Current Storage State
+            </h3>
+            <button onclick="checkCurrentState()">Check Current State</button>
+            <div id="step2-result"></div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step">
+            <h3>
+                <span class="step-number">3</span>
+                Test Login API
+            </h3>
+            <button onclick="testLoginAPI()">Test Login API</button>
+            <div id="step3-result"></div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step">
+            <h3>
+                <span class="step-number">4</span>
+                Store Token Manually
+            </h3>
+            <button onclick="storeTokenManually()" id="step4-btn" disabled>Store Token</button>
+            <div id="step4-result"></div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="step">
+            <h3>
+                <span class="step-number">5</span>
+                Verify Token Storage
+            </h3>
+            <button onclick="verifyTokenStorage()">Verify Storage</button>
+            <div id="step5-result"></div>
+        </div>
+
+        <!-- Final Action -->
+        <div class="final-action" id="final-action" style="display: none;">
+            <h3>✅ Token Verified! Ready to Access Admin Dashboard</h3>
+            <p style="margin-bottom: 20px;">Click below to navigate to the admin dashboard</p>
+            <button onclick="goToAdminDashboard()">Go to Admin Dashboard →</button>
+        </div>
+    </div>
+
+    <script>
+        let loginData = null;
+
+        // Step 1: Test localStorage
+        function testLocalStorage() {
+            const resultDiv = document.getElementById('step1-result');
+            resultDiv.innerHTML = '<div class="info">Testing...</div>';
+
+            try {
+                const testKey = 'test_' + Date.now();
+                const testValue = 'test_value_' + Math.random();
+                
+                // Test write
+                localStorage.setItem(testKey, testValue);
+                
+                // Test read
+                const retrieved = localStorage.getItem(testKey);
+                
+                // Test delete
+                localStorage.removeItem(testKey);
+                
+                if (retrieved === testValue) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <strong>✅ localStorage is working perfectly!</strong><br>
+                            • Can write data<br>
+                            • Can read data<br>
+                            • Can delete data<br>
+                            <br>
+                            <strong>Test Details:</strong><br>
+                            • Test key: ${testKey}<br>
+                            • Test value: ${testValue}<br>
+                            • Retrieved: ${retrieved}<br>
+                            • Match: ${retrieved === testValue ? 'YES' : 'NO'}
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <strong>❌ localStorage read/write mismatch!</strong><br>
+                            • Wrote: ${testValue}<br>
+                            • Read: ${retrieved}<br>
+                            This indicates a storage issue.
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <strong>❌ localStorage is NOT working!</strong><br>
+                        <strong>Error:</strong> ${error.message}<br>
+                        <br>
+                        <strong>Possible causes:</strong><br>
+                        • Private/Incognito browsing mode<br>
+                        • Browser settings blocking storage<br>
+                        • Security policy restrictions<br>
+                        • Browser extension interference<br>
+                        <br>
+                        <strong>Solution:</strong> Try in a regular browser window with extensions disabled.
+                    </div>
+                `;
+            }
+        }
+
+        // Step 2: Check current state
+        function checkCurrentState() {
+            const resultDiv = document.getElementById('step2-result');
+            
+            const token = localStorage.getItem('auxeira_auth_token');
+            const user = localStorage.getItem('auxeira_user');
+            const allKeys = Object.keys(localStorage);
+            
+            let html = '<div class="info">';
+            html += '<strong>Current localStorage State:</strong><br><br>';
+            html += `<strong>Total keys:</strong> ${allKeys.length}<br>`;
+            html += `<strong>All keys:</strong> ${allKeys.length > 0 ? allKeys.join(', ') : 'EMPTY'}<br><br>`;
+            html += `<strong>auxeira_auth_token:</strong> ${token ? 'EXISTS' : 'MISSING'}<br>`;
+            
+            if (token) {
+                html += `<strong>Token length:</strong> ${token.length}<br>`;
+                html += `<strong>Token preview:</strong> ${token.substring(0, 50)}...<br>`;
+                
+                try {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    html += `<br><strong>Token Payload:</strong><br>`;
+                    html += `• Email: ${payload.email}<br>`;
+                    html += `• Role: ${payload.role}<br>`;
+                    html += `• Expires: ${new Date(payload.exp * 1000).toISOString()}<br>`;
+                    
+                    const now = Math.floor(Date.now() / 1000);
+                    if (payload.exp < now) {
+                        html += `<br><span style="color: red;">⚠️ TOKEN IS EXPIRED!</span>`;
+                    } else {
+                        html += `<br><span style="color: green;">✅ Token is valid</span>`;
+                    }
+                } catch (e) {
+                    html += `<br><span style="color: red;">❌ Error decoding token: ${e.message}</span>`;
+                }
+            }
+            
+            html += `<br><br><strong>auxeira_user:</strong> ${user ? 'EXISTS' : 'MISSING'}<br>`;
+            
+            if (user) {
+                try {
+                    const userData = JSON.parse(user);
+                    html += `<strong>User Data:</strong><br>`;
+                    html += `<pre>${JSON.stringify(userData, null, 2)}</pre>`;
+                } catch (e) {
+                    html += `<span style="color: red;">❌ Error parsing user data: ${e.message}</span>`;
+                }
+            }
+            
+            html += '</div>';
+            resultDiv.innerHTML = html;
+        }
+
+        // Step 3: Test login API
+        async function testLoginAPI() {
+            const resultDiv = document.getElementById('step3-result');
+            resultDiv.innerHTML = '<div class="info">⏳ Logging in...</div>';
+
+            try {
+                const response = await fetch('https://6qfa3ssb10.execute-api.us-east-1.amazonaws.com/prod/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'gina@auxeira.com',
+                        password: 'SSEngine@25'
+                    })
+                });
+
+                console.log('Login response status:', response.status);
+                
+                const data = await response.json();
+                console.log('Login response data:', data);
+                
+                if (data.success) {
+                    loginData = data;
+                    
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <strong>✅ Login API successful!</strong><br><br>
+                            <strong>Response Structure:</strong><br>
+                            • success: ${data.success}<br>
+                            • message: ${data.message}<br>
+                            • Has access_token: ${!!data.data?.access_token}<br>
+                            • Has refresh_token: ${!!data.data?.refresh_token}<br>
+                            • Has user: ${!!data.data?.user}<br>
+                            <br>
+                            <strong>User Details:</strong><br>
+                            • Email: ${data.data?.user?.email}<br>
+                            • Role: ${data.data?.user?.role}<br>
+                            • Status: ${data.data?.user?.status}<br>
+                            • Login Count: ${data.data?.user?.loginCount}<br>
+                            <br>
+                            <strong>Token Info:</strong><br>
+                            • Token length: ${data.data?.access_token?.length}<br>
+                            • Token preview: ${data.data?.access_token?.substring(0, 50)}...<br>
+                            <br>
+                            <strong>Full Response:</strong>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                    
+                    document.getElementById('step4-btn').disabled = false;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <strong>❌ Login failed!</strong><br>
+                            <strong>Message:</strong> ${data.message}<br>
+                            <strong>Error:</strong> ${data.error}<br>
+                            <br>
+                            <strong>Full Response:</strong>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <strong>❌ Network error!</strong><br>
+                        <strong>Error:</strong> ${error.message}<br>
+                        <br>
+                        This could indicate:<br>
+                        • Network connectivity issues<br>
+                        • CORS problems<br>
+                        • API endpoint unavailable
+                    </div>
+                `;
+                console.error('Login error:', error);
+            }
+        }
+
+        // Step 4: Store token manually
+        function storeTokenManually() {
+            const resultDiv = document.getElementById('step4-result');
+            
+            if (!loginData || !loginData.data) {
+                resultDiv.innerHTML = '<div class="error">❌ No login data available. Please complete Step 3 first.</div>';
+                return;
+            }
+
+            try {
+                console.log('Storing token...');
+                console.log('Token:', loginData.data.access_token);
+                
+                // Store token
+                localStorage.setItem('auxeira_auth_token', loginData.data.access_token);
+                console.log('✅ Token stored');
+                
+                // Store user
+                localStorage.setItem('auxeira_user', JSON.stringify(loginData.data.user));
+                console.log('✅ User stored');
+                
+                // Store refresh token
+                if (loginData.data.refresh_token) {
+                    localStorage.setItem('auxeira_refresh_token', loginData.data.refresh_token);
+                    console.log('✅ Refresh token stored');
+                }
+
+                // Verify storage
+                const storedToken = localStorage.getItem('auxeira_auth_token');
+                const storedUser = localStorage.getItem('auxeira_user');
+                
+                console.log('Verification:');
+                console.log('  Token match:', storedToken === loginData.data.access_token);
+                console.log('  User stored:', !!storedUser);
+
+                resultDiv.innerHTML = `
+                    <div class="success">
+                        <strong>✅ Token stored successfully!</strong><br><br>
+                        <strong>Stored Keys:</strong><br>
+                        • auxeira_auth_token: ${storedToken ? 'YES' : 'NO'}<br>
+                        • auxeira_user: ${storedUser ? 'YES' : 'NO'}<br>
+                        • auxeira_refresh_token: ${localStorage.getItem('auxeira_refresh_token') ? 'YES' : 'NO'}<br>
+                        <br>
+                        <strong>Verification:</strong><br>
+                        • Token matches original: ${storedToken === loginData.data.access_token ? 'YES ✅' : 'NO ❌'}<br>
+                        • Token length: ${storedToken?.length}<br>
+                        <br>
+                        <strong>localStorage now contains:</strong><br>
+                        ${Object.keys(localStorage).join(', ')}
+                    </div>
+                `;
+                
+                document.getElementById('final-action').style.display = 'block';
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <strong>❌ Error storing token!</strong><br>
+                        <strong>Error:</strong> ${error.message}<br>
+                        <br>
+                        This could indicate:<br>
+                        • localStorage quota exceeded<br>
+                        • Browser blocking storage<br>
+                        • Security policy restriction
+                    </div>
+                `;
+                console.error('Storage error:', error);
+            }
+        }
+
+        // Step 5: Verify token storage
+        function verifyTokenStorage() {
+            const resultDiv = document.getElementById('step5-result');
+            
+            const token = localStorage.getItem('auxeira_auth_token');
+            const user = localStorage.getItem('auxeira_user');
+            
+            if (!token) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <strong>❌ No token found in localStorage!</strong><br><br>
+                        <strong>Current localStorage keys:</strong><br>
+                        ${Object.keys(localStorage).length > 0 ? Object.keys(localStorage).join(', ') : 'EMPTY'}<br>
+                        <br>
+                        <strong>Action needed:</strong> Complete Steps 3 and 4 to store the token.
+                    </div>
+                `;
+                return;
+            }
+
+            try {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                const userData = user ? JSON.parse(user) : null;
+                
+                const now = Math.floor(Date.now() / 1000);
+                const isExpired = payload.exp < now;
+                const timeLeft = Math.floor((payload.exp - now) / 60);
+                
+                let html = '<div class="success">';
+                html += '<strong>✅ Token found and verified!</strong><br><br>';
+                html += '<strong>Token Details:</strong><br>';
+                html += `• User ID: ${payload.userId}<br>`;
+                html += `• Email: ${payload.email}<br>`;
+                html += `• Role: ${payload.role}<br>`;
+                html += `• Issued: ${new Date(payload.iat * 1000).toISOString()}<br>`;
+                html += `• Expires: ${new Date(payload.exp * 1000).toISOString()}<br>`;
+                html += `• Status: ${isExpired ? '<span style="color:red;">EXPIRED ❌</span>' : `<span style="color:green;">VALID ✅ (${timeLeft} minutes left)</span>`}<br>`;
+                html += '<br>';
+                
+                if (userData) {
+                    html += '<strong>User Data:</strong><br>';
+                    html += `<pre>${JSON.stringify(userData, null, 2)}</pre>`;
+                }
+                
+                html += '<br><strong>Ready to access admin dashboard!</strong>';
+                html += '</div>';
+                
+                resultDiv.innerHTML = html;
+                
+                if (!isExpired) {
+                    document.getElementById('final-action').style.display = 'block';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <strong>❌ Error decoding token!</strong><br>
+                        <strong>Error:</strong> ${error.message}<br>
+                        <br>
+                        The token may be corrupted or invalid.
+                    </div>
+                `;
+            }
+        }
+
+        // Go to admin dashboard
+        function goToAdminDashboard() {
+            console.log('🚀 Navigating to admin dashboard...');
+            console.log('Token in localStorage:', !!localStorage.getItem('auxeira_auth_token'));
+            
+            const token = localStorage.getItem('auxeira_auth_token');
+            if (token) {
+                console.log('Token preview:', token.substring(0, 50) + '...');
+                console.log('Redirecting to: https://dashboard.auxeira.com/admin.html');
+                
+                // Add a small delay to ensure console logs are visible
+                setTimeout(() => {
+                    window.location.href = 'https://dashboard.auxeira.com/admin.html';
+                }, 500);
+            } else {
+                alert('❌ No token found! Please complete all steps first.');
+            }
+        }
+
+        // Auto-run Step 1 on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('🔍 Admin Login Diagnostic Tool loaded');
+            console.log('Current URL:', window.location.href);
+            console.log('localStorage keys:', Object.keys(localStorage));
+        });
+    </script>
+</body>
+</html>

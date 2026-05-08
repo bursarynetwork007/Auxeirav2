@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auxeira - Growth Metrics Dashboard</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Responsive Design Enhancements -->
+    <link href="responsive-enhancements.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* Bloomberg Terminal / Glass-Morphism Aesthetic */
+        :root {
+            --primary-bg: #0a0a0a;
+            --secondary-bg: #1a1a1a;
+            --accent-bg: #2a2a2a;
+            --neon-blue: #00d4ff;
+            --neon-purple: #8b5cf6;
+            --neon-gold: #fbbf24;
+            --success-green: #10b981;
+            --warning-orange: #f59e0b;
+            --danger-red: #ef4444;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Glass Morphism Card */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .glass-card:hover {
+            box-shadow: 0 0 25px rgba(0, 212, 255, 0.15);
+        }
+
+        /* Header */
+        .dashboard-header {
+            background: var(--primary-bg);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .brand-logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Narrative Summary Section */
+        .narrative-section {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(0, 212, 255, 0.1));
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .narrative-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--neon-blue);
+        }
+
+        .narrative-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .narrative-insight {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--success-green);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 12px;
+        }
+
+        .narrative-insight i {
+            color: var(--success-green);
+            margin-right: 8px;
+        }
+
+        /* Metrics Cards */
+        .metric-card {
+            padding: 20px;
+            border-radius: 12px;
+            background: var(--accent-bg);
+            border-left: 4px solid var(--neon-blue);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.2);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+
+        .metric-trend {
+            font-size: 0.85rem;
+            margin-top: 8px;
+        }
+
+        .metric-context {
+            background: rgba(0, 212, 255, 0.1);
+            border-left: 3px solid var(--neon-blue);
+            padding: 10px 12px;
+            border-radius: 6px;
+            margin-top: 12px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .trend-up { color: var(--success-green); }
+        .trend-down { color: var(--danger-red); }
+        .trend-neutral { color: var(--text-secondary); }
+
+        /* Health Indicator */
+        .health-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .health-good { background: var(--success-green); }
+        .health-warning { background: var(--warning-orange); }
+        .health-critical { background: var(--danger-red); }
+
+        /* Chart Styling */
+        .chart-container {
+            position: relative;
+            height: 350px;
+            padding: 10px;
+        }
+
+        /* Growth Levers Section */
+        .growth-levers {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.1));
+            border: 2px solid rgba(251, 191, 36, 0.3);
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 32px;
+            margin-bottom: 32px;
+        }
+
+        .lever-card {
+            background: var(--secondary-bg);
+            border-left: 4px solid var(--neon-gold);
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .lever-card:hover {
+            background: var(--accent-bg);
+            border-left-width: 6px;
+        }
+
+        .lever-impact {
+            display: inline-block;
+            background: rgba(251, 191, 36, 0.2);
+            color: var(--neon-gold);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        /* AI Simulator Section */
+        .ai-simulator {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(0, 212, 255, 0.1));
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 24px;
+        }
+
+        .simulator-input {
+            background: var(--accent-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            border-radius: 8px;
+            padding: 10px 12px;
+        }
+
+        .simulator-input:focus {
+            background: var(--accent-bg);
+            color: var(--text-primary);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+        }
+
+        /* Action Card */
+        .action-card {
+            background: var(--secondary-bg);
+            border-left: 3px solid var(--neon-blue);
+            padding: 15px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            margin-bottom: 15px;
+        }
+
+        .action-card:hover {
+            background: var(--accent-bg);
+            border-left-width: 5px;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 212, 255, 0.3);
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .metric-value {
+                font-size: 1.8rem;
+            }
+            .chart-container {
+                height: 250px;
+            }
+            .narrative-section {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="brand-logo">
+                    <i class="fas fa-chart-line me-2"></i>Growth Metrics
+                </div>
+                <div class="text-end">
+                    <small class="text-secondary">Last Updated: Today at 2:45 PM</small>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <!-- Section 0: Your Growth Story (Narrative) -->
+        <div class="narrative-section">
+            <div class="narrative-title">
+                <i class="fas fa-book me-2"></i>Your Growth Story
+            </div>
+            <div class="narrative-text">
+                Your startup is demonstrating <strong>exceptional growth momentum</strong>. Your MRR has grown <strong>40% in the last 3 months</strong>, driven by strong expansion revenue (128% NRR) and improved unit economics. Your LTV:CAC ratio of 14.9:1 is <strong>5x the ideal threshold</strong>, indicating you can afford to invest more aggressively in customer acquisition while maintaining profitability.
+            </div>
+            <div class="narrative-insight">
+                <i class="fas fa-lightbulb"></i>
+                <strong>Key Insight:</strong> Your biggest opportunity right now is to <strong>scale customer acquisition</strong> without sacrificing unit economics. Your churn rate (2.3%) is still slightly above the SaaS benchmark (1-2%), so addressing this could unlock an additional $50K+ in annual revenue.
+            </div>
+        </div>
+
+        <!-- Section 1: Core Financial Metrics -->
+        <h2 class="mb-4 text-primary">Core Financial Metrics</h2>
+        
+        <div class="row mb-4">
+            <!-- LTV Card -->
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="metric-card" style="border-left-color: var(--neon-blue);">
+                    <div class="metric-label">Customer Lifetime Value</div>
+                    <div class="metric-value text-primary">$1,890</div>
+                    <div class="metric-trend trend-up">
+                        <i class="fas fa-arrow-up"></i> +5.2% vs last month
+                    </div>
+                    <small class="text-secondary d-block mt-2">
+                        <span class="health-indicator health-good"></span>Healthy LTV growth
+                    </small>
+                    <div class="metric-context">
+                        <strong>What This Means:</strong> Each customer generates $1,890 in lifetime revenue. This is growing, which means your customers are becoming more valuable over time.
+                    </div>
+                </div>
+            </div>
+
+            <!-- CAC Card -->
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="metric-card" style="border-left-color: var(--warning-orange);">
+                    <div class="metric-label">Customer Acquisition Cost</div>
+                    <div class="metric-value text-warning">$127</div>
+                    <div class="metric-trend trend-down">
+                        <i class="fas fa-arrow-down"></i> -15.2% (Excellent!)
+                    </div>
+                    <small class="text-secondary d-block mt-2">
+                        <span class="health-indicator health-good"></span>CAC optimization working
+                    </small>
+                    <div class="metric-context">
+                        <strong>What This Means:</strong> You're spending $127 to acquire each customer. The 15% reduction shows your marketing is becoming more efficient—this is a major win.
+                    </div>
+                </div>
+            </div>
+
+            <!-- LTV:CAC Ratio Card -->
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="metric-card" style="border-left-color: var(--success-green);">
+                    <div class="metric-label">LTV:CAC Ratio</div>
+                    <div class="metric-value text-success">14.9:1</div>
+                    <div class="metric-trend trend-up">
+                        <i class="fas fa-arrow-up"></i> Ideal ratio: 3:1 or higher
+                    </div>
+                    <small class="text-secondary d-block mt-2">
+                        <span class="health-indicator health-good"></span>Exceptional unit economics
+                    </small>
+                    <div class="metric-context">
+                        <strong>What This Means:</strong> For every $1 spent on acquisition, you earn $14.90 in lifetime revenue. This is 5x the ideal threshold, meaning you have significant room to invest more in growth.
+                    </div>
+                </div>
+            </div>
+
+            <!-- NRR Card -->
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="metric-card" style="border-left-color: var(--neon-gold);">
+                    <div class="metric-label">Net Revenue Retention (NRR)</div>
+                    <div class="metric-value text-warning">128%</div>
+                    <div class="metric-trend trend-up">
+                        <i class="fas fa-arrow-up"></i> +8% vs last quarter
+                    </div>
+                    <small class="text-secondary d-block mt-2">
+                        <span class="health-indicator health-good"></span>Strong expansion revenue
+                    </small>
+                    <div class="metric-context">
+                        <strong>What This Means:</strong> You're retaining 100% of existing customers AND growing 28% more revenue from them through upsells and expansions. This is a hallmark of product-market fit.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Additional Key Metrics -->
+        <div class="row mb-4">
+            <!-- Total Customers -->
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="metric-card" style="border-left-color: var(--neon-purple);">
+                    <div class="metric-label">Total Customers</div>
+                    <div class="metric-value text-primary">1,247</div>
+                    <div class="metric-trend trend-up">
+                        <i class="fas fa-arrow-up"></i> +18% vs last quarter
+                    </div>
+                    <small class="text-secondary d-block mt-2">
+                        <span class="health-indicator health-good"></span>Steady customer growth
+                    </small>
+                </div>
+            </div>
+
+            <!-- Monthly Churn Rate -->
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="metric-card" style="border-left-color: var(--danger-red);">
+                    <div class="metric-label">Monthly Churn Rate</div>
+                    <div class="metric-value text-danger">2.3%</div>
+                    <div class="metric-trend trend-down">
+                        <i class="fas fa-arrow-down"></i> -0.9% vs last quarter
+                    </div>
+                    <small class="text-secondary d-block mt-2">
+                        <span class="health-indicator health-warning"></span>Above SaaS benchmark
+                    </small>
+                    <div class="metric-context">
+                        <strong>Opportunity:</strong> SaaS benchmark is 1-2%. Reducing churn to 1.5% would add ~$50K in annual revenue and significantly boost your Series A readiness.
+                    </div>
+                </div>
+            </div>
+
+            <!-- MRR -->
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="metric-card" style="border-left-color: var(--success-green);">
+                    <div class="metric-label">Monthly Recurring Revenue</div>
+                    <div class="metric-value text-success">$18,500</div>
+                    <div class="metric-trend trend-up">
+                        <i class="fas fa-arrow-up"></i> +40% vs last quarter
+                    </div>
+                    <small class="text-secondary d-block mt-2">
+                        <span class="health-indicator health-good"></span>Strong MRR growth
+                    </small>
+                </div>
+            </div>
+
+            <!-- Payback Period -->
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="metric-card" style="border-left-color: var(--neon-blue);">
+                    <div class="metric-label">CAC Payback Period</div>
+                    <div class="metric-value text-primary">2.1 mo</div>
+                    <div class="metric-trend trend-down">
+                        <i class="fas fa-arrow-down"></i> -0.3 mo vs last quarter
+                    </div>
+                    <small class="text-secondary d-block mt-2">
+                        <span class="health-indicator health-good"></span>Excellent payback speed
+                    </small>
+                    <div class="metric-context">
+                        <strong>What This Means:</strong> You recover your customer acquisition cost in just 2.1 months. This allows you to reinvest quickly and scale aggressively.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: AI-Recommended Growth Levers -->
+        <div class="growth-levers">
+            <h2 class="mb-4 text-warning">
+                <i class="fas fa-rocket me-2"></i>AI-Recommended Growth Levers
+            </h2>
+            <p class="text-secondary mb-3">Based on your metrics, here are the highest-impact opportunities to accelerate growth:</p>
+
+            <div class="lever-card">
+                <h6 class="text-primary"><i class="fas fa-bullseye me-2"></i>Reduce Churn to 1.5% (SaaS Benchmark)</h6>
+                <p class="small mb-2">Your current churn (2.3%) is above the industry benchmark. Implementing a customer success program could reduce churn by 0.8%.</p>
+                <div class="lever-impact">
+                    <i class="fas fa-dollar-sign"></i> +$50K annual revenue impact
+                </div>
+            </div>
+
+            <div class="lever-card">
+                <h6 class="text-primary"><i class="fas fa-bullseye me-2"></i>Increase CAC Spend by 20%</h6>
+                <p class="small mb-2">Your LTV:CAC ratio (14.9:1) gives you room to spend more on acquisition. Increasing CAC spend by 20% while maintaining unit economics could add 150+ new customers.</p>
+                <div class="lever-impact">
+                    <i class="fas fa-users"></i> +150 customers, +$25K MRR
+                </div>
+            </div>
+
+            <div class="lever-card">
+                <h6 class="text-primary"><i class="fas fa-bullseye me-2"></i>Expand Upsell Program</h6>
+                <p class="small mb-2">Your NRR (128%) shows strong expansion potential. A structured upsell program targeting your top 20% of customers could increase NRR to 135%+.</p>
+                <div class="lever-impact">
+                    <i class="fas fa-chart-bar"></i> +$2K-3K additional MRR
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Trend Charts -->
+        <h2 class="mb-4 text-primary mt-5">Growth Trends & Analysis</h2>
+
+        <div class="row mb-4">
+            <div class="col-lg-6 mb-4">
+                <div class="glass-card">
+                    <h5 class="mb-3">MRR Trend (New vs Expansion vs Churn)</h5>
+                    <div class="chart-container">
+                        <canvas id="mrrChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="glass-card">
+                    <h5 class="mb-3">Churn & Retention Trend</h5>
+                    <div class="chart-container">
+                        <canvas id="churnChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="glass-card">
+                    <h5 class="mb-3">CAC Optimization Trend</h5>
+                    <div class="chart-container">
+                        <canvas id="cacTrendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="glass-card">
+                    <h5 class="mb-3">LTV:CAC Ratio Evolution</h5>
+                    <div class="chart-container">
+                        <canvas id="ltvCacChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: AI Growth Prediction Simulator -->
+        <h2 class="mb-4 text-primary mt-5">AI Growth Prediction Simulator</h2>
+        <p class="text-secondary mb-4">Run "what-if" scenarios to see how different growth strategies impact your metrics and Series A readiness.</p>
+
+        <div class="ai-simulator">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">CAC Reduction (%)</label>
+                    <input type="range" class="form-range" id="cacReduction" min="0" max="30" value="0" oninput="updateSimulation()">
+                    <small class="text-secondary">Reduce CAC by <span id="cacValue">0</span>% through marketing optimization</small>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">MRR Growth (%)</label>
+                    <input type="range" class="form-range" id="mrrGrowth" min="0" max="100" value="0" oninput="updateSimulation()">
+                    <small class="text-secondary">Grow MRR by <span id="mrrValue">0</span>% through sales & marketing</small>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Churn Reduction (%)</label>
+                    <input type="range" class="form-range" id="churnReduction" min="0" max="2" step="0.1" value="0" oninput="updateSimulation()">
+                    <small class="text-secondary">Reduce churn by <span id="churnValue">0</span>% through customer success</small>
+                </div>
+            </div>
+
+            <button class="btn btn-primary mt-3" onclick="runFullSimulation()">
+                <i class="fas fa-magic me-2"></i>Run Full Simulation
+            </button>
+
+            <div id="simulationResults" style="display: none; margin-top: 24px;">
+                <h5 class="text-success mb-3">Projected Impact</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="metric-card" style="border-left-color: var(--success-green);">
+                            <div class="metric-label">Projected MRR</div>
+                            <div class="metric-value text-success" id="projectedMRR">$18,500</div>
+                            <small class="text-secondary">Growth: <span id="mrrGrowthPercent">0</span>%</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="metric-card" style="border-left-color: var(--neon-blue);">
+                            <div class="metric-label">Projected LTV:CAC Ratio</div>
+                            <div class="metric-value text-primary" id="projectedLtvCac">14.9:1</div>
+                            <small class="text-secondary">Change: <span id="ltvCacChange">0</span></small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <div class="metric-card" style="border-left-color: var(--neon-gold);">
+                            <div class="metric-label">Series A Readiness Score</div>
+                            <div class="metric-value text-warning" id="projectedSeriesA">78%</div>
+                            <small class="text-secondary">Projected increase: <span id="seriesAChange">0</span>%</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 6: Recommended Actions -->
+        <h2 class="mb-4 text-primary mt-5">Recommended Actions This Quarter</h2>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="action-card" style="border-left-color: var(--success-green);">
+                    <h6 class="text-success"><i class="fas fa-check-circle me-1"></i>Launch Customer Success Program</h6>
+                    <p class="small mb-2">Reduce churn from 2.3% to 1.5% through proactive support and engagement</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-success">+$50K ARR</span>
+                        <button class="btn btn-sm btn-primary">Start</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="action-card" style="border-left-color: var(--neon-blue);">
+                    <h6 class="text-primary"><i class="fas fa-rocket me-1"></i>Scale Paid Acquisition</h6>
+                    <p class="small mb-2">Increase CAC spend by 20% to acquire 150+ new customers this quarter</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-primary">+$25K MRR</span>
+                        <button class="btn btn-sm btn-primary">Plan</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="action-card" style="border-left-color: var(--neon-gold);">
+                    <h6 class="text-warning"><i class="fas fa-chart-bar me-1"></i>Expand Upsell Program</h6>
+                    <p class="small mb-2">Target top 20% of customers for premium tier upsells</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-warning text-dark">+$3K MRR</span>
+                        <button class="btn btn-sm btn-primary">Launch</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and Custom Script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Chart Configuration
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: 'var(--text-secondary)',
+                        font: { size: 12 }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                    ticks: { color: 'var(--text-secondary)' }
+                },
+                y: {
+                    grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                    ticks: { color: 'var(--text-secondary)' }
+                }
+            }
+        };
+
+        // 1. MRR Trend Chart
+        const mrrData = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+            datasets: [
+                {
+                    label: 'New Revenue',
+                    data: [800, 1000, 1200, 1400, 1600, 1800, 2000, 2200, 2400, 2600],
+                    backgroundColor: 'rgba(16, 185, 129, 0.3)',
+                    borderColor: 'var(--success-green)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                },
+                {
+                    label: 'Expansion Revenue',
+                    data: [2000, 2200, 2500, 2800, 3100, 3400, 3700, 4000, 4300, 4600],
+                    backgroundColor: 'rgba(0, 212, 255, 0.3)',
+                    borderColor: 'var(--neon-blue)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                },
+                {
+                    label: 'Churned Revenue',
+                    data: [-300, -350, -400, -450, -500, -550, -600, -650, -700, -750],
+                    backgroundColor: 'rgba(239, 68, 68, 0.3)',
+                    borderColor: 'var(--danger-red)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }
+            ]
+        };
+
+        // 2. Churn & Retention Chart
+        const churnData = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+            datasets: [
+                {
+                    label: 'Monthly Churn Rate (%)',
+                    data: [3.2, 3.0, 2.9, 2.7, 2.6, 2.5, 2.4, 2.3, 2.3, 2.3],
+                    borderColor: 'var(--danger-red)',
+                    backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                    yAxisID: 'y',
+                    tension: 0.4,
+                    fill: true
+                },
+                {
+                    label: 'Retention Rate (%)',
+                    data: [96.8, 97.0, 97.1, 97.3, 97.4, 97.5, 97.6, 97.7, 97.7, 97.7],
+                    borderColor: 'var(--success-green)',
+                    backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                    yAxisID: 'y1',
+                    tension: 0.4,
+                    fill: true
+                }
+            ]
+        };
+
+        // 3. CAC Trend Chart
+        const cacTrendData = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+            datasets: [
+                {
+                    label: 'Customer Acquisition Cost ($)',
+                    data: [200, 190, 180, 170, 160, 150, 140, 135, 130, 127],
+                    borderColor: 'var(--warning-orange)',
+                    backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }
+            ]
+        };
+
+        // 4. LTV:CAC Ratio Chart
+        const ltvCacData = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+            datasets: [
+                {
+                    label: 'LTV:CAC Ratio',
+                    data: [9.5, 9.9, 10.5, 11.1, 11.8, 12.6, 13.5, 14.2, 14.6, 14.9],
+                    borderColor: 'var(--neon-blue)',
+                    backgroundColor: 'rgba(0, 212, 255, 0.2)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }
+            ]
+        };
+
+        // Initialize Charts
+        document.addEventListener('DOMContentLoaded', () => {
+            new Chart(document.getElementById('mrrChart'), {
+                type: 'line',
+                data: mrrData,
+                options: chartOptions
+            });
+
+            new Chart(document.getElementById('churnChart'), {
+                type: 'line',
+                data: churnData,
+                options: {
+                    ...chartOptions,
+                    scales: {
+                        ...chartOptions.scales,
+                        y: {
+                            ...chartOptions.scales.y,
+                            title: { display: true, text: 'Churn Rate (%)' },
+                            min: 0,
+                            max: 5
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            grid: { drawOnChartArea: false },
+                            ticks: { color: 'var(--success-green)' },
+                            min: 95,
+                            max: 100
+                        }
+                    }
+                }
+            });
+
+            new Chart(document.getElementById('cacTrendChart'), {
+                type: 'line',
+                data: cacTrendData,
+                options: chartOptions
+            });
+
+            new Chart(document.getElementById('ltvCacChart'), {
+                type: 'line',
+                data: ltvCacData,
+                options: chartOptions
+            });
+        });
+
+        // Simulation Functions
+        function updateSimulation() {
+            const cacReduction = parseInt(document.getElementById('cacReduction').value);
+            const mrrGrowth = parseInt(document.getElementById('mrrGrowth').value);
+            const churnReduction = parseFloat(document.getElementById('churnReduction').value);
+
+            document.getElementById('cacValue').textContent = cacReduction;
+            document.getElementById('mrrValue').textContent = mrrGrowth;
+            document.getElementById('churnValue').textContent = churnReduction.toFixed(1);
+        }
+
+        function runFullSimulation() {
+            const cacReduction = parseInt(document.getElementById('cacReduction').value);
+            const mrrGrowth = parseInt(document.getElementById('mrrGrowth').value);
+            const churnReduction = parseFloat(document.getElementById('churnReduction').value);
+
+            const currentCAC = 127;
+            const currentMRR = 18500;
+            const currentLTV = 1890;
+            const currentLtvCac = 14.9;
+            const currentSeriesA = 78;
+
+            const newCAC = currentCAC * (1 - cacReduction / 100);
+            const newMRR = currentMRR * (1 + mrrGrowth / 100);
+            const newLTV = currentLTV * (1 + (mrrGrowth / 100) * 0.5);
+            const newLtvCac = newLTV / newCAC;
+            const seriesABoost = (cacReduction * 0.2) + (mrrGrowth * 0.15) + (churnReduction * 5);
+            const newSeriesA = Math.min(100, currentSeriesA + seriesABoost);
+
+            document.getElementById('projectedMRR').textContent = '$' + Math.round(newMRR);
+            document.getElementById('mrrGrowthPercent').textContent = '+' + mrrGrowth + '%';
+            document.getElementById('projectedLtvCac').textContent = newLtvCac.toFixed(1) + ':1';
+            document.getElementById('ltvCacChange').textContent = '+' + (newLtvCac - currentLtvCac).toFixed(1) + ' points';
+            document.getElementById('projectedSeriesA').textContent = Math.round(newSeriesA) + '%';
+            document.getElementById('seriesAChange').textContent = '+' + Math.round(seriesABoost) + '%';
+
+            document.getElementById('simulationResults').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

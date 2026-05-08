@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auxeira Share Value Partners - Strategy Intelligence Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <style>
+        :root {
+            --primary-bg: #0a0a0a;
+            --secondary-bg: #1a1a1a;
+            --accent-bg: #2a2a2a;
+            --ferrari-red: #dc0000;
+            --ferrari-gold: #d4af37;
+            --terminal-green: #00ff88;
+            --terminal-blue: #0088ff;
+            --terminal-purple: #8800ff;
+            --terminal-gold: #ffaa00;
+            --terminal-red: #ff4444;
+            --text-primary: #ffffff;
+            --text-secondary: #e0e0e0;
+            --text-muted: #888888;
+            --border-color: #444444;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-bg) 0%, #1a0a2a 100%);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Enhanced Text Visibility */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-primary);
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        .text-secondary {
+            color: var(--text-secondary) !important;
+        }
+
+        /* Glass Morphism Cards */
+        .terminal-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 16px 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .terminal-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--terminal-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .live-indicator {
+            width: 10px;
+            height: 10px;
+            background: var(--terminal-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 10px var(--terminal-green);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        /* Critical Action Banner */
+        .critical-banner {
+            background: linear-gradient(90deg, var(--terminal-blue), var(--terminal-purple));
+            color: white;
+            padding: 18px;
+            margin-bottom: 24px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideDown 0.5s ease-out;
+            box-shadow: 0 4px 20px rgba(0, 136, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* AI-Powered Insights Section */
+        .ai-insights-container {
+            background: linear-gradient(135deg, rgba(0, 136, 255, 0.15), rgba(136, 0, 255, 0.15));
+            border: 2px solid var(--terminal-blue);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 32px rgba(0, 136, 255, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-insights-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 136, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--terminal-blue);
+        }
+
+        .ai-header i {
+            font-size: 2rem;
+            color: var(--terminal-blue);
+            animation: pulse 2s infinite;
+        }
+
+        .ai-header h3 {
+            margin: 0;
+            color: var(--terminal-blue);
+            font-size: 1.5rem;
+        }
+
+        .ai-badge {
+            background: linear-gradient(135deg, var(--terminal-blue), var(--terminal-purple));
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .insight-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-left: 4px solid var(--terminal-blue);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .insight-card:hover {
+            transform: translateX(5px);
+            border-left-color: var(--terminal-purple);
+            box-shadow: 0 4px 20px rgba(0, 136, 255, 0.2);
+        }
+
+        .insight-card.critical {
+            border-left-color: var(--terminal-gold);
+            background: rgba(255, 170, 0, 0.1);
+        }
+
+        .insight-card.positive {
+            border-left-color: var(--terminal-green);
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .insight-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .insight-content {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        .insight-metric {
+            display: inline-block;
+            background: rgba(0, 136, 255, 0.2);
+            color: var(--terminal-blue);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            margin: 0 2px;
+        }
+
+        .insight-actions {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .insight-tag {
+            background: rgba(136, 0, 255, 0.2);
+            color: var(--terminal-purple);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .refresh-insights-btn {
+            background: linear-gradient(135deg, var(--terminal-blue), var(--terminal-purple));
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .refresh-insights-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 136, 255, 0.4);
+        }
+
+        .refresh-insights-btn i {
+            animation: none;
+        }
+
+        .refresh-insights-btn.loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .metric-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--terminal-blue), var(--terminal-purple));
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--terminal-blue);
+            box-shadow: 0 8px 25px rgba(0, 136, 255, 0.2);
+        }
+
+        .metric-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .metric-change {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .metric-change.positive {
+            color: var(--terminal-green);
+        }
+
+        .metric-change.negative {
+            color: var(--terminal-red);
+        }
+
+        /* Tab Navigation */
+        .nav-tabs {
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        .nav-tabs .nav-link {
+            color: var(--text-secondary);
+            border: none;
+            padding: 16px 28px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-radius: 8px 8px 0 0;
+            font-size: 0.95rem;
+        }
+
+        .nav-tabs .nav-link:hover {
+            color: var(--terminal-blue);
+            background: rgba(0, 136, 255, 0.1);
+            border-color: transparent;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: var(--terminal-blue);
+            background: transparent;
+            border-bottom: 3px solid var(--terminal-blue);
+            font-weight: 700;
+        }
+
+        /* Buttons */
+        .btn-terminal {
+            background: linear-gradient(135deg, var(--terminal-blue), var(--terminal-purple));
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 136, 255, 0.3);
+        }
+
+        .btn-terminal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 136, 255, 0.4);
+            color: white;
+        }
+
+        .btn-outline-terminal {
+            background: transparent;
+            border: 2px solid var(--terminal-blue);
+            color: var(--terminal-blue);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-terminal:hover {
+            background: var(--terminal-blue);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* What-If Scenario Section */
+        .scenario-container {
+            background: linear-gradient(135deg, rgba(255, 170, 0, 0.1), rgba(136, 0, 255, 0.1));
+            border: 2px solid var(--terminal-gold);
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 24px;
+        }
+
+        .scenario-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--terminal-gold);
+        }
+
+        .scenario-header i {
+            font-size: 1.8rem;
+            color: var(--terminal-gold);
+        }
+
+        .scenario-header h3 {
+            margin: 0;
+            color: var(--terminal-gold);
+            font-size: 1.4rem;
+        }
+
+        .scenario-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .scenario-control {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .scenario-control label {
+            display: block;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .scenario-control input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--glass-bg);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .scenario-control input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--terminal-gold);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
+        }
+
+        .scenario-control input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--terminal-gold);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
+        }
+
+        .scenario-value {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .scenario-value .current {
+            color: var(--terminal-blue);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .scenario-value .projected {
+            color: var(--terminal-gold);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .scenario-results {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        .comparison-table th {
+            color: var(--text-secondary);
+            font-weight: 600;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .comparison-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--secondary-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--terminal-blue);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--terminal-purple);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .scenario-controls {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Critical Action Banner -->
+    <div id="criticalBanner" class="critical-banner">
+        <div class="d-flex align-items-center">
+            <div class="live-indicator me-3"></div>
+            <div>
+                <strong>PARTNER IMPACT LIVE:</strong>
+                <span class="ms-2">
+                    Shadow Value: $<span id="shadowValueBanner">98,000</span> • 
+                    ROI: <span id="roiBanner">18.4x</span> • 
+                    ESG Score: <span id="esgBanner">82</span> • 
+                    Rank: #<span id="rankBanner">7</span>
+                </span>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-success">
+                <i class="fas fa-pulse me-1"></i>Live
+            </span>
+            <span class="badge bg-warning text-dark">EXECUTIVE</span>
+        </div>
+    </div>
+
+    <div class="container-fluid px-4">
+        <!-- Header -->
+        <div class="row mb-4 mt-3">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="mb-2">
+                            <i class="fas fa-chart-network me-2" style="color: var(--terminal-blue);"></i>
+                            Share Value Partners
+                        </h1>
+                        <p class="text-muted mb-0">Strategy Intelligence Platform</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-terminal" onclick="exportInsights()">
+                            <i class="fas fa-download me-2"></i>Export Insights
+                        </button>
+                        <button class="btn btn-terminal" onclick="logout()">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab">
+                    <i class="fas fa-tachometer-alt me-2"></i>Overview
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="partnership-tab" data-bs-toggle="tab" data-bs-target="#partnership" type="button" role="tab">
+                    <i class="fas fa-handshake me-2"></i>Partnership Impact
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="analytics-tab" data-bs-toggle="tab" data-bs-target="#analytics" type="button" role="tab">
+                    <i class="fas fa-chart-bar me-2"></i>Analytics
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="reports-tab" data-bs-toggle="tab" data-bs-target="#reports" type="button" role="tab">
+                    <i class="fas fa-file-alt me-2"></i>Reports
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="dashboardTabContent">
+            <!-- Overview Tab -->
+            <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                <!-- AI-Powered Insights -->
+                <div class="ai-insights-container">
+                    <div class="ai-header">
+                        <i class="fas fa-brain"></i>
+                        <div>
+                            <h3>AI-Powered Strategic Insights</h3>
+                            <p class="text-muted mb-0" style="font-size: 0.9rem;">Intelligent analysis of your performance data</p>
+                        </div>
+                        <span class="ai-badge">
+                            <i class="fas fa-sparkles me-1"></i>AI GENERATED
+                        </span>
+                    </div>
+
+                    <div id="aiInsightsContent">
+                        <!-- Insights will be dynamically loaded here -->
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <button class="refresh-insights-btn" onclick="refreshInsights()">
+                            <i class="fas fa-sync-alt"></i>
+                            <span>Refresh Insights</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Key Metrics -->
+                <div class="terminal-container">
+                    <div class="terminal-header">
+                        <div class="terminal-title">
+                            <i class="fas fa-chart-pie"></i>
+                            Key Performance Indicators
+                        </div>
+                        <div class="live-indicator"></div>
+                    </div>
+
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-value" style="color: var(--terminal-green);">$98,000</div>
+                            <div class="metric-label">Shadow Value</div>
+                            <div class="metric-change positive">
+                                <i class="fas fa-arrow-up me-1"></i>+12.5% vs last month
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-value" style="color: var(--terminal-blue);">18.4x</div>
+                            <div class="metric-label">ROI Multiplier</div>
+                            <div class="metric-change positive">
+                                <i class="fas fa-arrow-up me-1"></i>+2.1x improvement
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-value" style="color: var(--terminal-purple);">1,247</div>
+                            <div class="metric-label">Startup Engagements</div>
+                            <div class="metric-change positive">
+                                <i class="fas fa-arrow-up me-1"></i>+18% this quarter
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-value" style="color: var(--terminal-gold);">82</div>
+                            <div class="metric-label">ESG Impact Score</div>
+                            <div class="metric-change positive">
+                                <i class="fas fa-arrow-up me-1"></i>+5 points
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Chart -->
+                <div class="terminal-container">
+                    <div class="terminal-header">
+                        <div class="terminal-title">
+                            <i class="fas fa-chart-area"></i>
+                            Performance Trajectory
+                        </div>
+                    </div>
+                    <canvas id="performanceChart" height="80"></canvas>
+                </div>
+            </div>
+
+            <!-- Partnership Impact Tab -->
+            <div class="tab-pane fade" id="partnership" role="tabpanel">
+                <div class="terminal-container">
+                    <div class="terminal-header">
+                        <div class="terminal-title">
+                            <i class="fas fa-handshake"></i>
+                            Partnership Impact Analysis
+                        </div>
+                    </div>
+
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-value" style="color: var(--terminal-green);">$245,000</div>
+                            <div class="metric-label">Total Rewards Distributed</div>
+                            <div class="metric-change positive">
+                                <i class="fas fa-arrow-up me-1"></i>+28% YoY
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-value" style="color: var(--terminal-blue);">89%</div>
+                            <div class="metric-label">Redemption Rate</div>
+                            <div class="metric-change positive">
+                                <i class="fas fa-arrow-up me-1"></i>+7% vs average
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-value" style="color: var(--terminal-purple);">342</div>
+                            <div class="metric-label">Active Partnerships</div>
+                            <div class="metric-change positive">
+                                <i class="fas fa-arrow-up me-1"></i>+45 this month
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-value" style="color: var(--terminal-gold);">#7</div>
+                            <div class="metric-label">Leaderboard Rank</div>
+                            <div class="metric-change positive">
+                                <i class="fas fa-arrow-up me-1"></i>Up 3 positions
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- What-If Scenario Section -->
+                <div class="scenario-container">
+                    <div class="scenario-header">
+                        <i class="fas fa-flask"></i>
+                        <div>
+                            <h3>What-If Scenario Modeling</h3>
+                            <p class="text-muted mb-0" style="font-size: 0.9rem;">Adjust variables to project future outcomes and optimize your strategy</p>
+                        </div>
+                    </div>
+
+                    <div class="scenario-controls">
+                        <div class="scenario-control">
+                            <label>
+                                <i class="fas fa-dollar-sign me-2"></i>Monthly Investment
+                            </label>
+                            <input type="range" id="investmentSlider" min="5000" max="50000" step="1000" value="10000" oninput="updateScenario()">
+                            <div class="scenario-value">
+                                <span class="text-muted">Current:</span>
+                                <span class="current">$<span id="currentInvestment">10,000</span></span>
+                            </div>
+                        </div>
+
+                        <div class="scenario-control">
+                            <label>
+                                <i class="fas fa-percentage me-2"></i>Reward Discount Rate
+                            </label>
+                            <input type="range" id="discountSlider" min="5" max="50" step="5" value="20" oninput="updateScenario()">
+                            <div class="scenario-value">
+                                <span class="text-muted">Current:</span>
+                                <span class="current"><span id="currentDiscount">20</span>%</span>
+                            </div>
+                        </div>
+
+                        <div class="scenario-control">
+                            <label>
+                                <i class="fas fa-users me-2"></i>Target Startups/Month
+                            </label>
+                            <input type="range" id="startupsSlider" min="50" max="500" step="25" value="150" oninput="updateScenario()">
+                            <div class="scenario-value">
+                                <span class="text-muted">Current:</span>
+                                <span class="current"><span id="currentStartups">150</span></span>
+                            </div>
+                        </div>
+
+                        <div class="scenario-control">
+                            <label>
+                                <i class="fas fa-calendar me-2"></i>Time Horizon (Months)
+                            </label>
+                            <input type="range" id="timeSlider" min="3" max="24" step="3" value="12" oninput="updateScenario()">
+                            <div class="scenario-value">
+                                <span class="text-muted">Current:</span>
+                                <span class="current"><span id="currentTime">12</span> months</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="scenario-results">
+                        <h4 class="mb-3" style="color: var(--terminal-gold);">
+                            <i class="fas fa-chart-line me-2"></i>Projected Outcomes
+                        </h4>
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Current</th>
+                                    <th>Projected</th>
+                                    <th>Change</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Total Investment</td>
+                                    <td>$120,000</td>
+                                    <td class="projected">$<span id="projectedInvestment">120,000</span></td>
+                                    <td><span id="investmentChange" class="metric-change positive">0%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Expected ROI</td>
+                                    <td>18.4x</td>
+                                    <td class="projected"><span id="projectedROI">18.4</span>x</td>
+                                    <td><span id="roiChange" class="metric-change positive">0%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Startup Reach</td>
+                                    <td>1,800</td>
+                                    <td class="projected"><span id="projectedReach">1,800</span></td>
+                                    <td><span id="reachChange" class="metric-change positive">0%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Shadow Value</td>
+                                    <td>$98,000</td>
+                                    <td class="projected">$<span id="projectedShadow">98,000</span></td>
+                                    <td><span id="shadowChange" class="metric-change positive">0%</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="mt-3 d-flex gap-2">
+                            <button class="btn btn-terminal" onclick="saveScenario()">
+                                <i class="fas fa-save me-2"></i>Save Scenario
+                            </button>
+                            <button class="btn btn-outline-terminal" onclick="resetScenario()">
+                                <i class="fas fa-undo me-2"></i>Reset
+                            </button>
+                            <button class="btn btn-outline-terminal" onclick="exportScenario()">
+                                <i class="fas fa-file-export me-2"></i>Export Analysis
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Impact Breakdown Chart -->
+                <div class="terminal-container mt-4">
+                    <div class="terminal-header">
+                        <div class="terminal-title">
+                            <i class="fas fa-chart-pie"></i>
+                            Impact Distribution
+                        </div>
+                    </div>
+                    <canvas id="impactChart" height="80"></canvas>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div class="tab-pane fade" id="analytics" role="tabpanel">
+                <div class="terminal-container">
+                    <div class="terminal-header">
+                        <div class="terminal-title">
+                            <i class="fas fa-chart-bar"></i>
+                            Advanced Analytics
+                        </div>
+                    </div>
+                    <p class="text-muted">Detailed analytics and insights coming soon...</p>
+                </div>
+            </div>
+
+            <!-- Reports Tab -->
+            <div class="tab-pane fade" id="reports" role="tabpanel">
+                <div class="terminal-container">
+                    <div class="terminal-header">
+                        <div class="terminal-title">
+                            <i class="fas fa-file-alt"></i>
+                            Generated Reports
+                        </div>
+                    </div>
+                    <p class="text-muted">Your custom reports will appear here...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Check authentication on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            checkAuthentication();
+            initializeCharts();
+            updateScenario();
+            loadAIInsights();
+        });
+
+        function checkAuthentication() {
+            const isAuthenticated = localStorage.getItem('auxeira_partner_authenticated');
+            const paymentVerified = localStorage.getItem('auxeira_payment_verified');
+            
+            if (!isAuthenticated || !paymentVerified) {
+                // Redirect to onboarding form
+                window.location.href = '/frontend/dashboard/share_value_partner_onboarding.html';
+            }
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = '/frontend/index.html';
+        }
+
+        // AI-Powered Insights
+        async function loadAIInsights() {
+            const insightsContainer = document.getElementById('aiInsightsContent');
+            
+            // Show loading state
+            insightsContainer.innerHTML = `
+                <div class="text-center py-4">
+                    <i class="fas fa-spinner fa-spin fa-2x" style="color: var(--terminal-blue);"></i>
+                    <p class="text-muted mt-3">Analyzing your data...</p>
+                </div>
+            `;
+
+            try {
+                const insights = await generateAIInsights();
+                displayInsights(insights);
+            } catch (error) {
+                console.error('Error loading insights:', error);
+                displayFallbackInsights();
+            }
+        }
+
+        async function generateAIInsights() {
+            const context = buildPartnerContext();
+            
+            const prompt = `Analyze the following partner performance data and provide 3-4 strategic insights. Each insight should be concise, actionable, and data-driven. Format as JSON array with objects containing: title, content, type (positive/critical/neutral), and tags.
+
+Partner Data:
+${context}
+
+Provide insights about trends, opportunities, risks, and strategic recommendations.`;
+
+            try {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${getAPIKey()}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gemini-2.5-flash',
+                        messages: [{
+                            role: 'user',
+                            content: prompt
+                        }],
+                        max_tokens: 800,
+                        temperature: 0.7
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('API request failed');
+                }
+
+                const data = await response.json();
+                const insightsText = data.choices[0].message.content;
+                
+                // Try to parse JSON, fallback to text parsing if needed
+                try {
+                    return JSON.parse(insightsText);
+                } catch {
+                    return parseInsightsFromText(insightsText);
+                }
+            } catch (error) {
+                console.error('AI API Error:', error);
+                throw error;
+            }
+        }
+
+        function getAPIKey() {
+            // In production, this would be securely stored and retrieved
+            // For now, using placeholder - will be set via environment variable
+            return 'PLACEHOLDER_API_KEY';
+        }
+
+        function buildPartnerContext() {
+            return `
+Shadow Value: $98,000 (+12.5% vs last month)
+ROI: 18.4x (+2.1x improvement)
+Startup Engagements: 1,247 (+18% this quarter)
+ESG Score: 82 (+5 points)
+Total Rewards Distributed: $245,000 (+28% YoY)
+Redemption Rate: 89% (+7% vs average)
+Active Partnerships: 342 (+45 this month)
+Leaderboard Rank: #7 (Up 3 positions)
+            `.trim();
+        }
+
+        function displayInsights(insights) {
+            const insightsContainer = document.getElementById('aiInsightsContent');
+            
+            const insightsHTML = insights.map(insight => {
+                const typeClass = insight.type || 'neutral';
+                const icon = getInsightIcon(typeClass);
+                const tags = insight.tags || [];
+                
+                return `
+                    <div class="insight-card ${typeClass}">
+                        <div class="insight-title">
+                            <i class="${icon}"></i>
+                            ${insight.title}
+                        </div>
+                        <div class="insight-content">
+                            ${insight.content}
+                        </div>
+                        ${tags.length > 0 ? `
+                            <div class="insight-actions">
+                                ${tags.map(tag => `<span class="insight-tag">${tag}</span>`).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+            
+            insightsContainer.innerHTML = insightsHTML;
+        }
+
+        function displayFallbackInsights() {
+            const fallbackInsights = [
+                {
+                    title: "Exceptional ROI Growth Trajectory",
+                    content: "Your ROI has surged to <span class='insight-metric'>18.4x</span>, representing a remarkable <span class='insight-metric'>+2.1x improvement</span>. This growth is primarily driven by your high redemption rate of <span class='insight-metric'>89%</span> and strategic startup targeting. Continue focusing on high-engagement segments to maintain this momentum.",
+                    type: "positive",
+                    tags: ["ROI", "Growth", "Performance"]
+                },
+                {
+                    title: "Startup Engagement Acceleration",
+                    content: "With <span class='insight-metric'>1,247 engagements</span> this quarter (<span class='insight-metric'>+18%</span>), you're significantly outpacing the platform average. Your redemption rate of <span class='insight-metric'>89%</span> is <span class='insight-metric'>7% above average</span>, indicating strong product-market fit for your rewards. Consider scaling your investment to capitalize on this trend.",
+                    type: "positive",
+                    tags: ["Engagement", "Startups", "Trend"]
+                },
+                {
+                    title: "Leaderboard Advancement Opportunity",
+                    content: "You've climbed to <span class='insight-metric'>#7</span> (up 3 positions), but there's a strategic opportunity to reach the top 5. Partners in positions #5-6 have ESG scores of 85-87. Increasing your ESG-aligned partnerships could boost your score from <span class='insight-metric'>82</span> and improve your ranking.",
+                    type: "critical",
+                    tags: ["Ranking", "ESG", "Strategy"]
+                },
+                {
+                    title: "Shadow Value Optimization Path",
+                    content: "Your Shadow Value of <span class='insight-metric'>$98,000</span> shows healthy <span class='insight-metric'>+12.5%</span> monthly growth. Based on current trajectory and the what-if scenarios, increasing your monthly investment from $10K to $15K could potentially push Shadow Value past <span class='insight-metric'>$150K</span> within 6 months while maintaining your strong ROI.",
+                    type: "neutral",
+                    tags: ["Shadow Value", "Projection", "Investment"]
+                }
+            ];
+            
+            displayInsights(fallbackInsights);
+        }
+
+        function getInsightIcon(type) {
+            const icons = {
+                'positive': 'fas fa-chart-line',
+                'critical': 'fas fa-exclamation-triangle',
+                'neutral': 'fas fa-lightbulb'
+            };
+            return icons[type] || 'fas fa-info-circle';
+        }
+
+        function parseInsightsFromText(text) {
+            // Simple fallback parser if AI doesn't return JSON
+            return [
+                {
+                    title: "AI Analysis Complete",
+                    content: text,
+                    type: "neutral",
+                    tags: ["AI Generated"]
+                }
+            ];
+        }
+
+        async function refreshInsights() {
+            const btn = document.querySelector('.refresh-insights-btn');
+            btn.classList.add('loading');
+            btn.disabled = true;
+            
+            await loadAIInsights();
+            
+            setTimeout(() => {
+                btn.classList.remove('loading');
+                btn.disabled = false;
+            }, 500);
+        }
+
+        // What-If Scenario Functions
+        function updateScenario() {
+            const investment = parseInt(document.getElementById('investmentSlider').value);
+            const discount = parseInt(document.getElementById('discountSlider').value);
+            const startups = parseInt(document.getElementById('startupsSlider').value);
+            const timeHorizon = parseInt(document.getElementById('timeSlider').value);
+
+            // Update current values display
+            document.getElementById('currentInvestment').textContent = investment.toLocaleString();
+            document.getElementById('currentDiscount').textContent = discount;
+            document.getElementById('currentStartups').textContent = startups;
+            document.getElementById('currentTime').textContent = timeHorizon;
+
+            // Calculate projections (simplified model)
+            const totalInvestment = investment * timeHorizon;
+            const baseROI = 18.4;
+            const roiMultiplier = (discount / 20) * (startups / 150) * (timeHorizon / 12);
+            const projectedROI = (baseROI * roiMultiplier).toFixed(1);
+            const projectedReach = startups * timeHorizon;
+            const projectedShadow = Math.round(totalInvestment * projectedROI * 0.08);
+
+            // Update projected values
+            document.getElementById('projectedInvestment').textContent = totalInvestment.toLocaleString();
+            document.getElementById('projectedROI').textContent = projectedROI;
+            document.getElementById('projectedReach').textContent = projectedReach.toLocaleString();
+            document.getElementById('projectedShadow').textContent = projectedShadow.toLocaleString();
+
+            // Calculate and display changes
+            const investmentChange = ((totalInvestment - 120000) / 120000 * 100).toFixed(1);
+            const roiChange = ((projectedROI - 18.4) / 18.4 * 100).toFixed(1);
+            const reachChange = ((projectedReach - 1800) / 1800 * 100).toFixed(1);
+            const shadowChange = ((projectedShadow - 98000) / 98000 * 100).toFixed(1);
+
+            updateChangeDisplay('investmentChange', investmentChange);
+            updateChangeDisplay('roiChange', roiChange);
+            updateChangeDisplay('reachChange', reachChange);
+            updateChangeDisplay('shadowChange', shadowChange);
+        }
+
+        function updateChangeDisplay(elementId, changePercent) {
+            const element = document.getElementById(elementId);
+            const isPositive = parseFloat(changePercent) >= 0;
+            
+            element.className = `metric-change ${isPositive ? 'positive' : 'negative'}`;
+            element.innerHTML = `<i class="fas fa-arrow-${isPositive ? 'up' : 'down'} me-1"></i>${isPositive ? '+' : ''}${changePercent}%`;
+        }
+
+        function resetScenario() {
+            document.getElementById('investmentSlider').value = 10000;
+            document.getElementById('discountSlider').value = 20;
+            document.getElementById('startupsSlider').value = 150;
+            document.getElementById('timeSlider').value = 12;
+            updateScenario();
+        }
+
+        function saveScenario() {
+            const scenario = {
+                investment: document.getElementById('investmentSlider').value,
+                discount: document.getElementById('discountSlider').value,
+                startups: document.getElementById('startupsSlider').value,
+                timeHorizon: document.getElementById('timeSlider').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            localStorage.setItem('auxeira_saved_scenario', JSON.stringify(scenario));
+            alert('Scenario saved successfully!');
+        }
+
+        function exportScenario() {
+            const scenario = {
+                investment: document.getElementById('currentInvestment').textContent,
+                discount: document.getElementById('currentDiscount').textContent,
+                startups: document.getElementById('currentStartups').textContent,
+                timeHorizon: document.getElementById('currentTime').textContent,
+                projectedInvestment: document.getElementById('projectedInvestment').textContent,
+                projectedROI: document.getElementById('projectedROI').textContent,
+                projectedReach: document.getElementById('projectedReach').textContent,
+                projectedShadow: document.getElementById('projectedShadow').textContent
+            };
+            
+            const csvContent = `Metric,Current,Projected\nMonthly Investment,$${scenario.investment},$${scenario.projectedInvestment}\nDiscount Rate,${scenario.discount}%,${scenario.discount}%\nTarget Startups,${scenario.startups},${scenario.projectedReach}\nROI,18.4x,${scenario.projectedROI}x\nShadow Value,$98000,$${scenario.projectedShadow}`;
+            
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `auxeira_scenario_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+        }
+
+        function exportInsights() {
+            alert('Exporting comprehensive insights report...');
+        }
+
+        // Initialize Charts
+        function initializeCharts() {
+            // Performance Chart
+            const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+            new Chart(performanceCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Shadow Value ($)',
+                        data: [65000, 72000, 78000, 85000, 91000, 98000],
+                        borderColor: '#00ff88',
+                        backgroundColor: 'rgba(0, 255, 136, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: 'ROI Multiplier',
+                        data: [14.2, 15.1, 15.8, 16.9, 17.5, 18.4],
+                        borderColor: '#0088ff',
+                        backgroundColor: 'rgba(0, 136, 255, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        yAxisID: 'y1'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#e0e0e0' }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#888888' },
+                            grid: { color: '#333333' }
+                        },
+                        y: {
+                            type: 'linear',
+                            position: 'left',
+                            ticks: { color: '#00ff88' },
+                            grid: { color: '#333333' }
+                        },
+                        y1: {
+                            type: 'linear',
+                            position: 'right',
+                            ticks: { color: '#0088ff' },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+
+            // Impact Chart
+            const impactCtx = document.getElementById('impactChart').getContext('2d');
+            new Chart(impactCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Market Access', 'Management Excellence', 'Funding Optimization', 'Operational Efficiency'],
+                    datasets: [{
+                        data: [35, 25, 25, 15],
+                        backgroundColor: ['#0088ff', '#8800ff', '#ffaa00', '#00ff88'],
+                        borderColor: '#1a1a1a',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: { color: '#e0e0e0' }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+

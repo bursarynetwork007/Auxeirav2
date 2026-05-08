@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auxeira | API Documentation: Startup Success Engine Integration</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <meta name="description" content="Comprehensive API documentation for Auxeira's Startup Success Engine. Integrate behavioral analytics, blockchain verification, and real-time monitoring into your platform.">
+    <meta name="keywords" content="Auxeira API, startup success engine, behavioral analytics API, blockchain integration, developer documentation">
+    <meta property="og:title" content="Auxeira | API Documentation: Startup Success Engine Integration">
+    <meta property="og:description" content="Connect your startup ecosystem through our comprehensive API framework. Reduce information asymmetry and automate investor monitoring.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://auxeira.com/api.html">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Strategic Design System - Enhanced Bloomberg Terminal Aesthetic */
+        :root {
+            --bloomberg-dark: #0d1117;
+            --bloomberg-charcoal: #161b22;
+            --bloomberg-blue: #007bff;
+            --bloomberg-accent: #ffd700;
+            --bloomberg-text: #f0f6fc;
+            --bloomberg-text-secondary: #8b949e;
+            --bloomberg-gray: #30363d;
+            --bloomberg-success: #28a745;
+            --bloomberg-warning: #ffc107;
+            --bloomberg-danger: #dc3545;
+            --bloomberg-orange: #FF6B35;
+            --border-radius: 8px;
+            --border-radius-lg: 12px;
+            --border-radius-xl: 16px;
+            --border-radius-2xl: 20px;
+            --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.2);
+            --shadow-xl: 0 15px 35px rgba(0, 0, 0, 0.25);
+            --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.35);
+            --font-mono: 'JetBrains Mono', monospace;
+            --glass-bg: rgba(13, 17, 23, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --gradient-primary: linear-gradient(135deg, var(--bloomberg-blue) 0%, var(--bloomberg-accent) 100%);
+            --gradient-secondary: linear-gradient(135deg, var(--bloomberg-dark) 0%, var(--bloomberg-charcoal) 100%);
+            --gradient-hero: linear-gradient(135deg, var(--bloomberg-dark) 0%, var(--bloomberg-charcoal) 50%, var(--bloomberg-dark) 100%);
+            --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            --transition-spring: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 3rem;
+            --spacing-3xl: 4rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--bloomberg-text);
+            background-color: var(--bloomberg-dark);
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(0, 123, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 123, 255, 0.05) 0%, transparent 50%);
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Strategic Header Design */
+        .header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition-smooth);
+        }
+
+        .header.scrolled {
+            box-shadow: var(--shadow-2xl);
+            background: rgba(13, 17, 23, 0.95);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo {
+            height: 40px;
+            width: auto;
+            transition: var(--transition-smooth);
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .brand-text {
+            font-weight: 800;
+            font-size: 1.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: var(--transition-smooth);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: var(--bloomberg-text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition-smooth);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: var(--bloomberg-blue);
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border-color: var(--bloomberg-blue);
+            color: var(--bloomberg-blue);
+        }
+
+        .btn-outline:hover {
+            background: var(--bloomberg-blue);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary {
+            background: var(--bloomberg-blue);
+            border-color: var(--bloomberg-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--bloomberg-accent);
+            border-color: var(--bloomberg-accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 25px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .mobile-menu-btn span {
+            width: 100%;
+            height: 2px;
+            background-color: var(--bloomberg-text);
+            transition: var(--transition-smooth);
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            padding: 1rem;
+            z-index: 999;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+        }
+
+        .mobile-menu a {
+            color: var(--bloomberg-text);
+            text-decoration: none;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--glass-border);
+            transition: var(--transition-smooth);
+        }
+
+        .mobile-menu a:hover {
+            color: var(--bloomberg-blue);
+            transform: translateX(10px);
+        }
+
+        .mobile-menu .btn {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        /* Strategic Hero Section */
+        .hero {
+            background: var(--gradient-hero);
+            padding: 8rem 0 6rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.03"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            z-index: 1;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(0, 123, 255, 0.1) 0%, transparent 70%);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 0.75rem 2rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .badge-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--bloomberg-blue);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge-text::before {
+            content: '🔗';
+            font-size: 1.2rem;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: var(--bloomberg-text-secondary);
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        /* Section Styles */
+        section {
+            padding: 6rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 5rem;
+        }
+
+        .section-badge {
+            display: inline-block;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 0.5rem 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--bloomberg-blue);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--bloomberg-text);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            color: var(--bloomberg-text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Stats Overview */
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-xl);
+            margin: var(--spacing-2xl) 0;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-xl);
+            text-align: center;
+            transition: var(--transition-bounce);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.1) 0%, rgba(255, 215, 0, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--bloomberg-blue);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--bloomberg-blue);
+            margin-bottom: 0.5rem;
+            font-family: var(--font-mono);
+            transition: var(--transition-smooth);
+        }
+
+        .stat-card:hover .stat-value {
+            color: var(--bloomberg-accent);
+            transform: scale(1.1);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--bloomberg-text-secondary);
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        /* Card Grid */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--spacing-xl);
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-xl);
+            padding: 3rem;
+            transition: var(--transition-bounce);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.1) 0%, rgba(255, 215, 0, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-2xl);
+            border-color: var(--bloomberg-blue);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-header {
+            color: var(--bloomberg-text);
+            font-weight: 600;
+            margin-bottom: var(--spacing-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-size: 1.3rem;
+        }
+
+        .card-header i {
+            color: var(--bloomberg-blue);
+            font-size: 1.5rem;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            padding: var(--spacing-sm) 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-sm);
+            transition: var(--transition-smooth);
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-list li:hover {
+            transform: translateX(5px);
+            color: var(--bloomberg-blue);
+        }
+
+        .feature-list i {
+            color: var(--bloomberg-success);
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+
+        /* Integration Grid */
+        .integration-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+            margin: var(--spacing-2xl) 0;
+        }
+
+        .integration-item {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-lg);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-sm);
+            transition: var(--transition-bounce);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .integration-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.1) 0%, rgba(255, 215, 0, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .integration-item:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--bloomberg-blue);
+        }
+
+        .integration-item:hover::before {
+            opacity: 1;
+        }
+
+        .integration-item > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .integration-icon {
+            font-size: 2rem;
+            color: var(--bloomberg-blue);
+            transition: var(--transition-smooth);
+        }
+
+        .integration-item:hover .integration-icon {
+            color: var(--bloomberg-accent);
+            transform: scale(1.2);
+        }
+
+        /* API Endpoints */
+        .api-endpoint {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .api-endpoint::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.05) 0%, rgba(255, 215, 0, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .api-endpoint:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--bloomberg-blue);
+        }
+
+        .api-endpoint:hover::before {
+            opacity: 1;
+        }
+
+        .api-endpoint > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .method {
+            display: inline-block;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background-color: var(--bloomberg-blue);
+            color: var(--bloomberg-text);
+            border-radius: var(--border-radius);
+            font-weight: bold;
+            margin-right: var(--spacing-sm);
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+        }
+
+        .method-get { background-color: var(--bloomberg-success); }
+        .method-post { background-color: var(--bloomberg-blue); }
+        .method-put { background-color: var(--bloomberg-warning); color: #000; }
+        .method-delete { background-color: var(--bloomberg-danger); }
+
+        .endpoint {
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            color: var(--bloomberg-text);
+            font-weight: 600;
+        }
+
+        .description {
+            margin-top: var(--spacing-sm);
+            color: var(--bloomberg-text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: var(--bloomberg-charcoal);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-lg);
+            margin: var(--spacing-lg) 0;
+            overflow-x: auto;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.05) 0%, rgba(255, 215, 0, 0.05) 100%);
+            pointer-events: none;
+        }
+
+        .code-block pre {
+            margin: 0;
+            color: var(--bloomberg-text);
+            position: relative;
+            z-index: 1;
+        }
+
+        .code-block .hljs-keyword { color: var(--bloomberg-blue); }
+        .code-block .hljs-string { color: var(--bloomberg-success); }
+        .code-block .hljs-function { color: var(--bloomberg-orange); }
+        .code-block .hljs-comment { color: var(--bloomberg-text-secondary); }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            margin: var(--spacing-xl) 0;
+            border-bottom: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+            overflow: hidden;
+        }
+
+        .tab-btn {
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--bloomberg-text-secondary);
+            position: relative;
+            transition: var(--transition-smooth);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .tab-btn:hover {
+            color: var(--bloomberg-text);
+            background: rgba(0, 123, 255, 0.1);
+        }
+
+        .tab-btn.active {
+            color: var(--bloomberg-text);
+            background: rgba(0, 123, 255, 0.2);
+        }
+
+        .tab-btn.active:after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient-primary);
+        }
+
+        .tab-content {
+            display: none;
+            padding: var(--spacing-xl) 0;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+            border: 1px solid var(--glass-border);
+            border-top: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Legal Disclaimer */
+        .legal-disclaimer {
+            margin-top: var(--spacing-2xl);
+            padding: var(--spacing-lg);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius-lg);
+            font-size: 0.8rem;
+            text-align: center;
+            color: var(--bloomberg-text-secondary);
+            border: 1px solid var(--glass-border);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bloomberg-dark);
+            border-top: 1px solid var(--glass-border);
+            padding: 3rem 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: var(--bloomberg-text);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--bloomberg-text-secondary);
+            text-decoration: none;
+            transition: var(--transition-smooth);
+            font-size: 0.9rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--bloomberg-blue);
+            transform: translateX(5px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--glass-border);
+            padding-top: 2rem;
+            text-align: center;
+        }
+
+        .footer-bottom p {
+            color: var(--bloomberg-text-secondary);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Scroll Reveal */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .section-header h2 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .nav-buttons {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            .hero {
+                padding: 6rem 0 4rem;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
+            }
+
+            .section-header p {
+                font-size: 1.1rem;
+            }
+
+            .stats-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .integration-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                text-align: left;
+                border-bottom: 1px solid var(--glass-border);
+            }
+
+            .tab-btn:last-child {
+                border-bottom: none;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero {
+                padding: 4rem 0 3rem;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .stats-overview {
+                grid-template-columns: 1fr;
+            }
+
+            .integration-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <img src="images/auxeira-logo.png" alt="Auxeira Logo" class="logo">
+                <span class="brand-text">Auxeira</span>
+            </div>
+           
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="team.html">Team</a></li>
+                <li><a href="partners.html">Partners</a></li>
+                <li><a href="careers.html">Careers</a></li>
+                <li><a href="studies.html">Studies</a></li>
+            </ul>
+
+            <div class="nav-buttons">
+                <a href="index.html" class="btn btn-outline">Back to Home</a>
+                <a href="demo.html" class="btn btn-primary">View Demo</a>
+            </div>
+
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="team.html">Team</a>
+            <a href="partners.html">Partners</a>
+            <a href="careers.html">Careers</a>
+            <a href="studies.html">Studies</a>
+            <a href="index.html" class="btn btn-outline">Back to Home</a>
+            <a href="demo.html" class="btn btn-primary">View Demo</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="badge-text">Seamless Integration Architecture</span>
+            </div>
+            <h1 class="hero-title">API Documentation</h1>
+            <p class="hero-subtitle">
+                Connect your startup ecosystem through our comprehensive API framework. Reduce information asymmetry, automate investor monitoring, and create verifiable performance records through blockchain technology.
+            </p>
+            <div class="hero-buttons">
+                <a href="#endpoints" class="btn btn-primary">
+                    <i class="fas fa-code"></i> Explore Endpoints
+                </a>
+                <a href="#sdk" class="btn btn-outline">
+                    <i class="fas fa-key"></i> Get API Key
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <!-- Stats Section -->
+        <section id="overview" class="scroll-reveal">
+            <div class="stats-overview">
+                <div class="stat-card">
+                    <div class="stat-value">90%</div>
+                    <div class="stat-label">Startup Failure Rate Addressed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">$1T+</div>
+                    <div class="stat-label">Annual Ecosystem Loss Prevention</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">50%</div>
+                    <div class="stat-label">Monitoring Processes Automated</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">85%</div>
+                    <div class="stat-label">Success Prediction Accuracy</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Value Propositions -->
+        <section class="scroll-reveal">
+            <div class="section-header">
+                <div class="section-badge">Value Propositions</div>
+                <h2>Ecosystem-Wide Benefits</h2>
+                <p>The SSE platform delivers measurable benefits across the entire startup ecosystem through intelligent API integration</p>
+            </div>
+            
+            <div class="card-grid">
+                <div class="card">
+                    <h3 class="card-header"><i class="fas fa-leaf"></i> ESG Firms</h3>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> 20% improvement in ESG Integration Scores</li>
+                        <li><i class="fas fa-check"></i> Enhanced impact measurement and reporting</li>
+                        <li><i class="fas fa-check"></i> Transparent sustainability tracking</li>
+                        <li><i class="fas fa-check"></i> Automated compliance monitoring</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-header"><i class="fas fa-chart-line"></i> Venture Capitalists</h3>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> 30% increase in follow-on funding success</li>
+                        <li><i class="fas fa-check"></i> 15% reduction in portfolio write-offs</li>
+                        <li><i class="fas fa-check"></i> Improved due diligence processes</li>
+                        <li><i class="fas fa-check"></i> Real-time portfolio monitoring</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-header"><i class="fas fa-building"></i> Government Agencies</h3>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> 25% increase in regional job creation</li>
+                        <li><i class="fas fa-check"></i> Accelerated economic development</li>
+                        <li><i class="fas fa-check"></i> Policy impact measurement</li>
+                        <li><i class="fas fa-check"></i> Innovation ecosystem optimization</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-header"><i class="fas fa-hand-holding-usd"></i> Institutional Investors</h3>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> 80% milestone achievement rates</li>
+                        <li><i class="fas fa-check"></i> Improved investment confidence</li>
+                        <li><i class="fas fa-check"></i> Transparent KPI tracking</li>
+                        <li><i class="fas fa-check"></i> Risk-adjusted return optimization</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Platform Integrations -->
+        <section id="integrations" class="scroll-reveal">
+            <div class="section-header">
+                <div class="section-badge">Platform Integrations</div>
+                <h2>50+ Supported Platforms</h2>
+                <p>Connect with all critical startup functions across financial, customer, and operational platforms</p>
+            </div>
+            
+            <h3 style="margin-bottom: var(--spacing-lg); color: var(--bloomberg-text); text-align: center;">Financial Platforms</h3>
+            <div class="integration-grid">
+                <div class="integration-item">
+                    <i class="fas fa-credit-card integration-icon"></i>
+                    <div>Payment Processors</div>
+                </div>
+                <div class="integration-item">
+                    <i class="fas fa-calculator integration-icon"></i>
+                    <div>Accounting Software</div>
+                </div>
+                <div class="integration-item">
+                    <i class="fas fa-university integration-icon"></i>
+                    <div>Banking APIs</div>
+                </div>
+                <div class="integration-item">
+                    <i class="fas fa-chart-pie integration-icon"></i>
+                    <div>Equity Management</div>
+                </div>
+            </div>
+            
+            <h3 style="margin: var(--spacing-2xl) 0 var(--spacing-lg); color: var(--bloomberg-text); text-align: center;">Customer Platforms</h3>
+            <div class="integration-grid">
+                <div class="integration-item">
+                    <i class="fas fa-users integration-icon"></i>
+                    <div>CRM Systems</div>
+                </div>
+                <div class="integration-item">
+                    <i class="fas fa-envelope integration-icon"></i>
+                    <div>Marketing Platforms</div>
+                </div>
+                <div class="integration-item">
+                    <i class="fas fa-headset integration-icon"></i>
+                    <div>Support Systems</div>
+                </div>
+                <div class="integration-item">
+                    <i class="fas fa-chart-bar integration-icon"></i>
+                    <div>Analytics Tools</div>
+                </div>
+            </div>
+            
+            <h3 style="margin: var(--spacing-2xl) 0 var(--spacing-lg); color: var(--bloomberg-text); text-align: center;">Operational Platforms</h3>
+            <div class="integration-grid">
+                <div class="integration-item">
+                    <i class="fas fa-tasks integration-icon"></i>
+                    <div>Project Management</div>
+                </div>
+                <div class="integration-item">
+                    <i class="fas fa-code integration-icon"></i>
+                    <div>Development Tools</div>
+                </div>
+                <div class="integration-item">
+                    <i class="fas fa-cloud integration-icon"></i>
+                    <div>Cloud Infrastructure</div>
+                </div>
+                <div class="integration-item">
+                    <i class="fas fa-shield-alt integration-icon"></i>
+                    <div>Security Platforms</div>
+                </div>
+            </div>
+            
+            <div class="legal-disclaimer">
+                <p><strong>Legal Disclaimer:</strong> All company names, logos, and trademarks are the property of their respective owners. Their use does not imply affiliation, sponsorship, or endorsement by those companies.</p>
+            </div>
+        </section>
+
+        <!-- API Endpoints -->
+        <section id="endpoints" class="scroll-reveal">
+            <div class="section-header">
+                <div class="section-badge">API Endpoints</div>
+                <h2>Comprehensive API Framework</h2>
+                <p>Seamless integration with the SSE platform through our RESTful API architecture</p>
+            </div>
+            
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="auth">Authentication</button>
+                <button class="tab-btn" data-tab="data">Data Ingestion</button>
+                <button class="tab-btn" data-tab="blockchain">Blockchain</button>
+                <button class="tab-btn" data-tab="analytics">Analytics</button>
+            </div>
+            
+            <div id="auth" class="tab-content active">
+                <div class="api-endpoint">
+                    <span class="method method-post">POST</span>
+                    <span class="endpoint">/api/v1/auth/login</span>
+                    <div class="description">Authenticate with the API using your API key and receive a JWT token</div>
+                </div>
+                
+                <div class="api-endpoint">
+                    <span class="method method-post">POST</span>
+                    <span class="endpoint">/api/v1/auth/refresh</span>
+                    <div class="description">Refresh your authentication token before expiration</div>
+                </div>
+                
+                <div class="api-endpoint">
+                    <span class="method method-delete">DELETE</span>
+                    <span class="endpoint">/api/v1/auth/logout</span>
+                    <div class="description">Invalidate your current authentication token</div>
+                </div>
+                
+                <div class="code-block">
+                    <pre><code>// Example: Authentication Flow
+const authenticate = async (apiKey) => {
+  const response = await fetch('https://api.auxeira.com/v1/auth/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ 
+      apiKey: apiKey,
+      clientId: 'your-client-id'
+    })
+  });
+  
+  if (!response.ok) {
+    throw new Error('Authentication failed');
+  }
+  
+  const { token, expiresIn } = await response.json();
+  
+  // Store token securely
+  localStorage.setItem('auxeira_token', token);
+  
+  return token;
+};</code></pre>
+                </div>
+            </div>
+            
+            <div id="data" class="tab-content">
+                <div class="api-endpoint">
+                    <span class="method method-post">POST</span>
+                    <span class="endpoint">/api/v1/data/behavioral</span>
+                    <div class="description">Submit behavioral data for AI-powered analysis and intervention recommendations</div>
+                </div>
+                
+                <div class="api-endpoint">
+                    <span class="method method-get">GET</span>
+                    <span class="endpoint">/api/v1/metrics/real-time</span>
+                    <div class="description">Retrieve real-time performance metrics and KPI updates</div>
+                </div>
+                
+                <div class="api-endpoint">
+                    <span class="method method-put">PUT</span>
+                    <span class="endpoint">/api/v1/kpi/update</span>
+                    <div class="description">Update key performance indicator values and milestone progress</div>
+                </div>
+                
+                <div class="api-endpoint">
+                    <span class="method method-get">GET</span>
+                    <span class="endpoint">/api/v1/interventions/recommendations</span>
+                    <div class="description">Get AI-powered behavioral intervention recommendations</div>
+                </div>
+                
+                <div class="code-block">
+                    <pre><code>// Example: Submit Behavioral Data
+const submitBehavioralData = async (data, token) => {
+  const response = await fetch('https://api.auxeira.com/v1/data/behavioral', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      startupId: data.startupId,
+      metrics: {
+        customerInterviews: data.customerInterviews,
+        mvpIterations: data.mvpIterations,
+        burnRate: data.burnRate,
+        teamDynamics: data.teamDynamics
+      },
+      timestamp: new Date().toISOString()
+    })
+  });
+  
+  const result = await response.json();
+  return result.interventionRecommendations;
+};</code></pre>
+                </div>
+            </div>
+            
+            <div id="blockchain" class="tab-content">
+                <div class="api-endpoint">
+                    <span class="method method-post">POST</span>
+                    <span class="endpoint">/api/v1/blockchain/verify</span>
+                    <div class="description">Verify data integrity and create immutable records on the blockchain</div>
+                </div>
+                
+                <div class="api-endpoint">
+                    <span class="method method-get">GET</span>
+                    <span class="endpoint">/api/v1/blockchain/transactions</span>
+                    <div class="description">Retrieve blockchain transaction history and verification status</div>
+                </div>
+                
+                <div class="api-endpoint">
+                    <span class="method method-post">POST</span>
+                    <span class="endpoint">/api/v1/rewards/distribute</span>
+                    <div class="description">Distribute performance-based rewards via smart contracts</div>
+                </div>
+                
+                <div class="api-endpoint">
+                    <span class="method method-get">GET</span>
+                    <span class="endpoint">/api/v1/smart-contracts/status</span>
+                    <div class="description">Check smart contract execution status and results</div>
+                </div>
+                
+                <div class="code-block">
+                    <pre><code>// Example: Blockchain Verification
+const verifyOnBlockchain = async (data, token) => {
+  const response = await fetch('https://api.auxeira.com/v1/blockchain/verify', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      dataHash: data.hash,
+      metadata: {
+        startupId: data.startupId,
+        milestone: data.milestone,
+        verificationLevel: 'high'
+      }
+    })
+  });
+  
+  const verification = await response.json();
+  return {
+    transactionId: verification.txId,
+    blockHash: verification.blockHash,
+    verified: verification.success
+  };
+};</code></pre>
+                </div>
+            </div>
+            
+            <div id="analytics" class="tab-content">
+                <div class="api-endpoint">
+                    <span class="method method-get">GET</span>
+                    <span class="endpoint">/api/v1/analytics/dashboard</span>
+                    <div class="description">Retrieve comprehensive analytics data for dashboard visualization</div>
+                </div>
+                
+                <div class="api-endpoint">
+                    <span class="method method-post">POST</span>
+                    <span class="endpoint">/api/v1/reports/generate</span>
+                    <div class="description">Generate professional evaluation reports with behavioral insights</div>
+                </div>
+                
+                <div class="api-endpoint">
+                    <span class="method method-get">GET</span>
+                    <span class="endpoint">/api/v1/predictions/success-rate</span>
+                    <div class="description">Get AI-powered success rate predictions and risk assessments</div>
+                </div>
+                
+                <div class="api-endpoint">
+                    <span class="method method-get">GET</span>
+                    <span class="endpoint">/api/v1/benchmarks/industry</span>
+                    <div class="description">Access industry benchmarks and comparative performance data</div>
+                </div>
+                
+                <div class="code-block">
+                    <pre><code>// Example: Generate Analytics Report
+const generateReport = async (startupId, token) => {
+  const response = await fetch('https://api.auxeira.com/v1/reports/generate', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      startupId: startupId,
+      reportType: 'comprehensive',
+      timeframe: '90d',
+      includeRecommendations: true,
+      format: 'pdf'
+    })
+  });
+  
+  const report = await response.json();
+  return {
+    reportUrl: report.downloadUrl,
+    insights: report.keyInsights,
+    recommendations: report.actionItems
+  };
+};</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- SDK & Documentation -->
+        <section id="sdk" class="scroll-reveal">
+            <div class="section-header">
+                <div class="section-badge">Developer Resources</div>
+                <h2>SDK & Documentation</h2>
+                <p>Comprehensive resources and tools for developers to integrate with the SSE platform efficiently</p>
+            </div>
+            
+            <div class="card-grid">
+                <div class="card">
+                    <h3 class="card-header"><i class="fas fa-code"></i> Supported Languages</h3>
+                    <ul class="feature-list">
+                        <li><i class="fab fa-python"></i> Python SDK with async support</li>
+                        <li><i class="fab fa-js"></i> JavaScript/Node.js SDK</li>
+                        <li><i class="fab fa-golang"></i> Go SDK for high-performance applications</li>
+                        <li><i class="fas fa-code"></i> REST API with OpenAPI 3.0 specification</li>
+                        <li><i class="fab fa-react"></i> React components library</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-header"><i class="fas fa-book"></i> Developer Resources</h3>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-search"></i> Interactive API explorer with live testing</li>
+                        <li><i class="fas fa-code"></i> Code samples and integration tutorials</li>
+                        <li><i class="fas fa-link"></i> Webhook integration guides and examples</li>
+                        <li><i class="fas fa-tachometer-alt"></i> Rate limiting and best practices documentation</li>
+                        <li><i class="fas fa-bug"></i> Debugging tools and error handling guides</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-header"><i class="fas fa-shield-alt"></i> Security & Compliance</h3>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-lock"></i> OAuth 2.0 and JWT authentication</li>
+                        <li><i class="fas fa-certificate"></i> SSL/TLS encryption for all endpoints</li>
+                        <li><i class="fas fa-user-shield"></i> GDPR and SOC 2 compliance</li>
+                        <li><i class="fas fa-key"></i> API key management and rotation</li>
+                        <li><i class="fas fa-audit"></i> Comprehensive audit logging</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-header"><i class="fas fa-cogs"></i> Technical Specifications</h3>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-server"></i> 99.9% uptime SLA guarantee</li>
+                        <li><i class="fas fa-clock"></i> Sub-100ms response times</li>
+                        <li><i class="fas fa-expand-arrows-alt"></i> Auto-scaling infrastructure</li>
+                        <li><i class="fas fa-globe"></i> Global CDN with edge caching</li>
+                        <li><i class="fas fa-chart-line"></i> Real-time monitoring and alerting</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: var(--spacing-2xl);">
+                <a href="#" class="btn btn-primary">
+                    <i class="fas fa-book-open"></i> View Full Documentation
+                </a>
+                <a href="#" class="btn btn-outline">
+                    <i class="fas fa-download"></i> Download SDK
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Platform</h3>
+                    <ul class="footer-links">
+                        <li><a href="dashboard.html">Dashboard Demo</a></li>
+                        <li><a href="api.html">API Documentation</a></li>
+                        <li><a href="partners.html">Partner Network</a></li>
+                        <li><a href="insights.html">Data Insights</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Research</h3>
+                    <ul class="footer-links">
+                        <li><a href="whitepaper.html">White-Paper</a></li>
+                        <li><a href="studies.html">Case Studies</a></li>
+                        <li><a href="reports.html">Industry Reports</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Auxeira</a></li>
+                        <li><a href="team.html">Leadership Team</a></li>
+                        <li><a href="careers.html">Careers</a></li>
+                        <li><a href="press.html">Press Kit</a></li>
+                    </ul>
+                </div>
+
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Auxeira. All rights reserved. The Startup Success Engine is a proprietary platform of Auxeira.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Header scroll effect
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+
+            // Scroll reveal animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all scroll reveal elements
+            document.querySelectorAll('.scroll-reveal').forEach(element => {
+                observer.observe(element);
+            });
+
+            // Enhanced hover effects for cards
+            document.querySelectorAll('.stat-card, .card, .integration-item, .api-endpoint').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                    this.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Counter animation for stats
+            function animateCounters() {
+                const counters = document.querySelectorAll('.stat-value');
+                counters.forEach(counter => {
+                    const target = parseFloat(counter.textContent.replace(/[^\d.]/g, ''));
+                    const increment = target / 50;
+                    let current = 0;
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            counter.textContent = counter.textContent.replace(/[\d.]+/, target);
+                            clearInterval(timer);
+                        } else {
+                            const value = counter.textContent.includes('.') ? 
+                                current.toFixed(1) : Math.floor(current);
+                            counter.textContent = counter.textContent.replace(/[\d.]+/, value);
+                        }
+                    }, 30);
+                });
+            }
+
+            // Trigger counter animation when stats are visible
+            const statsObserver = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounters();
+                        statsObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            const statsSection = document.querySelector('.stats-overview');
+            if (statsSection) {
+                statsObserver.observe(statsSection);
+            }
+
+            // Tab functionality
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const targetTab = this.getAttribute('data-tab');
+                    
+                    // Remove active class from all tabs and contents
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked tab and corresponding content
+                    this.classList.add('active');
+                    document.getElementById(targetTab).classList.add('active');
+                });
+            });
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Add floating animation to badges
+            document.querySelectorAll('.hero-badge, .section-badge').forEach(element => {
+                element.classList.add('float');
+            });
+        });
+
+        // Mobile menu functionality
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('active');
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+            
+            if (!mobileMenu.contains(event.target) && !menuBtn.contains(event.target)) {
+                mobileMenu.classList.remove('active');
+            }
+        });
+    </script>
+<script src="js/sw-registration.js"></script>
+</body>
+</html>
+
+
+<!-- Backend Integration Panel -->
+<div class="integration-panel" style="margin: 20px 0; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px;">
+    <h3 style="margin: 0 0 15px 0;">Live Backend Integration</h3>
+    <div class="backend-status" style="margin-bottom: 15px;">Initializing connection...</div>
+    <button onclick="AuxeiraApp.testBackendConnection()" 
+            style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+        Test Live Connection
+    </button>
+    <div id="api-test-results" style="margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 4px; min-height: 60px; display: none;">
+    </div>
+</div>
+
+<script>
+AuxeiraApp.testBackendConnection = async function() {
+    const resultsDiv = document.getElementById('api-test-results');
+    resultsDiv.style.display = 'block';
+    resultsDiv.innerHTML = '<div style="color: #ffd700;">Testing connection...</div>';
+    
+    try {
+        const health = await this.api.getHealth();
+        const status = await this.api.getStatus();
+        const solana = await this.api.testSolana();
+        
+        resultsDiv.innerHTML = `
+            <div style="color: #90ee90;">
+                <strong>✅ All Systems Operational</strong><br>
+                Backend: ${health.status}<br>
+                Services: ${status.services}<br>
+                Blockchain: ${solana.solana}<br>
+                <small>Last tested: ${new Date().toLocaleString()}</small>
+            </div>
+        `;
+    } catch (error) {
+        resultsDiv.innerHTML = `
+            <div style="color: #ffcccb;">
+                <strong>❌ Connection Failed</strong><br>
+                ${error.message}
+            </div>
+        `;
+    }
+};
+</script>

@@ -1,0 +1,63 @@
+{
+  "version": 2,
+  "name": "auxeira-ferrari-dashboards",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "env": {
+    "PAYSTACK_PUBLIC_KEY": "@paystack_public_key",
+    "OPENAI_API_KEY": "@openai_api_key",
+    "THUNDERBIT_API_KEY": "@thunderbit_api_key"
+  },
+  "build": {
+    "env": {
+      "PAYSTACK_PUBLIC_KEY": "@paystack_public_key",
+      "OPENAI_API_KEY": "@openai_api_key",
+      "THUNDERBIT_API_KEY": "@thunderbit_api_key"
+    }
+  },
+  "functions": {
+    "app/api/**/*.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.paystack.co; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://api.paystack.co https://api.openai.com;"
+        }
+      ]
+    }
+  ]
+}

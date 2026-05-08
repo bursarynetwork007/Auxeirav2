@@ -1,0 +1,1796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Careers at Auxeira - Join the Behavioral Revolution</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <meta name="description" content="Join Auxeira's mission to transform startup success through behavioral science. Exciting opportunities in AI, blockchain, and behavioral economics.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Strategic Design System - Enhanced Bloomberg Terminal Aesthetic */
+        :root {
+            --bloomberg-dark: #0d1117;
+            --bloomberg-charcoal: #161b22;
+            --bloomberg-blue: #007bff;
+            --bloomberg-accent: #ffd700;
+            --bloomberg-text: #f0f6fc;
+            --bloomberg-text-secondary: #8b949e;
+            --bloomberg-gray: #30363d;
+            --bloomberg-success: #28a745;
+            --bloomberg-warning: #ffc107;
+            --border-radius: 8px;
+            --border-radius-lg: 12px;
+            --border-radius-xl: 16px;
+            --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.2);
+            --shadow-xl: 0 15px 35px rgba(0, 0, 0, 0.25);
+            --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.35);
+            --font-mono: 'JetBrains Mono', monospace;
+            --glass-bg: rgba(13, 17, 23, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --gradient-primary: linear-gradient(135deg, var(--bloomberg-blue) 0%, var(--bloomberg-accent) 100%);
+            --gradient-secondary: linear-gradient(135deg, var(--bloomberg-dark) 0%, var(--bloomberg-charcoal) 100%);
+            --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--bloomberg-text);
+            background-color: var(--bloomberg-dark);
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(0, 123, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 123, 255, 0.05) 0%, transparent 50%);
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Strategic Header Design */
+        .header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition-smooth);
+        }
+
+        .header.scrolled {
+            box-shadow: var(--shadow-xl);
+            background: rgba(13, 17, 23, 0.95);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo {
+            height: 40px;
+            width: auto;
+            transition: var(--transition-smooth);
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .brand-text {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: var(--transition-smooth);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: var(--bloomberg-text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition-smooth);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: var(--bloomberg-blue);
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--bloomberg-blue);
+            color: var(--bloomberg-blue);
+        }
+
+        .btn-outline:hover {
+            background: var(--bloomberg-blue);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary {
+            background: var(--bloomberg-blue);
+            border: 2px solid var(--bloomberg-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--bloomberg-accent);
+            border-color: var(--bloomberg-accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 25px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .mobile-menu-btn span {
+            width: 100%;
+            height: 2px;
+            background-color: var(--bloomberg-text);
+            transition: var(--transition-smooth);
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            padding: 1rem;
+            z-index: 999;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+        }
+
+        .mobile-menu a {
+            color: var(--bloomberg-text);
+            text-decoration: none;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--glass-border);
+            transition: var(--transition-smooth);
+        }
+
+        .mobile-menu a:hover {
+            color: var(--bloomberg-blue);
+            transform: translateX(10px);
+        }
+
+        .mobile-menu .btn {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        /* Strategic Hero Section - Career Focus */
+        .careers-hero {
+            background: var(--gradient-secondary);
+            padding: 8rem 0 6rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .careers-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.03"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            z-index: 1;
+        }
+
+        .careers-hero .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 0.5rem 1.5rem;
+            margin-bottom: 2rem;
+            color: var(--bloomberg-blue);
+            font-weight: 600;
+            font-size: 0.9rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: var(--bloomberg-text-secondary);
+            margin-bottom: 3rem;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+            line-height: 1.6;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        .hero-stat {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: 1.5rem;
+            text-align: center;
+            transition: var(--transition-smooth);
+        }
+
+        .hero-stat:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--bloomberg-blue);
+        }
+
+        .hero-stat-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--bloomberg-blue);
+            font-family: var(--font-mono);
+            margin-bottom: 0.5rem;
+            transition: var(--transition-smooth);
+        }
+
+        .hero-stat:hover .hero-stat-value {
+            color: var(--bloomberg-accent);
+            transform: scale(1.1);
+        }
+
+        .hero-stat-label {
+            color: var(--bloomberg-text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Strategic Benefits Section */
+        .benefits-section {
+            padding: 6rem 0;
+            background: var(--bloomberg-dark);
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--bloomberg-text);
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid transparent;
+            background: linear-gradient(to right, var(--bloomberg-blue), var(--bloomberg-accent)) bottom/100px 3px no-repeat;
+            position: relative;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--bloomberg-text-secondary);
+            text-align: center;
+            margin-bottom: 4rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 4rem;
+        }
+        
+        .benefit-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-xl);
+            padding: 3rem;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition-bounce);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .benefit-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.1) 0%, rgba(255, 215, 0, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 0;
+        }
+        
+        .benefit-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: var(--shadow-2xl);
+            border-color: var(--bloomberg-blue);
+        }
+
+        .benefit-card:hover::before {
+            opacity: 1;
+        }
+
+        .benefit-card > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .benefit-icon {
+            font-size: 3.5rem;
+            color: var(--bloomberg-blue);
+            margin-bottom: 1.5rem;
+            transition: var(--transition-smooth);
+        }
+
+        .benefit-card:hover .benefit-icon {
+            color: var(--bloomberg-accent);
+            transform: scale(1.2);
+        }
+        
+        .benefit-title {
+            font-size: 1.5rem;
+            color: var(--bloomberg-text);
+            margin-bottom: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .benefit-card p {
+            color: var(--bloomberg-text-secondary);
+            line-height: 1.7;
+            font-size: 1.05rem;
+        }
+
+        /* Strategic Positions Section */
+        .positions-section {
+            padding: 6rem 0;
+            background: var(--bloomberg-charcoal);
+        }
+        
+        .position-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-xl);
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow-lg);
+            border-left: 6px solid var(--bloomberg-blue);
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .position-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.05) 0%, rgba(255, 215, 0, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 0;
+        }
+
+        .position-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-2xl);
+            border-left-color: var(--bloomberg-accent);
+        }
+
+        .position-card:hover::before {
+            opacity: 1;
+        }
+
+        .position-card > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .position-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            gap: 2rem;
+        }
+        
+        .position-icon {
+            font-size: 3.5rem;
+            transition: var(--transition-smooth);
+        }
+
+        .position-card:hover .position-icon {
+            transform: scale(1.1);
+        }
+        
+        .position-title {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .position-name {
+            font-size: 2.2rem;
+            color: var(--bloomberg-text);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        
+        .position-details {
+            color: var(--bloomberg-text-secondary);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        
+        .position-content {
+            margin-top: 2rem;
+        }
+        
+        .content-block {
+            margin-bottom: 2.5rem;
+        }
+        
+        .content-title {
+            font-size: 1.4rem;
+            color: var(--bloomberg-blue);
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--bloomberg-gray);
+            font-weight: 600;
+        }
+        
+        .bullet-list {
+            list-style: none;
+        }
+        
+        .bullet-list li {
+            margin-bottom: 1rem;
+            position: relative;
+            padding-left: 2rem;
+            color: var(--bloomberg-text-secondary);
+            line-height: 1.7;
+            transition: var(--transition-smooth);
+        }
+
+        .bullet-list li:hover {
+            color: var(--bloomberg-text);
+            transform: translateX(5px);
+        }
+        
+        .bullet-list li:before {
+            content: "▶";
+            color: var(--bloomberg-blue);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            font-size: 0.8rem;
+            line-height: 1.7;
+            transition: var(--transition-smooth);
+        }
+
+        .bullet-list li:hover:before {
+            color: var(--bloomberg-accent);
+            transform: scale(1.2);
+        }
+
+        .salary-info {
+            background: var(--bloomberg-charcoal);
+            padding: 2rem;
+            border-radius: var(--border-radius-lg);
+            margin: 2rem 0;
+            border-left: 4px solid var(--bloomberg-accent);
+            position: relative;
+            transition: var(--transition-smooth);
+        }
+
+        .salary-info:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .apply-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--bloomberg-blue);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            transition: var(--transition-smooth);
+            margin-top: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .apply-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .apply-button:hover::before {
+            left: 100%;
+        }
+
+        .apply-button:hover {
+            background: var(--bloomberg-accent);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        /* Strategic CTA Section */
+        .cta-section {
+            background: var(--gradient-secondary);
+            border-radius: var(--border-radius-xl);
+            padding: 5rem;
+            text-align: center;
+            margin: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.05"><circle cx="50" cy="50" r="40" fill="none" stroke="white" stroke-width="2"/></svg>');
+            z-index: 1;
+        }
+
+        .cta-section > * {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .cta-title {
+            font-size: 2.8rem;
+            color: var(--bloomberg-text);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .cta-text {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            color: var(--bloomberg-text-secondary);
+            line-height: 1.6;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 1.5rem 3rem;
+            background: var(--bloomberg-blue);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            transition: var(--transition-smooth);
+            font-size: 1.2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+        
+        .cta-button:hover {
+            background: var(--bloomberg-accent);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-2xl);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+            padding: 4rem 0 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 3rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .footer-sections {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(200px, 1fr));
+            gap: 2rem;
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .footer-brand {
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            min-width: 280px;
+            max-width: 320px;
+        }
+
+        .footer-logo {
+            height: 40px;
+            width: auto;
+            margin-bottom: 1rem;
+        }
+
+        .footer h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .footer p {
+            color: var(--bloomberg-text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bloomberg-charcoal);
+            color: var(--bloomberg-text);
+            transition: var(--transition-smooth);
+        }
+
+        .social-links a:hover {
+            background: var(--bloomberg-blue);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .footer-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer-section h4 {
+            font-size: 1.2rem;
+            color: var(--bloomberg-text);
+            margin-bottom: 1rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-section h4::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background: var(--bloomberg-blue);
+        }
+
+        .footer-section a {
+            color: var(--bloomberg-text-secondary);
+            text-decoration: none;
+            margin-bottom: 0.75rem;
+            transition: var(--transition-smooth);
+        }
+
+        .footer-section a:hover {
+            color: var(--bloomberg-blue);
+            transform: translateX(5px);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--bloomberg-gray);
+            flex-wrap: wrap;
+        }
+
+        .footer-legal {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .footer-legal a {
+            color: var(--bloomberg-text-secondary);
+            text-decoration: none;
+            transition: var(--transition-smooth);
+        }
+
+        .footer-legal a:hover {
+            color: var(--bloomberg-blue);
+        }
+
+        .footer-legal span {
+            color: var(--bloomberg-text-secondary);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Scroll Reveal */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Enhanced Responsive Design - Desktop First Approach */
+        
+        /* Large Desktop (1200px and up) - Base styles already defined above */
+        
+        /* Desktop (1024px to 1199px) */
+        @media screen and (max-width: 1199px) {
+            .container {
+                max-width: 1024px;
+                padding: 0 2rem;
+            }
+            
+            .hero-title {
+                font-size: 3.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.3rem;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+            }
+
+            .position-name {
+                font-size: 1.9rem;
+            }
+        }
+        
+        /* Tablet Landscape (768px to 1023px) */
+        @media screen and (max-width: 1023px) {
+            .container {
+                max-width: 768px;
+                padding: 0 1.5rem;
+            }
+            
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .position-name {
+                font-size: 1.8rem;
+            }
+            
+            .footer-content {
+                gap: 2rem;
+            }
+            
+            .footer-brand {
+                min-width: 250px;
+                max-width: 280px;
+            }
+            
+            .footer-sections {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.5rem;
+                max-width: 500px;
+            }
+            
+            .benefits-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+        }
+
+        /* Tablet Portrait & Mobile Landscape (481px to 767px) */
+        @media screen and (max-width: 767px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .nav-buttons {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+            }
+            
+            .container {
+                padding: 0 1rem;
+            }
+
+            .careers-hero {
+                padding: 5rem 0 4rem;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+                margin: 0 auto 2rem;
+            }
+
+            .benefits-section,
+            .positions-section {
+                padding: 4rem 0;
+            }
+
+            .benefit-card,
+            .position-card {
+                padding: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .position-name {
+                font-size: 1.6rem;
+            }
+
+            .cta-section {
+                padding: 3rem 1rem;
+            }
+
+            .cta-title {
+                font-size: 2rem;
+            }
+            
+            .cta-text {
+                font-size: 1.1rem;
+            }
+            
+            .benefits-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .hero-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 2rem;
+                text-align: center;
+                align-items: center;
+            }
+            
+            .footer-brand {
+                min-width: auto;
+                max-width: 100%;
+                text-align: center;
+            }
+            
+            .footer-sections {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                max-width: 100%;
+                width: 100%;
+            }
+            
+            .footer-section {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                padding-bottom: 1.5rem;
+            }
+            
+            .footer-section:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: center;
+                text-align: center;
+            }
+
+            .footer-legal {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+        }
+        
+        /* Mobile Portrait (320px to 480px) */
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 0 0.75rem;
+            }
+            
+            .careers-hero {
+                padding: 4rem 0 3rem;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+                line-height: 1.1;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            
+            .benefit-card, 
+            .position-card {
+                padding: 1.5rem;
+            }
+            
+            .position-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.6rem;
+            }
+
+            .cta-title {
+                font-size: 1.8rem;
+            }
+            
+            .cta-text {
+                font-size: 1rem;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .hero-stats {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .btn {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+                width: 100%;
+                max-width: 280px;
+                justify-content: center;
+            }
+            
+            .nav {
+                padding: 0.75rem 0;
+            }
+            
+            .brand-text {
+                font-size: 1.25rem;
+            }
+        }
+        
+        /* Extra Small Mobile (up to 319px) */
+        @media screen and (max-width: 319px) {
+            .container {
+                padding: 0 0.5rem;
+            }
+            
+            .hero-title {
+                font-size: 1.75rem;
+            }
+            
+            .section-title {
+                font-size: 1.4rem;
+            }
+            
+            .cta-title {
+                font-size: 1.6rem;
+            }
+            
+            .position-name {
+                font-size: 1.4rem;
+            }
+        }
+        
+        /* Cross-browser compatibility fixes */
+        @supports (-webkit-backdrop-filter: blur(20px)) {
+            .header, .benefit-card, .position-card {
+                -webkit-backdrop-filter: blur(20px);
+            }
+        }
+        
+        @supports (backdrop-filter: blur(20px)) {
+            .header, .benefit-card, .position-card {
+                backdrop-filter: blur(20px);
+            }
+        }
+        
+        /* High DPI displays */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .logo, .footer-logo {
+                image-rendering: -webkit-optimize-contrast;
+                image-rendering: crisp-edges;
+            }
+        }
+        
+        /* Print styles */
+        @media print {
+            .header, .footer, .mobile-menu-btn, .cta-section {
+                display: none;
+            }
+            
+            body {
+                background: white;
+                color: black;
+            }
+            
+            .careers-hero, .benefits-section, .positions-section {
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* Focus styles for accessibility */
+        @media (prefers-reduced-motion: no-preference) {
+            .btn:focus-visible,
+            .footer-section a:focus-visible {
+                outline: 2px solid var(--bloomberg-blue);
+                outline-offset: 2px;
+            }
+        }
+        
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: var(--bloomberg-text);
+                --bg-color: var(--bloomberg-dark);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <img src="images/auxeira-logo.png" alt="Auxeira Logo" class="logo">
+                <span class="brand-text">Auxeira</span>
+            </div>
+           
+            <ul class="nav-menu">
+                <li><a href="index.html#platform">Platform</a></li>
+                <li><a href="index.html#investors">For Investors</a></li>
+                <li><a href="partners.html">Partners</a></li>
+                <li><a href="index.html#pricing">Pricing</a></li>
+            </ul>
+
+            <div class="nav-buttons">
+                <button class="btn btn-outline" onclick="openAuthModal('login')">Login</button>
+                <button class="btn btn-primary" onclick="openAuthModal('signup')">Get Started</button>
+            </div>
+
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="index.html#platform">Platform</a>
+            <a href="index.html#investors">For Investors</a>
+            <a href="partners.html">Partners</a>
+            <a href="index.html#pricing">Pricing</a>
+            <button class="btn btn-outline" onclick="openAuthModal('login')">Login</button>
+            <button class="btn btn-primary" onclick="openAuthModal('signup')">Get Started</button>
+        </div>
+    </header>
+
+    <!-- Careers Hero Section -->
+    <section class="careers-hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-rocket"></i> Join the Revolution
+                </div>
+                <h1 class="hero-title">Careers: Join the Behavioral Revolution</h1>
+                <p class="hero-subtitle">Help us transform the $1 trillion startup failure crisis into systematic success through cutting-edge behavioral science, AI, and blockchain technology</p>
+                
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">85.7%</div>
+                        <div class="hero-stat-label">Success Prediction Accuracy</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">$847K</div>
+                        <div class="hero-stat-label">Average Value Unlocked</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">10K+</div>
+                        <div class="hero-stat-label">Startups Tracked</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">32</div>
+                        <div class="hero-stat-label">Elite Partners</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="container">
+        <!-- Why Work at Auxeira Section -->
+        <section class="benefits-section scroll-reveal">
+            <h2 class="section-title">Why Work at Auxeira?</h2>
+            <p class="section-subtitle">Join a mission-driven team building the world's first behavioral intervention platform for entrepreneurs</p>
+            
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h3 class="benefit-title">Mission-Driven Impact</h3>
+                    <p>Work on one of the world's most important challenges: ensuring brilliant ideas get systematic support to succeed. Every feature you build directly prevents entrepreneur failure and creates economic opportunity globally.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-microchip"></i>
+                    </div>
+                    <h3 class="benefit-title">Cutting-Edge Technology</h3>
+                    <p>Build the world's first behavioral intervention platform combining AI, blockchain, and behavioral economics. Work with technologies and methodologies that don't exist anywhere else.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3 class="benefit-title">Academic Rigor Meets Scale</h3>
+                    <p>Our partnerships with MIT, Stanford, and Harvard mean your work contributes to peer-reviewed research while scaling to millions of users worldwide.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3 class="benefit-title">Accelerated Growth</h3>
+                    <p>Working directly with founder Emmanuel Luthuli provides unprecedented learning opportunities. Develop skills in behavioral science, AI, blockchain, and global business.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3 class="benefit-title">Global Impact</h3>
+                    <p>Your work will directly impact entrepreneurs across 32 countries, helping reduce startup failure rates from 90% to under 50% through systematic behavioral intervention.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <h3 class="benefit-title">Competitive Rewards</h3>
+                    <p>Competitive salaries, significant equity participation, AUX token rewards, and comprehensive benefits package including health, dental, and professional development.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Open Positions Section -->
+        <section class="positions-section scroll-reveal">
+            <h2 class="section-title">Open Positions</h2>
+            
+            <!-- Senior AI/ML Engineer -->
+            <div class="position-card">
+                <div class="position-header">
+                    <div class="position-icon">🤖</div>
+                    <div class="position-title">
+                        <h3 class="position-name">Senior AI/ML Engineer</h3>
+                        <p class="position-details">Location: Remote-first (SF, Boston, DC) • Salary: $160K - $220K + equity + token rewards</p>
+                    </div>
+                </div>
+                
+                <div class="position-content">
+                    <div class="content-block">
+                        <h4 class="content-title">What You'll Do</h4>
+                        <ul class="bullet-list">
+                            <li>Develop predictive models that forecast startup success with 85%+ accuracy</li>
+                            <li>Build behavioral intervention systems using deep learning and reinforcement learning</li>
+                            <li>Create real-time anomaly detection across 150+ integrated KPIs</li>
+                            <li>Apply NLP to analyze founder communication patterns and sentiment</li>
+                            <li>Design personalized nudge optimization using multi-armed bandit algorithms</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="content-block">
+                        <h4 class="content-title">What We're Looking For</h4>
+                        <ul class="bullet-list">
+                            <li>MS/PhD in Computer Science, Statistics, or related quantitative field</li>
+                            <li>5+ years experience with production ML systems at scale</li>
+                            <li>Deep learning expertise (PyTorch/TensorFlow) and statistical modeling</li>
+                            <li>Experience with time series analysis, survival models, and causal inference</li>
+                            <li>Interest in behavioral science and human decision-making optimization</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="content-block">
+                        <h4 class="content-title">Why This Role Matters</h4>
+                        <p>Your algorithms will directly determine which interventions help entrepreneurs succeed. You'll build the brain of the world's first autonomous behavioral coaching system.</p>
+                    </div>
+
+                    <a href="mailto:careers@auxeira.com?subject=Senior AI/ML Engineer Application" class="apply-button">Apply Now</a>
+                </div>
+            </div>
+            
+            <!-- Senior Blockchain Engineer -->
+            <div class="position-card">
+                <div class="position-header">
+                    <div class="position-icon">⛓️</div>
+                    <div class="position-title">
+                        <h3 class="position-name">Senior Blockchain Engineer</h3>
+                        <p class="position-details">Location: Remote-first (SF, Boston, DC) • Salary: $150K - $200K + equity + token rewards</p>
+                    </div>
+                </div>
+                
+                <div class="position-content">
+                    <div class="content-block">
+                        <h4 class="content-title">What You'll Do</h4>
+                        <ul class="bullet-list">
+                            <li>Design and implement smart contracts for behavioral achievement verification</li>
+                            <li>Build decentralized reputation systems for startup performance tracking</li>
+                            <li>Create tokenomics models for AUX token distribution and governance</li>
+                            <li>Develop cross-chain interoperability for partner ecosystem integration</li>
+                            <li>Implement zero-knowledge proofs for privacy-preserving verification</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="content-block">
+                        <h4 class="content-title">What We're Looking For</h4>
+                        <ul class="bullet-list">
+                            <li>BS/MS in Computer Science or equivalent experience</li>
+                            <li>4+ years experience with Ethereum, Solidity, and Web3 technologies</li>
+                            <li>Experience with DeFi protocols, tokenomics, and governance mechanisms</li>
+                            <li>Knowledge of cryptographic primitives and security best practices</li>
+                            <li>Interest in behavioral economics and incentive mechanism design</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="content-block">
+                        <h4 class="content-title">Why This Role Matters</h4>
+                        <p>You'll create the trust infrastructure that enables transparent, verifiable behavioral change tracking at global scale.</p>
+                    </div>
+
+                    <a href="mailto:careers@auxeira.com?subject=Senior Blockchain Engineer Application" class="apply-button">Apply Now</a>
+                </div>
+            </div>
+
+            <!-- Senior Full-Stack Engineer -->
+            <div class="position-card">
+                <div class="position-header">
+                    <div class="position-icon">💻</div>
+                    <div class="position-title">
+                        <h3 class="position-name">Senior Full-Stack Engineer</h3>
+                        <p class="position-details">Location: Remote-first (SF, Boston, DC) • Salary: $140K - $190K + equity + token rewards</p>
+                    </div>
+                </div>
+                
+                <div class="position-content">
+                    <div class="content-block">
+                        <h4 class="content-title">What You'll Do</h4>
+                        <ul class="bullet-list">
+                            <li>Build the Bloomberg Terminal-inspired dashboard for entrepreneurs</li>
+                            <li>Create real-time data visualization and behavioral analytics interfaces</li>
+                            <li>Develop API integrations with 150+ startup tools and platforms</li>
+                            <li>Implement responsive, accessible user experiences across devices</li>
+                            <li>Build scalable backend systems supporting millions of users</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="content-block">
+                        <h4 class="content-title">What We're Looking For</h4>
+                        <ul class="bullet-list">
+                            <li>BS in Computer Science or equivalent experience</li>
+                            <li>5+ years experience with React, Node.js, and modern web technologies</li>
+                            <li>Experience with data visualization libraries (D3.js, Chart.js)</li>
+                            <li>Knowledge of database design, API development, and cloud platforms</li>
+                            <li>Passion for creating intuitive, data-driven user experiences</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="content-block">
+                        <h4 class="content-title">Why This Role Matters</h4>
+                        <p>You'll create the interface through which millions of entrepreneurs receive behavioral guidance and track their progress toward success.</p>
+                    </div>
+
+                    <a href="mailto:careers@auxeira.com?subject=Senior Full-Stack Engineer Application" class="apply-button">Apply Now</a>
+                </div>
+            </div>
+
+            <!-- Behavioral Scientist -->
+            <div class="position-card">
+                <div class="position-header">
+                    <div class="position-icon">🧠</div>
+                    <div class="position-title">
+                        <h3 class="position-name">Behavioral Scientist</h3>
+                        <p class="position-details">Location: Remote-first (SF, Boston, DC) • Salary: $120K - $160K + equity + token rewards</p>
+                    </div>
+                </div>
+                
+                <div class="position-content">
+                    <div class="content-block">
+                        <h4 class="content-title">What You'll Do</h4>
+                        <ul class="bullet-list">
+                            <li>Design behavioral interventions based on Thaler, Ariely, and Kahneman principles</li>
+                            <li>Conduct A/B tests and analyze behavioral change effectiveness</li>
+                            <li>Develop nudge frameworks for different entrepreneurial contexts</li>
+                            <li>Collaborate with AI team to optimize intervention timing and personalization</li>
+                            <li>Publish research findings in peer-reviewed behavioral economics journals</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="content-block">
+                        <h4 class="content-title">What We're Looking For</h4>
+                        <ul class="bullet-list">
+                            <li>PhD in Behavioral Economics, Psychology, or related field</li>
+                            <li>3+ years experience designing and testing behavioral interventions</li>
+                            <li>Strong statistical analysis skills (R, Python, SPSS)</li>
+                            <li>Experience with experimental design and causal inference</li>
+                            <li>Interest in entrepreneurship and business applications</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="content-block">
+                        <h4 class="content-title">Why This Role Matters</h4>
+                        <p>You'll translate Nobel Prize-winning behavioral science into practical interventions that systematically improve entrepreneur decision-making.</p>
+                    </div>
+
+                    <a href="mailto:careers@auxeira.com?subject=Behavioral Scientist Application" class="apply-button">Apply Now</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action Section -->
+        <section class="cta-section scroll-reveal">
+            <h2 class="cta-title">Ready to Transform Entrepreneurship?</h2>
+            <p class="cta-text">Don't see the perfect role? We're always looking for exceptional talent who share our mission to make startup success predictable through behavioral science.</p>
+            <a href="mailto:careers@auxeira.com?subject=General Interest - Careers" class="cta-button">Get in Touch</a>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="images/auxeira-logo.png" alt="Auxeira Logo" class="footer-logo">
+                    <h3>Auxeira</h3>
+                    <p>The Bloomberg Terminal for Entrepreneurship</p>
+                    <div class="social-links">
+                        <a href="https://x.com/auxeira" target="_blank" aria-label="Follow us on X">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                            </svg>
+                        </a>
+                        <a href="https://instagram.com/auxeira" target="_blank" aria-label="Follow us on Instagram">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.40s-.644-1.44-1.439-1.40z"/>
+                            </svg>
+                        </a>
+                        <a href="https://www.linkedin.com/company/auxeira/" target="_blank" aria-label="Follow us on LinkedIn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-sections">
+                    <div class="footer-section">
+                        <h4>Platform</h4>
+                        <a href="dashboard.html">Dashboard Demo</a>
+                        <a href="api.html">API Documentation</a>
+                        <a href="partners.html">Partner Network</a>
+                        <a href="insights.html">Data Insights</a>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Research</h4>
+                        <a href="whitepaper.html">White-Paper</a>
+                        <a href="studies.html">Case Studies</a>
+                        <a href="reports.html">Industry Reports</a>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Company</h4>
+                        <a href="about.html">About Auxeira</a>
+                        <a href="team.html">Leadership Team</a>
+                        <a href="careers.html">Careers</a>
+                        <a href="press.html">Press Kit</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-legal">
+                    <a href="terms.html">Terms of Service</a>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <span>© 2025 Auxeira. All rights reserved.</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Authentication Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAuthModal()">&times;</span>
+            <div id="authContent">
+                <!-- Content will be dynamically loaded -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced strategic interactions and animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Header scroll effect
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+
+            // Scroll reveal animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all scroll reveal elements
+            document.querySelectorAll('.scroll-reveal').forEach(element => {
+                observer.observe(element);
+            });
+
+            // Enhanced hover effects for cards
+            document.querySelectorAll('.benefit-card, .position-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-15px) scale(1.02)';
+                    this.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Parallax effect for hero section
+            window.addEventListener('scroll', function() {
+                const scrolled = window.pageYOffset;
+                const hero = document.querySelector('.careers-hero');
+                if (hero) {
+                    hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+                }
+            });
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Counter animation for hero stats
+            function animateCounters() {
+                const counters = document.querySelectorAll('.hero-stat-value');
+                counters.forEach(counter => {
+                    const target = counter.textContent.includes('K') ? 
+                        parseInt(counter.textContent.replace(/[^\d]/g, '')) : 
+                        parseFloat(counter.textContent.replace(/[^\d.]/g, ''));
+                    const increment = target / 50;
+                    let current = 0;
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            counter.textContent = counter.textContent.replace(/[\d.]+/, target);
+                            clearInterval(timer);
+                        } else {
+                            const value = counter.textContent.includes('.') ? 
+                                current.toFixed(1) : Math.floor(current);
+                            counter.textContent = counter.textContent.replace(/[\d.]+/, value);
+                        }
+                    }, 30);
+                });
+            }
+
+            // Trigger counter animation when hero stats are visible
+            const statsObserver = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounters();
+                        statsObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            const heroStats = document.querySelector('.hero-stats');
+            if (heroStats) {
+                statsObserver.observe(heroStats);
+            }
+
+            // Mobile menu functionality
+            window.toggleMobileMenu = function() {
+                const mobileMenu = document.getElementById('mobileMenu');
+                mobileMenu.classList.toggle('active');
+            };
+
+            // Modal functionality
+            window.openAuthModal = function(type) {
+                const modal = document.getElementById('authModal');
+                const content = document.getElementById('authContent');
+                
+                if (type === 'login') {
+                    content.innerHTML = `
+                        <h2>Login to Auxeira</h2>
+                        <form>
+                            <input type="email" placeholder="Email" required>
+                            <input type="password" placeholder="Password" required>
+                            <button type="submit" class="btn btn-primary">Login</button>
+                        </form>
+                    `;
+                } else {
+                    content.innerHTML = `
+                        <h2>Get Started with Auxeira</h2>
+                        <form>
+                            <input type="text" placeholder="Full Name" required>
+                            <input type="email" placeholder="Email" required>
+                            <input type="password" placeholder="Password" required>
+                            <button type="submit" class="btn btn-primary">Get Started</button>
+                        </form>
+                    `;
+                }
+                
+                modal.style.display = 'block';
+            };
+
+            window.closeAuthModal = function() {
+                document.getElementById('authModal').style.display = 'none';
+            };
+
+            // Close modal when clicking outside
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('authModal');
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+<script src="js/recaptcha-fix.js"></script>
+</body>
+</html>
+

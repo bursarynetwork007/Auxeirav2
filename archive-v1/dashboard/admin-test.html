@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0d1117;
+            color: #f0f6fc;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section {
+            background: #161b22;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        h1, h2 {
+            color: #ffd700;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .success {
+            color: #28a745;
+        }
+        .error {
+            color: #dc3545;
+        }
+        .info {
+            color: #17a2b8;
+        }
+        pre {
+            background: #0d1117;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        .status-box {
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .status-success {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid #28a745;
+        }
+        .status-error {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid #dc3545;
+        }
+        .status-info {
+            background: rgba(23, 162, 184, 0.2);
+            border: 1px solid #17a2b8;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Admin Dashboard Test & Debug Tool</h1>
+    
+    <div class="section">
+        <h2>1. Token Status</h2>
+        <div id="tokenStatus"></div>
+        <button onclick="checkTokens()">🔍 Check Tokens</button>
+        <button onclick="clearAllTokens()">🗑️ Clear All Tokens</button>
+    </div>
+    
+    <div class="section">
+        <h2>2. Login Test</h2>
+        <p>Test login with admin credentials</p>
+        <button onclick="testLogin()">🔐 Test Login (gina@auxeira.com)</button>
+        <div id="loginStatus"></div>
+    </div>
+    
+    <div class="section">
+        <h2>3. Admin API Test</h2>
+        <p>Test admin dashboard API access</p>
+        <button onclick="testAdminAPI()">📊 Test Admin API</button>
+        <div id="apiStatus"></div>
+    </div>
+    
+    <div class="section">
+        <h2>4. Navigation Test</h2>
+        <p>Test redirect to admin dashboard</p>
+        <button onclick="goToAdminDashboard()">➡️ Go to Admin Dashboard</button>
+        <button onclick="goToLogin()">🏠 Go to Login Page</button>
+    </div>
+    
+    <div class="section">
+        <h2>5. Debug Log</h2>
+        <button onclick="clearLog()">🧹 Clear Log</button>
+        <pre id="debugLog"></pre>
+    </div>
+
+    <script>
+        const debugLog = document.getElementById('debugLog');
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const prefix = type === 'error' ? '❌' : type === 'success' ? '✅' : 'ℹ️';
+            const logMessage = `[${timestamp}] ${prefix} ${message}\n`;
+            debugLog.textContent += logMessage;
+            console.log(message);
+            
+            // Auto-scroll to bottom
+            debugLog.scrollTop = debugLog.scrollHeight;
+        }
+        
+        function clearLog() {
+            debugLog.textContent = '';
+            log('Log cleared');
+        }
+        
+        function checkTokens() {
+            log('=== Checking Tokens ===');
+            
+            const token1 = localStorage.getItem('authToken');
+            const token2 = localStorage.getItem('auxeira_auth_token');
+            const user = localStorage.getItem('auxeira_user');
+            
+            log(`authToken: ${token1 ? 'FOUND' : 'NOT FOUND'}`);
+            log(`auxeira_auth_token: ${token2 ? 'FOUND' : 'NOT FOUND'}`);
+            log(`auxeira_user: ${user ? 'FOUND' : 'NOT FOUND'}`);
+            
+            if (token1) log(`authToken length: ${token1.length}`);
+            if (token2) log(`auxeira_auth_token length: ${token2.length}`);
+            
+            let statusHTML = '<div class="status-box ';
+            if (token1 || token2) {
+                statusHTML += 'status-success">✅ Token Found!<br>';
+                if (token1) statusHTML += `<strong>authToken:</strong> ${token1.substring(0, 50)}...<br>`;
+                if (token2) statusHTML += `<strong>auxeira_auth_token:</strong> ${token2.substring(0, 50)}...<br>`;
+                if (user) {
+                    const userData = JSON.parse(user);
+                    statusHTML += `<strong>User:</strong> ${userData.email} (${userData.role})`;
+                }
+            } else {
+                statusHTML += 'status-error">❌ No Token Found<br>You need to login first.';
+            }
+            statusHTML += '</div>';
+            
+            document.getElementById('tokenStatus').innerHTML = statusHTML;
+            
+            log('Token check complete', token1 || token2 ? 'success' : 'error');
+        }
+        
+        function clearAllTokens() {
+            log('Clearing all tokens...');
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('auxeira_auth_token');
+            localStorage.removeItem('auxeira_refresh_token');
+            localStorage.removeItem('auxeira_user');
+            log('All tokens cleared', 'success');
+            checkTokens();
+        }
+        
+        async function testLogin() {
+            log('=== Testing Login ===');
+            document.getElementById('loginStatus').innerHTML = '<div class="status-box status-info">⏳ Logging in...</div>';
+            
+            try {
+                const response = await fetch('https://6qfa3ssb10.execute-api.us-east-1.amazonaws.com/prod/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'gina@auxeira.com',
+                        password: 'SSEngine@25'
+                    })
+                });
+                
+                const data = await response.json();
+                log(`Login response status: ${response.status}`);
+                log(`Login success: ${data.success}`);
+                
+                if (data.success && data.data?.access_token) {
+                    // Store token
+                    localStorage.setItem('auxeira_auth_token', data.data.access_token);
+                    if (data.data?.refresh_token) {
+                        localStorage.setItem('auxeira_refresh_token', data.data.refresh_token);
+                    }
+                    
+                    // Store user data
+                    const userData = {
+                        userId: data.data.user.id,
+                        email: data.data.user.email,
+                        firstName: data.data.user.firstName,
+                        lastName: data.data.user.lastName,
+                        role: data.data.user.role
+                    };
+                    localStorage.setItem('auxeira_user', JSON.stringify(userData));
+                    
+                    log('Token stored successfully', 'success');
+                    log(`User role: ${data.data.user.role}`, 'success');
+                    
+                    document.getElementById('loginStatus').innerHTML = `
+                        <div class="status-box status-success">
+                            ✅ Login Successful!<br>
+                            <strong>Email:</strong> ${data.data.user.email}<br>
+                            <strong>Role:</strong> ${data.data.user.role}<br>
+                            <strong>Token:</strong> ${data.data.access_token.substring(0, 50)}...
+                        </div>
+                    `;
+                    
+                    checkTokens();
+                } else {
+                    log('Login failed: ' + (data.message || 'Unknown error'), 'error');
+                    document.getElementById('loginStatus').innerHTML = `
+                        <div class="status-box status-error">
+                            ❌ Login Failed<br>
+                            ${data.message || 'Unknown error'}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                log('Login error: ' + error.message, 'error');
+                document.getElementById('loginStatus').innerHTML = `
+                    <div class="status-box status-error">
+                        ❌ Error: ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        async function testAdminAPI() {
+            log('=== Testing Admin API ===');
+            document.getElementById('apiStatus').innerHTML = '<div class="status-box status-info">⏳ Testing API...</div>';
+            
+            const token = localStorage.getItem('auxeira_auth_token');
+            
+            if (!token) {
+                log('No token found. Please login first.', 'error');
+                document.getElementById('apiStatus').innerHTML = `
+                    <div class="status-box status-error">
+                        ❌ No Token Found<br>
+                        Please login first using the "Test Login" button above.
+                    </div>
+                `;
+                return;
+            }
+            
+            try {
+                const response = await fetch('https://4nfviaokncu6osk3imrlhr4uoe0koigh.lambda-url.us-east-1.on.aws/?action=overview', {
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                });
+                
+                const data = await response.json();
+                log(`API response status: ${response.status}`);
+                log(`API success: ${data.success}`);
+                
+                if (data.success) {
+                    log('Admin API access successful', 'success');
+                    log(`Total users: ${data.data.overview.totalUsers}`);
+                    log(`Total startups: ${data.data.overview.totalStartups}`);
+                    
+                    document.getElementById('apiStatus').innerHTML = `
+                        <div class="status-box status-success">
+                            ✅ Admin API Working!<br>
+                            <strong>Total Users:</strong> ${data.data.overview.totalUsers}<br>
+                            <strong>Total Startups:</strong> ${data.data.overview.totalStartups}<br>
+                            <strong>Active Users:</strong> ${data.data.overview.activeUsers}
+                        </div>
+                    `;
+                } else {
+                    log('Admin API failed: ' + (data.error || 'Unknown error'), 'error');
+                    document.getElementById('apiStatus').innerHTML = `
+                        <div class="status-box status-error">
+                            ❌ API Failed<br>
+                            ${data.error || 'Unknown error'}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                log('API error: ' + error.message, 'error');
+                document.getElementById('apiStatus').innerHTML = `
+                    <div class="status-box status-error">
+                        ❌ Error: ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        function goToAdminDashboard() {
+            log('Navigating to admin dashboard...');
+            const token = localStorage.getItem('auxeira_auth_token');
+            if (!token) {
+                log('Warning: No token found. You will be redirected back to login.', 'error');
+            } else {
+                log('Token found. Redirecting...', 'success');
+            }
+            window.location.href = 'https://auxeira.com/dashboard/admin.html';
+        }
+        
+        function goToLogin() {
+            log('Navigating to login page...');
+            window.location.href = 'https://auxeira.com/';
+        }
+        
+        // Check tokens on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            log('=== Admin Test Page Loaded ===');
+            checkTokens();
+        });
+    </script>
+</body>
+</html>

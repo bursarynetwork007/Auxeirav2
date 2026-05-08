@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auxeira Activity Lifecycle - Earn Tokens</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Bloomberg Terminal Aesthetic */
+        :root {
+            --bloomberg-dark: #0d1117;
+            --bloomberg-charcoal: #161b22;
+            --bloomberg-blue: #007bff;
+            --bloomberg-accent: #ffd700;
+            --bloomberg-text: #f0f6fc;
+            --bloomberg-text-secondary: #8b949e;
+            --bloomberg-gray: #30363d;
+            --bloomberg-success: #28a745;
+            --bloomberg-warning: #ffc107;
+            --bloomberg-danger: #dc3545;
+            --bloomberg-info: #17a2b8;
+            --border-radius: 8px;
+            --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.2);
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bloomberg-dark);
+            color: var(--bloomberg-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .header {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--bloomberg-blue) 0%, var(--bloomberg-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--bloomberg-text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Progress Tracker */
+        .progress-tracker {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .progress-step-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            transition: var(--transition-smooth);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-step.active .progress-step-circle {
+            background: linear-gradient(135deg, var(--bloomberg-blue) 0%, var(--bloomberg-accent) 100%);
+            color: var(--bloomberg-dark);
+            border-color: var(--bloomberg-accent);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .progress-step.completed .progress-step-circle {
+            background: var(--bloomberg-success);
+            color: white;
+            border-color: var(--bloomberg-success);
+        }
+
+        .progress-step.inactive .progress-step-circle {
+            background: var(--bloomberg-charcoal);
+            color: var(--bloomberg-text-secondary);
+        }
+
+        .progress-step-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .progress-step.active .progress-step-label {
+            color: var(--bloomberg-blue);
+        }
+
+        .progress-step.completed .progress-step-label {
+            color: var(--bloomberg-success);
+        }
+
+        .progress-step.inactive .progress-step-label {
+            color: var(--bloomberg-text-secondary);
+        }
+
+        /* Main Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--bloomberg-charcoal);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            transition: var(--transition-smooth);
+        }
+
+        .card:hover {
+            border-color: var(--bloomberg-blue);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--bloomberg-text);
+        }
+
+        .card-subtitle {
+            font-size: 0.9rem;
+            color: var(--bloomberg-text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Activity Feed Section */
+        .activity-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .activity-item {
+            background: var(--bloomberg-dark);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .activity-item:hover {
+            background: rgba(0, 123, 255, 0.05);
+            border-color: var(--bloomberg-blue);
+        }
+
+        .activity-item.selected {
+            background: rgba(0, 123, 255, 0.1);
+            border-color: var(--bloomberg-blue);
+            box-shadow: var(--shadow-md);
+        }
+
+        .activity-info {
+            flex: 1;
+        }
+
+        .activity-name {
+            font-weight: 600;
+            color: var(--bloomberg-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .activity-category {
+            font-size: 0.85rem;
+            color: var(--bloomberg-text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .activity-description {
+            font-size: 0.85rem;
+            color: var(--bloomberg-text-secondary);
+        }
+
+        .activity-tokens {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            color: var(--bloomberg-accent);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+        }
+
+        .tier-badge {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 0.5rem;
+        }
+
+        .tier-bronze {
+            background: rgba(184, 134, 11, 0.2);
+            color: #daa520;
+        }
+
+        .tier-silver {
+            background: rgba(192, 192, 192, 0.2);
+            color: #c0c0c0;
+        }
+
+        .tier-gold {
+            background: rgba(255, 215, 0, 0.2);
+            color: var(--bloomberg-accent);
+        }
+
+        /* Nudge/Good Practice Section */
+        .nudge-section {
+            background: rgba(0, 123, 255, 0.05);
+            border: 1px solid rgba(0, 123, 255, 0.2);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .nudge-title {
+            font-weight: 700;
+            color: var(--bloomberg-blue);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nudge-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .nudge-item {
+            display: flex;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+            color: var(--bloomberg-text);
+        }
+
+        .nudge-item i {
+            color: var(--bloomberg-success);
+            margin-top: 0.25rem;
+        }
+
+        /* Form Section */
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--bloomberg-text);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 0.75rem;
+            background: var(--bloomberg-dark);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            color: var(--bloomberg-text);
+            font-family: 'Inter', sans-serif;
+            transition: var(--transition-smooth);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--bloomberg-blue);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* File Upload */
+        .file-upload {
+            border: 2px dashed rgba(0, 123, 255, 0.3);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            background: rgba(0, 123, 255, 0.02);
+        }
+
+        .file-upload:hover {
+            border-color: var(--bloomberg-blue);
+            background: rgba(0, 123, 255, 0.05);
+        }
+
+        .file-upload.active {
+            border-color: var(--bloomberg-success);
+            background: rgba(40, 167, 69, 0.05);
+        }
+
+        .file-upload i {
+            font-size: 2rem;
+            color: var(--bloomberg-blue);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .file-upload-text {
+            color: var(--bloomberg-text);
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .file-upload-subtext {
+            font-size: 0.85rem;
+            color: var(--bloomberg-text-secondary);
+        }
+
+        .file-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: rgba(0, 123, 255, 0.05);
+            border: 1px solid rgba(0, 123, 255, 0.2);
+            border-radius: var(--border-radius);
+        }
+
+        .file-item-name {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--bloomberg-text);
+        }
+
+        .file-item-remove {
+            background: none;
+            border: none;
+            color: var(--bloomberg-danger);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .file-item-remove:hover {
+            color: #c82333;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--bloomberg-blue) 0%, var(--bloomberg-accent) 100%);
+            color: var(--bloomberg-dark);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--bloomberg-charcoal);
+            color: var(--bloomberg-text);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        /* Quality Score Display */
+        .quality-score-display {
+            background: rgba(0, 123, 255, 0.05);
+            border: 1px solid rgba(0, 123, 255, 0.2);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .quality-score-label {
+            font-size: 0.9rem;
+            color: var(--bloomberg-text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .quality-score-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--bloomberg-accent);
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 0.5rem;
+        }
+
+        .quality-score-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bloomberg-charcoal);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.75rem;
+        }
+
+        .quality-score-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--bloomberg-blue) 0%, var(--bloomberg-accent) 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .alert-info {
+            background: rgba(23, 162, 184, 0.15);
+            color: var(--bloomberg-info);
+            border: 1px solid rgba(23, 162, 184, 0.3);
+        }
+
+        .alert-success {
+            background: rgba(40, 167, 69, 0.15);
+            color: var(--bloomberg-success);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+
+        .alert-warning {
+            background: rgba(255, 193, 7, 0.15);
+            color: var(--bloomberg-warning);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-tracker {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-trophy"></i> Activity Lifecycle</h1>
+            <p>Complete activities, earn tokens, and build your startup's success score</p>
+        </div>
+
+        <!-- Progress Tracker -->
+        <div class="progress-tracker">
+            <div class="progress-step active" id="step-1">
+                <div class="progress-step-circle">1</div>
+                <div class="progress-step-label">Select Activity</div>
+            </div>
+            <div class="progress-step inactive" id="step-2">
+                <div class="progress-step-circle">2</div>
+                <div class="progress-step-label">Submit Proof</div>
+            </div>
+            <div class="progress-step inactive" id="step-3">
+                <div class="progress-step-circle">3</div>
+                <div class="progress-step-label">AI Assessment</div>
+            </div>
+            <div class="progress-step inactive" id="step-4">
+                <div class="progress-step-circle">4</div>
+                <div class="progress-step-label">Earn Tokens</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content-grid">
+            <!-- Left Column: Activity Selection -->
+            <div>
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-list"></i> Available Activities</div>
+                    <div class="card-subtitle">Select an activity to get started</div>
+
+                    <div class="activity-feed" id="activityFeed">
+                        <!-- Activities will be populated here by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Submission Form -->
+            <div>
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-pencil-alt"></i> Activity Details</div>
+                    <div class="card-subtitle" id="selectedActivityName">Select an activity to continue</div>
+
+                    <!-- Nudge Section -->
+                    <div class="nudge-section" id="nudgeSection" style="display: none;">
+                        <div class="nudge-title">
+                            <i class="fas fa-lightbulb"></i> Best Practice Guide
+                        </div>
+                        <div class="nudge-content" id="nudgeContent">
+                            <!-- Nudge content will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- Form -->
+                    <div class="form-section" id="formSection" style="display: none;">
+                        <!-- Title -->
+                        <div class="form-group">
+                            <label>Activity Title</label>
+                            <input type="text" id="activityTitle" placeholder="e.g., Customer Interview - Segment A" />
+                        </div>
+
+                        <!-- Description -->
+                        <div class="form-group">
+                            <label>Description & Key Findings</label>
+                            <textarea id="activityDescription" placeholder="Describe what you did, key insights, and outcomes..."></textarea>
+                            <small style="color: var(--bloomberg-text-secondary);">Minimum 100 characters for quality assessment</small>
+                        </div>
+
+                        <!-- Consistency Weeks -->
+                        <div class="form-group">
+                            <label>Weeks of Consistency</label>
+                            <input type="number" id="consistencyWeeks" placeholder="How many weeks have you been doing this activity?" min="0" max="52" />
+                        </div>
+
+                        <!-- File Upload -->
+                        <div class="form-group">
+                            <label>Proof/Evidence (Files)</label>
+                            <div class="file-upload" id="fileUpload">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <div class="file-upload-text">Click to upload or drag and drop</div>
+                                <div class="file-upload-subtext">PDF, Images, Documents (Max 10MB)</div>
+                                <input type="file" id="fileInput" multiple style="display: none;" />
+                            </div>
+                            <div class="file-list" id="fileList"></div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="btn-group">
+                            <button class="btn btn-secondary" onclick="resetForm()">Clear</button>
+                            <button class="btn btn-primary" id="submitBtn" onclick="submitActivity()" disabled>
+                                <i class="fas fa-paper-plane"></i> Submit for Review
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Section -->
+        <div id="statusSection" style="display: none;">
+            <div class="card">
+                <div class="card-title"><i class="fas fa-hourglass-half"></i> Submission Status</div>
+                <div id="statusContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample Activity Data (from Token Calculator API)
+        const activities = [
+            {
+                id: 1,
+                name: "Customer Interviews Conducted",
+                category: "Customer Discovery & Validation",
+                description: "Conduct 5 qualified customer interviews",
+                tier: "bronze",
+                baseTokens: 20,
+                nudges: [
+                    "Prepare a structured interview guide with 5-7 key questions",
+                    "Record or take detailed notes during the interview",
+                    "Focus on understanding pain points, not pitching your solution",
+                    "Follow up with interviewees within 24 hours"
+                ]
+            },
+            {
+                id: 4,
+                name: "MVP Launches & Iterations",
+                category: "Product Iteration & Development",
+                description: "Launch or iterate on MVP",
+                tier: "silver",
+                baseTokens: 75,
+                nudges: [
+                    "Ensure MVP has core functionality only (no nice-to-haves)",
+                    "Set a clear success metric (e.g., 100 signups in 2 weeks)",
+                    "Document the iteration process and learnings",
+                    "Share launch metrics and user feedback"
+                ]
+            },
+            {
+                id: 8,
+                name: "KPI Dashboard Establishment",
+                category: "Metrics Tracking & Data-Driven Decisions",
+                description: "Set up tracking infrastructure",
+                tier: "silver",
+                baseTokens: 50,
+                nudges: [
+                    "Track at least 5 key metrics: CAC, LTV, Churn, MRR, Burn Rate",
+                    "Use a tool like Google Sheets, Mixpanel, or Amplitude",
+                    "Update metrics weekly and document trends",
+                    "Share monthly metric review with your team"
+                ]
+            },
+            {
+                id: 17,
+                name: "First Revenue Achievement",
+                category: "Market Validation & Traction",
+                description: "Achieve first paying customer",
+                tier: "gold",
+                baseTokens: 300,
+                nudges: [
+                    "Document the customer's profile and use case",
+                    "Capture the pricing and payment terms",
+                    "Record customer testimonial or case study",
+                    "Analyze what led to this first sale"
+                ]
+            },
+            {
+                id: 23,
+                name: "Pitch Deck Development",
+                category: "Investor Readiness",
+                description: "Create professional pitch deck",
+                tier: "silver",
+                baseTokens: 75,
+                nudges: [
+                    "Include: Problem, Solution, Market, Traction, Team, Ask",
+                    "Keep it to 10-15 slides maximum",
+                    "Use data and customer testimonials, not just claims",
+                    "Practice your pitch multiple times"
+                ]
+            }
+        ];
+
+        let selectedActivity = null;
+        let uploadedFiles = [];
+
+        // Initialize Activity Feed
+        function initActivityFeed() {
+            const feed = document.getElementById('activityFeed');
+            feed.innerHTML = '';
+
+            activities.forEach(activity => {
+                const item = document.createElement('div');
+                item.className = 'activity-item';
+                item.innerHTML = `
+                    <div class="activity-info">
+                        <div class="activity-name">${activity.name}</div>
+                        <div class="activity-category">${activity.category}</div>
+                        <div class="activity-description">${activity.description}</div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div class="activity-tokens">
+                            <i class="fas fa-coins"></i> ${activity.baseTokens}
+                            <span class="tier-badge tier-${activity.tier}">${activity.tier}</span>
+                        </div>
+                    </div>
+                `;
+
+                item.addEventListener('click', () => selectActivity(activity, item));
+                feed.appendChild(item);
+            });
+        }
+
+        // Select Activity
+        function selectActivity(activity, element) {
+            // Remove previous selection
+            document.querySelectorAll('.activity-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+
+            // Add selection to clicked item
+            element.classList.add('selected');
+            selectedActivity = activity;
+
+            // Update form
+            document.getElementById('selectedActivityName').textContent = activity.name;
+            document.getElementById('activityTitle').placeholder = activity.name;
+
+            // Show nudge section
+            const nudgeSection = document.getElementById('nudgeSection');
+            const nudgeContent = document.getElementById('nudgeContent');
+            nudgeContent.innerHTML = activity.nudges.map(nudge => `
+                <div class="nudge-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>${nudge}</span>
+                </div>
+            `).join('');
+            nudgeSection.style.display = 'block';
+
+            // Show form section
+            document.getElementById('formSection').style.display = 'flex';
+
+            // Update progress
+            updateProgress(2);
+        }
+
+        // File Upload Handling
+        const fileUpload = document.getElementById('fileUpload');
+        const fileInput = document.getElementById('fileInput');
+
+        fileUpload.addEventListener('click', () => fileInput.click());
+        fileUpload.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileUpload.classList.add('active');
+        });
+        fileUpload.addEventListener('dragleave', () => {
+            fileUpload.classList.remove('active');
+        });
+        fileUpload.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileUpload.classList.remove('active');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+            uploadedFiles = Array.from(files);
+            updateFileList();
+            checkFormValidity();
+        }
+
+        function updateFileList() {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = uploadedFiles.map((file, index) => `
+                <div class="file-item">
+                    <div class="file-item-name">
+                        <i class="fas fa-file"></i>
+                        <span>${file.name}</span>
+                    </div>
+                    <button class="file-item-remove" onclick="removeFile(${index})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function removeFile(index) {
+            uploadedFiles.splice(index, 1);
+            updateFileList();
+            checkFormValidity();
+        }
+
+        // Form Validation
+        function checkFormValidity() {
+            const title = document.getElementById('activityTitle').value.trim();
+            const description = document.getElementById('activityDescription').value.trim();
+            const hasFiles = uploadedFiles.length > 0;
+
+            const isValid = selectedActivity && title && description.length >= 100 && hasFiles;
+            document.getElementById('submitBtn').disabled = !isValid;
+        }
+
+        document.getElementById('activityTitle').addEventListener('input', checkFormValidity);
+        document.getElementById('activityDescription').addEventListener('input', checkFormValidity);
+
+        // Submit Activity
+        function submitActivity() {
+            if (!selectedActivity) return;
+
+            const title = document.getElementById('activityTitle').value;
+            const description = document.getElementById('activityDescription').value;
+            const consistencyWeeks = parseInt(document.getElementById('consistencyWeeks').value) || 0;
+
+            // Simulate AI Assessment
+            updateProgress(3);
+            showStatus('processing');
+
+            // Simulate AI processing
+            setTimeout(() => {
+                const qualityScore = simulateAIAssessment(description);
+                showAssessmentResult(qualityScore, consistencyWeeks);
+            }, 2000);
+        }
+
+        function simulateAIAssessment(description) {
+            // Simulate AI quality scoring based on description length and keywords
+            let score = 0.5;
+            if (description.length > 200) score += 0.2;
+            if (description.length > 300) score += 0.15;
+            if (description.includes('insight') || description.includes('learning')) score += 0.15;
+            return Math.min(score, 1.0);
+        }
+
+        function showAssessmentResult(qualityScore, consistencyWeeks) {
+            updateProgress(4);
+
+            // Calculate tokens
+            const baseTokens = selectedActivity.baseTokens;
+            const qualityBonus = qualityScore < 0.7 ? 1.0 : qualityScore < 0.85 ? 1.2 : 1.5;
+            const consistencyBonus = consistencyWeeks >= 12 ? 1.25 : consistencyWeeks >= 8 ? 1.1 : 1.0;
+            const stageMultiplier = 1.3; // Assume Seed stage
+
+            const finalTokens = Math.floor(baseTokens * qualityBonus * stageMultiplier * consistencyBonus);
+
+            const statusContent = document.getElementById('statusContent');
+            statusContent.innerHTML = `
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Activity submitted and assessed successfully!</span>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem;">
+                    <div class="quality-score-display">
+                        <div class="quality-score-label">Quality Score</div>
+                        <div class="quality-score-value">${(qualityScore * 100).toFixed(0)}%</div>
+                        <div class="quality-score-bar">
+                            <div class="quality-score-fill" style="width: ${qualityScore * 100}%"></div>
+                        </div>
+                        <div style="font-size: 0.85rem; color: var(--bloomberg-text-secondary);">
+                            ${qualityScore >= 0.85 ? 'Excellent' : qualityScore >= 0.7 ? 'Good' : 'Fair'}
+                        </div>
+                    </div>
+
+                    <div class="quality-score-display">
+                        <div class="quality-score-label">Tokens Awarded</div>
+                        <div class="quality-score-value">${finalTokens}</div>
+                        <div style="font-size: 0.85rem; color: var(--bloomberg-text-secondary);">
+                            Base: ${baseTokens} × Quality: ${qualityBonus.toFixed(2)}x × Stage: ${stageMultiplier}x
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(0, 123, 255, 0.05); border-radius: var(--border-radius); border: 1px solid rgba(0, 123, 255, 0.2);">
+                    <div style="font-weight: 600; color: var(--bloomberg-text); margin-bottom: 0.5rem;">
+                        <i class="fas fa-info-circle"></i> Breakdown
+                    </div>
+                    <div style="font-size: 0.9rem; color: var(--bloomberg-text-secondary); line-height: 1.8;">
+                        Base Tokens: <strong>${baseTokens}</strong><br>
+                        Quality Bonus: <strong>${(qualityBonus * 100).toFixed(0)}%</strong><br>
+                        Consistency Bonus: <strong>${(consistencyBonus * 100).toFixed(0)}%</strong><br>
+                        Stage Multiplier: <strong>${stageMultiplier}x</strong><br>
+                        <hr style="border: none; border-top: 1px solid rgba(255, 255, 255, 0.1); margin: 0.75rem 0;">
+                        <strong style="color: var(--bloomberg-accent);">Total: ${finalTokens} Tokens</strong>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+                    <button class="btn btn-primary" onclick="resetForm()">
+                        <i class="fas fa-plus"></i> Submit Another Activity
+                    </button>
+                    <button class="btn btn-secondary" onclick="viewWallet()">
+                        <i class="fas fa-wallet"></i> View Token Wallet
+                    </button>
+                </div>
+            `;
+
+            document.getElementById('statusSection').style.display = 'block';
+        }
+
+        function showStatus(status) {
+            const statusContent = document.getElementById('statusContent');
+            if (status === 'processing') {
+                statusContent.innerHTML = `
+                    <div class="alert alert-info">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>AI Agent is assessing your submission...</span>
+                    </div>
+                `;
+            }
+            document.getElementById('statusSection').style.display = 'block';
+        }
+
+        // Progress Update
+        function updateProgress(step) {
+            for (let i = 1; i <= 4; i++) {
+                const stepEl = document.getElementById(`step-${i}`);
+                stepEl.classList.remove('active', 'completed', 'inactive');
+
+                if (i < step) {
+                    stepEl.classList.add('completed');
+                } else if (i === step) {
+                    stepEl.classList.add('active');
+                } else {
+                    stepEl.classList.add('inactive');
+                }
+            }
+        }
+
+        // Reset Form
+        function resetForm() {
+            document.getElementById('activityTitle').value = '';
+            document.getElementById('activityDescription').value = '';
+            document.getElementById('consistencyWeeks').value = '';
+            uploadedFiles = [];
+            updateFileList();
+            selectedActivity = null;
+            document.querySelectorAll('.activity-item').forEach(item => item.classList.remove('selected'));
+            document.getElementById('nudgeSection').style.display = 'none';
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('statusSection').style.display = 'none';
+            updateProgress(1);
+            checkFormValidity();
+        }
+
+        // Placeholder Functions
+        function viewWallet() {
+            alert('Token Wallet feature coming soon!');
+        }
+
+        // Initialize
+        initActivityFeed();
+    </script>
+</body>
+</html>
+

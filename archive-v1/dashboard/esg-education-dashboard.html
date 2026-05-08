@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auxeira ESG Education Impact Dashboard</title>
+    
+    <!-- External Libraries -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <style>
+        /* Ferrari-Level Design System */
+        :root {
+            /* Bloomberg Terminal Color Palette */
+            --terminal-black: #000000;
+            --terminal-dark: #1a1a1a;
+            --terminal-gray: #2d2d2d;
+            --terminal-light-gray: #404040;
+            --terminal-blue: #00d4ff;
+            --terminal-green: #00ff41;
+            --terminal-yellow: #ffff00;
+            --terminal-orange: #ff8c00;
+            --terminal-red: #ff073a;
+            --terminal-purple: #bf00ff;
+            --terminal-white: #ffffff;
+            
+            /* Education-Focused Colors */
+            --education-primary: #4f46e5;
+            --education-secondary: #7c3aed;
+            --education-success: #059669;
+            --education-warning: #d97706;
+            --education-danger: #dc2626;
+            --education-info: #0284c7;
+            
+            /* Glass Morphism */
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            
+            /* Typography */
+            --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        /* Global Styles */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-sans);
+            background: linear-gradient(135deg, var(--terminal-dark) 0%, var(--terminal-black) 100%);
+            color: var(--terminal-white);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Bloomberg Terminal Header */
+        .terminal-header {
+            background: var(--terminal-black);
+            border-bottom: 2px solid var(--terminal-blue);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .terminal-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--terminal-blue);
+            font-family: var(--font-mono);
+        }
+
+        .brand-subtitle {
+            color: var(--terminal-green);
+            font-size: 0.9rem;
+            font-family: var(--font-mono);
+        }
+
+        .terminal-controls {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-badge {
+            background: linear-gradient(45deg, var(--education-primary), var(--education-secondary));
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .notification-icon {
+            position: relative;
+            color: var(--terminal-yellow);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--terminal-red);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main Dashboard Layout */
+        .dashboard-container {
+            padding: 2rem;
+            max-width: 1920px;
+            margin: 0 auto;
+        }
+
+        /* Hero Impact Story Section */
+        .hero-impact {
+            background: linear-gradient(135deg, var(--education-primary), var(--education-secondary));
+            border-radius: 16px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-impact::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--terminal-white), var(--terminal-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .hero-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .hero-metric {
+            text-align: center;
+        }
+
+        .hero-metric-value {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--terminal-green);
+            font-family: var(--font-mono);
+        }
+
+        .hero-metric-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        /* Living Stories Grid */
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .story-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--glass-shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .story-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .story-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--terminal-blue);
+        }
+
+        .story-content {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .story-metrics {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .story-metric {
+            text-align: center;
+        }
+
+        .story-metric-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--terminal-green);
+            font-family: var(--font-mono);
+        }
+
+        .story-metric-label {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        /* Forecast & Trends Section */
+        .forecast-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .forecast-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .forecast-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--terminal-blue);
+        }
+
+        .forecast-controls {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .forecast-btn {
+            background: var(--terminal-gray);
+            border: 1px solid var(--terminal-light-gray);
+            color: var(--terminal-white);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .forecast-btn.active {
+            background: var(--education-primary);
+            border-color: var(--education-primary);
+        }
+
+        .forecast-btn:hover {
+            background: var(--education-primary);
+            border-color: var(--education-primary);
+        }
+
+        /* Chart Containers */
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 2rem 0;
+        }
+
+        .chart-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .unlock-btn {
+            background: linear-gradient(45deg, var(--education-primary), var(--education-secondary));
+            border: none;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .unlock-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.4);
+        }
+
+        /* Outcomes Dashboard */
+        .outcomes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .outcome-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .outcome-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .outcome-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--terminal-blue);
+        }
+
+        .outcome-trend {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .trend-up {
+            color: var(--terminal-green);
+        }
+
+        .trend-down {
+            color: var(--terminal-red);
+        }
+
+        .outcome-value {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--terminal-green);
+            font-family: var(--font-mono);
+            margin-bottom: 0.5rem;
+        }
+
+        .outcome-description {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        /* Portfolio Impact Tree */
+        .impact-tree {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .tree-visualization {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 2rem 0;
+        }
+
+        .tree-root {
+            background: linear-gradient(45deg, var(--education-primary), var(--education-secondary));
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+        }
+
+        .tree-branches {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tree-branch {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 150px;
+        }
+
+        .branch-node {
+            background: var(--terminal-green);
+            color: var(--terminal-black);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 255, 65, 0.3);
+        }
+
+        .branch-label {
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .branch-metric {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-top: 0.5rem;
+        }
+
+        /* AI Insights Panel */
+        .ai-insights {
+            background: linear-gradient(135deg, var(--terminal-purple), var(--education-secondary));
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-insights::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="20" cy="80" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
+        }
+
+        .ai-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .ai-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .ai-icon {
+            font-size: 1.5rem;
+            color: var(--terminal-yellow);
+        }
+
+        .ai-title h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .ai-insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .ai-insight {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .insight-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--terminal-yellow);
+        }
+
+        .insight-content {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+
+        .insight-confidence {
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: var(--terminal-green);
+            font-weight: 600;
+        }
+
+        /* Premium Features Teaser */
+        .premium-teaser {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--terminal-yellow);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .premium-teaser::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 0, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .premium-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .premium-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--terminal-yellow);
+            margin-bottom: 1rem;
+        }
+
+        .premium-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .premium-feature {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--terminal-yellow);
+        }
+
+        .feature-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-description {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .premium-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .cta-btn {
+            padding: 0.75rem 2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .cta-primary {
+            background: linear-gradient(45deg, var(--terminal-yellow), var(--terminal-orange));
+            color: var(--terminal-black);
+        }
+
+        .cta-secondary {
+            background: transparent;
+            color: var(--terminal-yellow);
+            border: 2px solid var(--terminal-yellow);
+        }
+
+        .cta-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 255, 0, 0.3);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .dashboard-container {
+                padding: 1.5rem;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .stories-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .terminal-header {
+                padding: 0.5rem 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .terminal-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .dashboard-container {
+                padding: 1rem;
+            }
+            
+            .hero-impact {
+                padding: 2rem;
+            }
+            
+            .hero-title {
+                font-size: 1.5rem;
+            }
+            
+            .stories-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .outcomes-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tree-branches {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .ai-insights-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .premium-features {
+                grid-template-columns: 1fr;
+            }
+            
+            .premium-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-metrics {
+                grid-template-columns: 1fr;
+            }
+            
+            .story-metrics {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .forecast-controls {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .forecast-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-in-left {
+            animation: slideInLeft 0.6s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .slide-in-right {
+            animation: slideInRight 0.6s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Loading States */
+        .loading {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Focus States */
+        .forecast-btn:focus,
+        .unlock-btn:focus,
+        .cta-btn:focus {
+            outline: 2px solid var(--terminal-blue);
+            outline-offset: 2px;
+        }
+
+        /* High Contrast Mode */
+        @media (prefers-contrast: high) {
+            :root {
+                --glass-bg: rgba(0, 0, 0, 0.8);
+                --glass-border: rgba(255, 255, 255, 0.5);
+            }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Bloomberg Terminal Header -->
+    <header class="terminal-header">
+        <div class="terminal-brand">
+            <div class="brand-logo">AUXEIRA</div>
+            <div class="brand-subtitle">ESG EDUCATION TERMINAL</div>
+        </div>
+        <div class="terminal-controls">
+            <div class="user-info">
+                <select class="form-select" id="regionSelector" style="background: var(--terminal-gray); border: 1px solid var(--terminal-light-gray); color: var(--terminal-white);">
+                    <option value="global">🌍 Global</option>
+                    <option value="africa">🌍 Africa</option>
+                    <option value="south-africa">🇿🇦 South Africa</option>
+                    <option value="nigeria">🇳🇬 Nigeria</option>
+                    <option value="kenya">🇰🇪 Kenya</option>
+                    <option value="ghana">🇬🇭 Ghana</option>
+                </select>
+                <div class="user-badge" id="userBadge">Education Impact Leader</div>
+                <div class="notification-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notificationCount">5</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dashboard Container -->
+    <main class="dashboard-container">
+        <!-- Hero Impact Story -->
+        <section class="hero-impact fade-in">
+            <div class="hero-content">
+                <h1 class="hero-title">Your R2.4M Transformed 285,000 Lives</h1>
+                <p class="hero-subtitle">Real stories from your education portfolio across Africa - updated live</p>
+                <div class="hero-metrics">
+                    <div class="hero-metric">
+                        <div class="hero-metric-value">285K</div>
+                        <div class="hero-metric-label">Students Reached</div>
+                    </div>
+                    <div class="hero-metric">
+                        <div class="hero-metric-value">12.5K</div>
+                        <div class="hero-metric-label">Teachers Trained</div>
+                    </div>
+                    <div class="hero-metric">
+                        <div class="hero-metric-value">450</div>
+                        <div class="hero-metric-label">Schools Supported</div>
+                    </div>
+                    <div class="hero-metric">
+                        <div class="hero-metric-value">5.8x</div>
+                        <div class="hero-metric-label">Education ROI</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Living Stories Grid -->
+        <section class="stories-grid">
+            <div class="story-card slide-in-left">
+                <span class="story-icon">👩‍🏫</span>
+                <h3 class="story-title">Nomsa's Teaching Revolution</h3>
+                <p class="story-content">
+                    Your investment in Teacher Tomorrow trained Nomsa in digital literacy. She now teaches 240 students in rural KwaZulu-Natal, 
+                    with 89% showing improved math scores. "I can reach every child now," she says.
+                </p>
+                <div class="story-metrics">
+                    <div class="story-metric">
+                        <div class="story-metric-value">240</div>
+                        <div class="story-metric-label">Students</div>
+                    </div>
+                    <div class="story-metric">
+                        <div class="story-metric-value">89%</div>
+                        <div class="story-metric-label">Improvement</div>
+                    </div>
+                    <div class="story-metric">
+                        <div class="story-metric-value">R45</div>
+                        <div class="story-metric-label">Cost/Student</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-card slide-in-right">
+                <span class="story-icon">🔬</span>
+                <h3 class="story-title">STEM Sisters Breaking Barriers</h3>
+                <p class="story-content">
+                    Your STEM Sisters Initiative reached 45,000 girls across Nigeria. Fatima, 16, now leads her school's robotics team. 
+                    78% of participants are pursuing STEM careers - triple the national average.
+                </p>
+                <div class="story-metrics">
+                    <div class="story-metric">
+                        <div class="story-metric-value">45K</div>
+                        <div class="story-metric-label">Girls Reached</div>
+                    </div>
+                    <div class="story-metric">
+                        <div class="story-metric-value">78%</div>
+                        <div class="story-metric-label">STEM Careers</div>
+                    </div>
+                    <div class="story-metric">
+                        <div class="story-metric-value">3x</div>
+                        <div class="story-metric-label">National Avg</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-card slide-in-left">
+                <span class="story-icon">💻</span>
+                <h3 class="story-title">Digital Divide Closed</h3>
+                <p class="story-content">
+                    LearnBridge Africa connected 85,000 students to digital learning. In remote Ghana, Kwame's village now has 
+                    96% digital literacy. Your investment saved 15,000 tons CO₂ through digital-first education.
+                </p>
+                <div class="story-metrics">
+                    <div class="story-metric">
+                        <div class="story-metric-value">85K</div>
+                        <div class="story-metric-label">Connected</div>
+                    </div>
+                    <div class="story-metric">
+                        <div class="story-metric-value">96%</div>
+                        <div class="story-metric-label">Digital Literacy</div>
+                    </div>
+                    <div class="story-metric">
+                        <div class="story-metric-value">15K</div>
+                        <div class="story-metric-label">Tons CO₂ Saved</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI-Powered Forecasts & Trends -->
+        <section class="forecast-section">
+            <div class="forecast-header">
+                <h2 class="forecast-title">
+                    <i class="fas fa-chart-line" style="color: var(--terminal-green); margin-right: 0.5rem;"></i>
+                    AI Education Forecasts & Trends
+                </h2>
+                <div class="forecast-controls">
+                    <button class="forecast-btn active" data-period="1year">1 Year</button>
+                    <button class="forecast-btn" data-period="3years">3 Years</button>
+                    <button class="forecast-btn" data-period="5years">5 Years</button>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="forecastChart" width="800" height="400"></canvas>
+                <div class="chart-overlay">
+                    <h4 style="color: var(--terminal-yellow); margin-bottom: 1rem;">
+                        <i class="fas fa-lock" style="margin-right: 0.5rem;"></i>
+                        Premium Forecasting
+                    </h4>
+                    <p style="margin-bottom: 1.5rem;">Unlock AI-powered predictions for student outcomes, teacher retention, and impact scaling</p>
+                    <button class="unlock-btn" onclick="showPremiumModal()">
+                        Unlock for $149/month
+                    </button>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="outcome-card">
+                        <div class="outcome-header">
+                            <span class="outcome-title">Student Achievement</span>
+                            <span class="outcome-trend trend-up">↗ +24%</span>
+                        </div>
+                        <div class="outcome-value">94.2%</div>
+                        <p class="outcome-description">Projected literacy improvement rate based on current portfolio trajectory</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="outcome-card">
+                        <div class="outcome-header">
+                            <span class="outcome-title">Teacher Retention</span>
+                            <span class="outcome-trend trend-up">↗ +18%</span>
+                        </div>
+                        <div class="outcome-value">89.7%</div>
+                        <p class="outcome-description">Predicted retention rate with continued professional development investment</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="outcome-card">
+                        <div class="outcome-header">
+                            <span class="outcome-title">Impact Scaling</span>
+                            <span class="outcome-trend trend-up">↗ +156%</span>
+                        </div>
+                        <div class="outcome-value">730K</div>
+                        <p class="outcome-description">Estimated students reached by 2027 with current growth trajectory</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio Impact Tree -->
+        <section class="impact-tree">
+            <h2 style="color: var(--terminal-blue); margin-bottom: 1rem;">
+                <i class="fas fa-sitemap" style="margin-right: 0.5rem;"></i>
+                Your Education Impact Tree
+            </h2>
+            <p style="opacity: 0.8; margin-bottom: 2rem;">Live visualization of your portfolio's interconnected impact across Africa</p>
+            
+            <div class="tree-visualization">
+                <div class="tree-root pulse">ESG Education Portfolio</div>
+                
+                <div class="tree-branches">
+                    <div class="tree-branch">
+                        <div class="branch-node">LB</div>
+                        <div class="branch-label">LearnBridge Africa</div>
+                        <div class="branch-metric">85K students • 48% literacy ↑</div>
+                    </div>
+                    <div class="tree-branch">
+                        <div class="branch-node">SS</div>
+                        <div class="branch-label">STEM Sisters</div>
+                        <div class="branch-metric">45K girls • 78% STEM careers</div>
+                    </div>
+                    <div class="tree-branch">
+                        <div class="branch-node">TT</div>
+                        <div class="branch-label">Teacher Tomorrow</div>
+                        <div class="branch-metric">12.5K teachers • 89% retention</div>
+                    </div>
+                    <div class="tree-branch">
+                        <div class="branch-node">VP</div>
+                        <div class="branch-label">VocationalPath</div>
+                        <div class="branch-metric">28K students • 74% job placement</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Real-Time Outcomes Dashboard -->
+        <section class="outcomes-grid">
+            <div class="outcome-card">
+                <div class="outcome-header">
+                    <span class="outcome-title">
+                        <i class="fas fa-graduation-cap" style="color: var(--education-primary); margin-right: 0.5rem;"></i>
+                        Literacy Gains
+                    </span>
+                    <span class="outcome-trend trend-up">↗ +42%</span>
+                </div>
+                <div class="outcome-value">42%</div>
+                <p class="outcome-description">Average reading level improvement across all portfolio schools in the last 12 months</p>
+            </div>
+
+            <div class="outcome-card">
+                <div class="outcome-header">
+                    <span class="outcome-title">
+                        <i class="fas fa-calculator" style="color: var(--education-success); margin-right: 0.5rem;"></i>
+                        Numeracy Growth
+                    </span>
+                    <span class="outcome-trend trend-up">↗ +38%</span>
+                </div>
+                <div class="outcome-value">38%</div>
+                <p class="outcome-description">Math proficiency increase measured through standardized assessments</p>
+            </div>
+
+            <div class="outcome-card">
+                <div class="outcome-header">
+                    <span class="outcome-title">
+                        <i class="fas fa-balance-scale" style="color: var(--education-warning); margin-right: 0.5rem;"></i>
+                        Gender Parity
+                    </span>
+                    <span class="outcome-trend trend-up">↗ +12%</span>
+                </div>
+                <div class="outcome-value">0.94</div>
+                <p class="outcome-description">Gender Parity Index approaching UNESCO target of 1.0 for equal access</p>
+            </div>
+
+            <div class="outcome-card">
+                <div class="outcome-header">
+                    <span class="outcome-title">
+                        <i class="fas fa-laptop" style="color: var(--education-info); margin-right: 0.5rem;"></i>
+                        Digital Skills
+                    </span>
+                    <span class="outcome-trend trend-up">↗ +156%</span>
+                </div>
+                <div class="outcome-value">78/100</div>
+                <p class="outcome-description">Digital literacy score based on technology competency assessments</p>
+            </div>
+
+            <div class="outcome-card">
+                <div class="outcome-header">
+                    <span class="outcome-title">
+                        <i class="fas fa-leaf" style="color: var(--education-success); margin-right: 0.5rem;"></i>
+                        Carbon Impact
+                    </span>
+                    <span class="outcome-trend trend-up">↗ -15K tons</span>
+                </div>
+                <div class="outcome-value">15,000</div>
+                <p class="outcome-description">Tons of CO₂ avoided through digital learning platforms and green school initiatives</p>
+            </div>
+
+            <div class="outcome-card">
+                <div class="outcome-header">
+                    <span class="outcome-title">
+                        <i class="fas fa-dollar-sign" style="color: var(--education-primary); margin-right: 0.5rem;"></i>
+                        Cost Efficiency
+                    </span>
+                    <span class="outcome-trend trend-down">↓ -23%</span>
+                </div>
+                <div class="outcome-value">$65</div>
+                <p class="outcome-description">Cost per student impact - 23% reduction through operational efficiency gains</p>
+            </div>
+        </section>
+
+        <!-- AI-Powered Insights -->
+        <section class="ai-insights">
+            <div class="ai-content">
+                <div class="ai-title">
+                    <i class="fas fa-brain ai-icon"></i>
+                    <h3>AI Education Intelligence</h3>
+                </div>
+                
+                <div class="ai-insights-grid">
+                    <div class="ai-insight">
+                        <div class="insight-title">Optimal Investment Window</div>
+                        <div class="insight-content">
+                            Teacher training programs show 3x higher ROI when deployed during school holidays. 
+                            Next optimal window: December 2024.
+                        </div>
+                        <div class="insight-confidence">94% confidence</div>
+                    </div>
+                    
+                    <div class="ai-insight">
+                        <div class="insight-title">Gender Equity Acceleration</div>
+                        <div class="insight-content">
+                            Investing additional $180K in STEM Sisters could achieve gender parity 18 months ahead of schedule 
+                            across your portfolio.
+                        </div>
+                        <div class="insight-confidence">87% confidence</div>
+                    </div>
+                    
+                    <div class="ai-insight">
+                        <div class="insight-title">Scaling Opportunity</div>
+                        <div class="insight-content">
+                            LearnBridge Africa's model shows 89% success rate for replication. Recommended expansion: 
+                            Ghana and Kenya markets.
+                        </div>
+                        <div class="insight-confidence">91% confidence</div>
+                    </div>
+                    
+                    <div class="ai-insight">
+                        <div class="insight-title">Risk Mitigation</div>
+                        <div class="insight-content">
+                            Teacher retention risk detected in 3 schools. Proactive salary support of $45K could prevent 
+                            15% impact reduction.
+                        </div>
+                        <div class="insight-confidence">96% confidence</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Premium Features Teaser -->
+        <section class="premium-teaser">
+            <div class="premium-content">
+                <h2 class="premium-title">
+                    <i class="fas fa-crown" style="margin-right: 0.5rem;"></i>
+                    Unlock Your Full Education Impact Potential
+                </h2>
+                <p style="font-size: 1.1rem; opacity: 0.9; margin-bottom: 2rem;">
+                    Join 500+ education investors using Auxeira's premium analytics to maximize their impact
+                </p>
+                
+                <div class="premium-features">
+                    <div class="premium-feature">
+                        <div class="feature-icon">📊</div>
+                        <div class="feature-title">Advanced Analytics</div>
+                        <div class="feature-description">Real-time impact modeling and predictive outcomes</div>
+                    </div>
+                    <div class="premium-feature">
+                        <div class="feature-icon">🎯</div>
+                        <div class="feature-title">AI Deal Flow</div>
+                        <div class="feature-description">Smart matching with 94% education compatibility</div>
+                    </div>
+                    <div class="premium-feature">
+                        <div class="feature-icon">📈</div>
+                        <div class="feature-title">Impact Forecasting</div>
+                        <div class="feature-description">5-year projections with 90%+ accuracy</div>
+                    </div>
+                    <div class="premium-feature">
+                        <div class="feature-icon">🏆</div>
+                        <div class="feature-title">UNESCO Reporting</div>
+                        <div class="feature-description">Automated compliance and impact documentation</div>
+                    </div>
+                    <div class="premium-feature">
+                        <div class="feature-icon">🌍</div>
+                        <div class="feature-title">Global Benchmarks</div>
+                        <div class="feature-description">Compare performance against 10,000+ education programs</div>
+                    </div>
+                    <div class="premium-feature">
+                        <div class="feature-icon">🤝</div>
+                        <div class="feature-title">Expert Network</div>
+                        <div class="feature-description">Connect with education leaders and policy makers</div>
+                    </div>
+                </div>
+                
+                <div class="premium-cta">
+                    <button class="cta-btn cta-primary" onclick="startFreeTrial()">
+                        Start 30-Day Free Trial
+                    </button>
+                    <button class="cta-btn cta-secondary" onclick="schedulDemo()">
+                        Schedule Demo
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- JavaScript for Interactive Features -->
+    <script>
+        // Dashboard Data and State Management
+        class ESGEducationDashboard {
+            constructor() {
+                this.currentRegion = 'global';
+                this.forecastPeriod = '3years';
+                this.charts = {};
+                this.animationQueue = [];
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.initializeCharts();
+                this.startRealTimeUpdates();
+                this.loadUserPreferences();
+            }
+
+            setupEventListeners() {
+                // Region selector
+                document.getElementById('regionSelector').addEventListener('change', (e) => {
+                    this.currentRegion = e.target.value;
+                    this.updateDashboardForRegion();
+                });
+
+                // Forecast period buttons
+                document.querySelectorAll('.forecast-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.forecast-btn').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.forecastPeriod = e.target.dataset.period;
+                        this.updateForecastChart();
+                    });
+                });
+
+                // Notification bell
+                document.querySelector('.notification-icon').addEventListener('click', () => {
+                    this.showNotifications();
+                });
+
+                // Story cards hover effects
+                document.querySelectorAll('.story-card').forEach(card => {
+                    card.addEventListener('mouseenter', () => {
+                        this.animateCard(card);
+                    });
+                });
+            }
+
+            initializeCharts() {
+                // Initialize forecast chart (blurred for demo)
+                const ctx = document.getElementById('forecastChart');
+                if (ctx) {
+                    this.charts.forecast = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: ['2024', '2025', '2026', '2027'],
+                            datasets: [{
+                                label: 'Students Reached',
+                                data: [285000, 420000, 580000, 730000],
+                                borderColor: '#00d4ff',
+                                backgroundColor: 'rgba(0, 212, 255, 0.1)',
+                                tension: 0.4,
+                                fill: true
+                            }, {
+                                label: 'Teachers Trained',
+                                data: [12500, 18000, 25000, 32000],
+                                borderColor: '#00ff41',
+                                backgroundColor: 'rgba(0, 255, 65, 0.1)',
+                                tension: 0.4,
+                                fill: true
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    labels: {
+                                        color: '#ffffff'
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    ticks: { color: '#ffffff' },
+                                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                                },
+                                y: {
+                                    ticks: { color: '#ffffff' },
+                                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+
+            updateDashboardForRegion() {
+                const regionData = this.getRegionData(this.currentRegion);
+                
+                // Update hero metrics
+                this.updateHeroMetrics(regionData);
+                
+                // Update stories
+                this.updateStories(regionData);
+                
+                // Update outcomes
+                this.updateOutcomes(regionData);
+                
+                // Show loading animation
+                this.showLoadingAnimation();
+            }
+
+            getRegionData(region) {
+                const data = {
+                    global: {
+                        students: '285K',
+                        teachers: '12.5K',
+                        schools: '450',
+                        roi: '5.8x',
+                        heroTitle: 'Your R2.4M Transformed 285,000 Lives',
+                        heroSubtitle: 'Real stories from your education portfolio across Africa - updated live'
+                    },
+                    africa: {
+                        students: '285K',
+                        teachers: '12.5K',
+                        schools: '450',
+                        roi: '5.8x',
+                        heroTitle: 'Your African Impact: 285,000 Students Empowered',
+                        heroSubtitle: 'Transforming education across the continent - live updates'
+                    },
+                    'south-africa': {
+                        students: '85K',
+                        teachers: '3.2K',
+                        schools: '120',
+                        roi: '6.2x',
+                        heroTitle: 'South Africa: 85,000 Students Reached',
+                        heroSubtitle: 'From Cape Town to Johannesburg - your education impact'
+                    },
+                    nigeria: {
+                        students: '95K',
+                        teachers: '4.1K',
+                        schools: '180',
+                        roi: '5.4x',
+                        heroTitle: 'Nigeria: 95,000 Students Connected',
+                        heroSubtitle: 'Lagos to Kano - bridging the education divide'
+                    },
+                    kenya: {
+                        students: '65K',
+                        teachers: '2.8K',
+                        schools: '95',
+                        roi: '6.1x',
+                        heroTitle: 'Kenya: 65,000 Students Empowered',
+                        heroSubtitle: 'Nairobi to Mombasa - building tomorrow\'s leaders'
+                    },
+                    ghana: {
+                        students: '40K',
+                        teachers: '2.4K',
+                        schools: '55',
+                        roi: '5.9x',
+                        heroTitle: 'Ghana: 40,000 Students Transformed',
+                        heroSubtitle: 'Accra to Kumasi - digital learning revolution'
+                    }
+                };
+                
+                return data[region] || data.global;
+            }
+
+            updateHeroMetrics(data) {
+                const metrics = document.querySelectorAll('.hero-metric-value');
+                const title = document.querySelector('.hero-title');
+                const subtitle = document.querySelector('.hero-subtitle');
+                
+                if (title) title.textContent = data.heroTitle;
+                if (subtitle) subtitle.textContent = data.heroSubtitle;
+                
+                if (metrics.length >= 4) {
+                    this.animateValue(metrics[0], data.students);
+                    this.animateValue(metrics[1], data.teachers);
+                    this.animateValue(metrics[2], data.schools);
+                    this.animateValue(metrics[3], data.roi);
+                }
+            }
+
+            updateStories(data) {
+                // Update story content based on region
+                const stories = document.querySelectorAll('.story-content');
+                const regionStories = this.getRegionStories(this.currentRegion);
+                
+                stories.forEach((story, index) => {
+                    if (regionStories[index]) {
+                        story.textContent = regionStories[index];
+                        story.parentElement.classList.add('fade-in');
+                    }
+                });
+            }
+
+            getRegionStories(region) {
+                const stories = {
+                    'south-africa': [
+                        'Your investment in Teacher Tomorrow trained Nomsa in digital literacy. She now teaches 240 students in rural KwaZulu-Natal, with 89% showing improved math scores. "I can reach every child now," she says.',
+                        'Your STEM Sisters Initiative reached 15,000 girls across South Africa. Thandi, 16, now leads her school\'s robotics team in Soweto. 82% of participants are pursuing STEM careers.',
+                        'LearnBridge Africa connected 25,000 students to digital learning across the Western Cape. In remote areas, students now have 94% digital literacy rates.'
+                    ],
+                    nigeria: [
+                        'Your Teacher Tomorrow program trained 1,200 educators across Lagos and Kano. Teacher retention increased by 94%, with students showing 67% improvement in literacy.',
+                        'STEM Sisters reached 20,000 girls across Nigeria. Fatima from Abuja now mentors 50 younger students in coding. 78% are pursuing STEM careers - triple the national average.',
+                        'LearnBridge Africa connected 35,000 students across Nigeria. Digital literacy in rural areas jumped from 23% to 89% in just 18 months.'
+                    ],
+                    kenya: [
+                        'Your investment trained 800 teachers across Kenya. In Kibera, teacher Grace now uses tablets to teach 180 students, with 91% showing improved reading skills.',
+                        'STEM Sisters empowered 12,000 Kenyan girls. Wanjiku from Nakuru won the national science fair and now studies engineering at University of Nairobi.',
+                        'LearnBridge Africa brought digital learning to 28,000 Kenyan students. Remote schools in Turkana now have 87% digital literacy rates.'
+                    ]
+                };
+                
+                return stories[region] || stories['south-africa'];
+            }
+
+            updateOutcomes(data) {
+                // Update outcome cards with region-specific data
+                const outcomes = document.querySelectorAll('.outcome-value');
+                const regionOutcomes = this.getRegionOutcomes(this.currentRegion);
+                
+                outcomes.forEach((outcome, index) => {
+                    if (regionOutcomes[index]) {
+                        this.animateValue(outcome, regionOutcomes[index]);
+                    }
+                });
+            }
+
+            getRegionOutcomes(region) {
+                const outcomes = {
+                    'south-africa': ['45%', '41%', '0.96', '82/100', '5,200', '$58'],
+                    nigeria: ['39%', '35%', '0.91', '76/100', '6,800', '$62'],
+                    kenya: ['48%', '44%', '0.94', '85/100', '3,000', '$55'],
+                    ghana: ['42%', '38%', '0.93', '79/100', '2,400', '$61']
+                };
+                
+                return outcomes[region] || ['42%', '38%', '0.94', '78/100', '15,000', '$65'];
+            }
+
+            animateValue(element, newValue) {
+                element.style.opacity = '0.5';
+                setTimeout(() => {
+                    element.textContent = newValue;
+                    element.style.opacity = '1';
+                    element.classList.add('pulse');
+                    setTimeout(() => element.classList.remove('pulse'), 1000);
+                }, 300);
+            }
+
+            animateCard(card) {
+                card.style.transform = 'translateY(-8px) scale(1.02)';
+                setTimeout(() => {
+                    card.style.transform = 'translateY(0) scale(1)';
+                }, 300);
+            }
+
+            updateForecastChart() {
+                if (this.charts.forecast) {
+                    // Update chart data based on forecast period
+                    const periodData = this.getForecastData(this.forecastPeriod);
+                    this.charts.forecast.data = periodData;
+                    this.charts.forecast.update('active');
+                }
+            }
+
+            getForecastData(period) {
+                const data = {
+                    '1year': {
+                        labels: ['Q1 2024', 'Q2 2024', 'Q3 2024', 'Q4 2024'],
+                        datasets: [{
+                            label: 'Students Reached',
+                            data: [285000, 320000, 365000, 420000],
+                            borderColor: '#00d4ff',
+                            backgroundColor: 'rgba(0, 212, 255, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    '3years': {
+                        labels: ['2024', '2025', '2026', '2027'],
+                        datasets: [{
+                            label: 'Students Reached',
+                            data: [285000, 420000, 580000, 730000],
+                            borderColor: '#00d4ff',
+                            backgroundColor: 'rgba(0, 212, 255, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }, {
+                            label: 'Teachers Trained',
+                            data: [12500, 18000, 25000, 32000],
+                            borderColor: '#00ff41',
+                            backgroundColor: 'rgba(0, 255, 65, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    '5years': {
+                        labels: ['2024', '2025', '2026', '2027', '2028', '2029'],
+                        datasets: [{
+                            label: 'Students Reached',
+                            data: [285000, 420000, 580000, 730000, 920000, 1150000],
+                            borderColor: '#00d4ff',
+                            backgroundColor: 'rgba(0, 212, 255, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }, {
+                            label: 'Teachers Trained',
+                            data: [12500, 18000, 25000, 32000, 42000, 55000],
+                            borderColor: '#00ff41',
+                            backgroundColor: 'rgba(0, 255, 65, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    }
+                };
+                
+                return data[period] || data['3years'];
+            }
+
+            startRealTimeUpdates() {
+                // Simulate real-time updates every 30 seconds
+                setInterval(() => {
+                    this.updateLiveMetrics();
+                }, 30000);
+                
+                // Update notification count periodically
+                setInterval(() => {
+                    this.updateNotificationCount();
+                }, 60000);
+            }
+
+            updateLiveMetrics() {
+                // Simulate small changes in metrics
+                const metrics = document.querySelectorAll('.outcome-value');
+                metrics.forEach(metric => {
+                    const currentValue = metric.textContent;
+                    // Add subtle animation to show "live" updates
+                    metric.classList.add('pulse');
+                    setTimeout(() => metric.classList.remove('pulse'), 1000);
+                });
+            }
+
+            updateNotificationCount() {
+                const badge = document.getElementById('notificationCount');
+                const currentCount = parseInt(badge.textContent);
+                const newCount = Math.max(0, currentCount + Math.floor(Math.random() * 3) - 1);
+                badge.textContent = newCount;
+                
+                if (newCount > currentCount) {
+                    badge.classList.add('pulse');
+                    setTimeout(() => badge.classList.remove('pulse'), 1000);
+                }
+            }
+
+            showLoadingAnimation() {
+                const cards = document.querySelectorAll('.story-card, .outcome-card');
+                cards.forEach((card, index) => {
+                    card.classList.add('loading');
+                    setTimeout(() => {
+                        card.classList.remove('loading');
+                        card.classList.add('fade-in');
+                    }, 500 + (index * 100));
+                });
+            }
+
+            showNotifications() {
+                const notifications = [
+                    'New impact report available for STEM Sisters Initiative',
+                    'Teacher retention rate increased by 5% this month',
+                    'LearnBridge Africa reached milestone: 100K students',
+                    'UNESCO compliance report ready for download',
+                    'New funding opportunity: $2M education grant available'
+                ];
+                
+                alert('Notifications:\n\n' + notifications.join('\n\n'));
+            }
+
+            loadUserPreferences() {
+                // Load saved user preferences from localStorage
+                const savedRegion = localStorage.getItem('auxeira_region');
+                if (savedRegion) {
+                    document.getElementById('regionSelector').value = savedRegion;
+                    this.currentRegion = savedRegion;
+                    this.updateDashboardForRegion();
+                }
+            }
+
+            saveUserPreferences() {
+                // Save user preferences to localStorage
+                localStorage.setItem('auxeira_region', this.currentRegion);
+            }
+        }
+
+        // Global Functions for UI Interactions
+        function showPremiumModal() {
+            alert('Premium Features:\n\n• Advanced AI Forecasting\n• Real-time Impact Analytics\n• UNESCO Compliance Automation\n• Expert Network Access\n\nStart your 30-day free trial today!');
+        }
+
+        function startFreeTrial() {
+            alert('Starting your 30-day free trial...\n\nYou\'ll have access to:\n• All premium analytics\n• AI-powered insights\n• Advanced reporting\n• Expert support\n\nWelcome to the future of education impact!');
+        }
+
+        function schedulDemo() {
+            alert('Demo scheduled!\n\nOur education impact specialist will contact you within 24 hours to schedule a personalized demonstration.\n\nThank you for your interest in transforming education!');
+        }
+
+        function boostGreen() {
+            alert('Green Impact Boost Available!\n\nInvest an additional $85K to:\n• Train 500 more teachers in eco-literacy\n• Certify 25 more schools as green\n• Save an estimated 8 tons more CO₂\n\n94% confidence in projected outcomes.');
+        }
+
+        // Initialize Dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            const dashboard = new ESGEducationDashboard();
+            
+            // Save preferences on page unload
+            window.addEventListener('beforeunload', () => {
+                dashboard.saveUserPreferences();
+            });
+            
+            // Add accessibility features
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Tab') {
+                    document.body.classList.add('keyboard-navigation');
+                }
+            });
+            
+            document.addEventListener('mousedown', () => {
+                document.body.classList.remove('keyboard-navigation');
+            });
+        });
+
+        // Performance optimization
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(() => {
+                // Preload images and resources during idle time
+                const imageUrls = [
+                    'https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=800',
+                    'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800'
+                ];
+                
+                imageUrls.forEach(url => {
+                    const img = new Image();
+                    img.src = url;
+                });
+            });
+        }
+
+        // Service Worker for offline functionality
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(console.error);
+        }
+    </script>
+</body>
+</html>

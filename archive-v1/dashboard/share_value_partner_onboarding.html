@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auxeira Share Value Partner Onboarding</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <style>
+        :root {
+            --primary-bg: #0a0a0a;
+            --secondary-bg: #1a1a1a;
+            --terminal-blue: #0088ff;
+            --terminal-purple: #8800ff;
+            --terminal-gold: #ffaa00;
+            --text-primary: #ffffff;
+            --text-secondary: #e0e0e0;
+            --text-muted: #888888;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-bg) 0%, #1a0a2a 100%);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 40px 0;
+        }
+
+        .onboarding-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid var(--glass-border);
+        }
+
+        .header-section h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--terminal-blue), var(--terminal-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+        }
+
+        .header-section p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .form-label {
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-control, .form-select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            border-radius: 8px;
+            padding: 12px 16px;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--terminal-blue);
+            color: var(--text-primary);
+            box-shadow: 0 0 0 0.2rem rgba(0, 136, 255, 0.25);
+        }
+
+        .form-control::placeholder {
+            color: var(--text-muted);
+        }
+
+        .tier-card {
+            border: 2px solid var(--glass-border);
+            padding: 24px;
+            margin: 16px 0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .tier-card:hover {
+            border-color: var(--terminal-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 136, 255, 0.2);
+        }
+
+        .tier-selected {
+            border-color: var(--terminal-blue);
+            background: rgba(0, 136, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 123, 255, 0.3);
+        }
+
+        .tier-card h5 {
+            color: var(--terminal-blue);
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .tier-price {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--terminal-gold);
+            margin-bottom: 16px;
+        }
+
+        .benefit-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .benefit-list li {
+            color: var(--text-secondary);
+            padding: 8px 0;
+            padding-left: 28px;
+            position: relative;
+        }
+
+        .benefit-list li:before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: var(--terminal-blue);
+        }
+
+        .form-check-input {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: var(--glass-border);
+        }
+
+        .form-check-input:checked {
+            background-color: var(--terminal-blue);
+            border-color: var(--terminal-blue);
+        }
+
+        .form-check-label {
+            color: var(--text-secondary);
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--terminal-blue), var(--terminal-purple));
+            border: none;
+            color: white;
+            padding: 16px 40px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 136, 255, 0.3);
+            width: 100%;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 136, 255, 0.4);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .section-title {
+            color: var(--terminal-blue);
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-top: 32px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--glass-border);
+        }
+
+        .required-badge {
+            color: var(--terminal-gold);
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .info-text {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            padding: 12px;
+        }
+
+        .progress-step:before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: var(--glass-border);
+            z-index: 0;
+        }
+
+        .progress-step:first-child:before {
+            display: none;
+        }
+
+        .progress-step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            border: 2px solid var(--glass-border);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 8px;
+        }
+
+        .progress-step.active .progress-step-circle {
+            background: var(--terminal-blue);
+            border-color: var(--terminal-blue);
+            color: white;
+        }
+
+        .progress-step.completed .progress-step-circle {
+            background: var(--terminal-blue);
+            border-color: var(--terminal-blue);
+            color: white;
+        }
+
+        .progress-step-label {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .progress-step.active .progress-step-label {
+            color: var(--terminal-blue);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="onboarding-container">
+            <!-- Header -->
+            <div class="header-section">
+                <h1>
+                    <i class="fas fa-handshake me-2"></i>
+                    Share Value Partner Onboarding
+                </h1>
+                <p>
+                    Join the Auxeira ecosystem to offer rewards (discounts, cashback, tokens) to high-potential startups. 
+                    Gain visibility, qualified leads, and comprehensive ROI insights tailored to your tier.
+                </p>
+            </div>
+
+            <!-- Progress Indicator -->
+            <div class="progress-indicator">
+                <div class="progress-step active">
+                    <div class="progress-step-circle">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="progress-step-label">Company Info</div>
+                </div>
+                <div class="progress-step">
+                    <div class="progress-step-circle">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <div class="progress-step-label">Rewards</div>
+                </div>
+                <div class="progress-step">
+                    <div class="progress-step-circle">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <div class="progress-step-label">Select Tier</div>
+                </div>
+                <div class="progress-step">
+                    <div class="progress-step-circle">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <div class="progress-step-label">Payment</div>
+                </div>
+            </div>
+
+            <!-- Onboarding Form -->
+            <form id="partnerForm">
+                <!-- Company Information -->
+                <h4 class="section-title">
+                    <i class="fas fa-building me-2"></i>Company Information
+                </h4>
+
+                <div class="mb-3">
+                    <label for="companyName" class="form-label">
+                        Company Name<span class="required-badge">REQUIRED</span>
+                    </label>
+                    <input type="text" class="form-control" id="companyName" required 
+                           placeholder="Enter your company name">
+                </div>
+
+                <div class="mb-3">
+                    <label for="contactEmail" class="form-label">
+                        Contact Email<span class="required-badge">REQUIRED</span>
+                    </label>
+                    <input type="email" class="form-control" id="contactEmail" required 
+                           placeholder="partner@company.com">
+                </div>
+
+                <div class="mb-3">
+                    <label for="contactName" class="form-label">
+                        Contact Person<span class="required-badge">REQUIRED</span>
+                    </label>
+                    <input type="text" class="form-control" id="contactName" required 
+                           placeholder="Full name of primary contact">
+                </div>
+
+                <div class="mb-3">
+                    <label for="whyJoin" class="form-label">
+                        Why Join Auxeira?<span class="required-badge">REQUIRED</span>
+                    </label>
+                    <textarea class="form-control" id="whyJoin" rows="3" required 
+                              placeholder="Briefly describe your interest in partnering with Auxeira..."></textarea>
+                    <div class="info-text">
+                        This helps us ensure quality partnerships—e.g., "We want to offer SaaS discounts to edtech startups."
+                    </div>
+                </div>
+
+                <!-- Rewards Offered -->
+                <h4 class="section-title">
+                    <i class="fas fa-gift me-2"></i>Rewards You Offer
+                </h4>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        Select Reward Types<span class="required-badge">AT LEAST ONE REQUIRED</span>
+                    </label>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="discount" value="discount">
+                        <label class="form-check-label" for="discount">
+                            <strong>Discounts</strong> - Percentage off services/products
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="cashback" value="cashback">
+                        <label class="form-check-label" for="cashback">
+                            <strong>Cashback</strong> - Percentage back on purchases
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="tokens" value="tokens">
+                        <label class="form-check-label" for="tokens">
+                            <strong>Redeemable Tokens</strong> - Credits or points system
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="other" value="other">
+                        <label class="form-check-label" for="other">
+                            <strong>Other</strong> - Describe in details below
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="rewardDetails" class="form-label">
+                        Reward Details<span class="required-badge">REQUIRED</span>
+                    </label>
+                    <textarea class="form-control" id="rewardDetails" rows="4" required 
+                              placeholder="e.g., '20% discount on first-year SaaS subscription, minimum spend $100'"></textarea>
+                    <div class="info-text">
+                        Be specific to ensure quality—vague entries may delay approval.
+                    </div>
+                </div>
+
+                <!-- Tier Selection -->
+                <h4 class="section-title">
+                    <i class="fas fa-crown me-2"></i>Select Your Monthly Tier
+                </h4>
+
+                <p class="text-secondary mb-4">
+                    Choose a tier that fits your goals. Benefits build on each other for clear differentiation—start low and upgrade anytime.
+                    <strong>All prices are monthly subscriptions in USD, billed via Paystack.</strong>
+                </p>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="tier-card" id="silverTier" onclick="selectTier('silver')">
+                            <h5><i class="fas fa-medal me-2"></i>Silver</h5>
+                            <div class="tier-price">$49<span style="font-size: 1rem; color: var(--text-muted);">/mo</span></div>
+                            <ul class="benefit-list">
+                                <li>Basic directory listing</li>
+                                <li>Monthly redemption reports</li>
+                                <li>Access to partner resources</li>
+                                <li>Startup ecosystem exposure</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="tier-card" id="goldTier" onclick="selectTier('gold')">
+                            <h5><i class="fas fa-star me-2"></i>Gold</h5>
+                            <div class="tier-price">$99<span style="font-size: 1rem; color: var(--text-muted);">/mo</span></div>
+                            <ul class="benefit-list">
+                                <li>All Silver benefits</li>
+                                <li>5+ qualified startup intros/month</li>
+                                <li>Detailed ROI analytics</li>
+                                <li>Co-branded marketing emails</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="tier-card" id="platinumTier" onclick="selectTier('platinum')">
+                            <h5><i class="fas fa-gem me-2"></i>Platinum</h5>
+                            <div class="tier-price">$199<span style="font-size: 1rem; color: var(--text-muted);">/mo</span></div>
+                            <ul class="benefit-list">
+                                <li>All Gold benefits</li>
+                                <li>Priority premium startup access</li>
+                                <li>Custom reports & API access</li>
+                                <li>Co-marketing opportunities</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">
+                        Selected Tier<span class="required-badge">REQUIRED</span>
+                    </label>
+                    <select class="form-select" id="selectedTier" required>
+                        <option value="">Choose your tier...</option>
+                        <option value="silver">Silver - $49/mo</option>
+                        <option value="gold">Gold - $99/mo</option>
+                        <option value="platinum">Platinum - $199/mo</option>
+                    </select>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-lock me-2"></i>
+                        Submit & Proceed to Secure Checkout
+                    </button>
+                    <div class="info-text mt-3">
+                        <i class="fas fa-shield-alt me-1"></i>
+                        Secure payment processing via Paystack. You can cancel your subscription anytime.
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Tier selection
+        function selectTier(tier) {
+            // Remove previous selection
+            document.querySelectorAll('.tier-card').forEach(card => {
+                card.classList.remove('tier-selected');
+            });
+            
+            // Add selection to clicked tier
+            document.getElementById(tier + 'Tier').classList.add('tier-selected');
+            document.getElementById('selectedTier').value = tier;
+        }
+
+        // Sync tier card clicks with dropdown
+        document.getElementById('selectedTier').addEventListener('change', function() {
+            const tier = this.value;
+            if (tier) {
+                selectTier(tier);
+            }
+        });
+
+        // Form submission
+        document.getElementById('partnerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate at least one reward type is selected
+            const rewards = document.querySelectorAll('input[type="checkbox"]:checked');
+            if (rewards.length === 0) {
+                alert('Please select at least one reward type.');
+                return;
+            }
+
+            // Validate tier selection
+            const tier = document.getElementById('selectedTier').value;
+            if (!tier) {
+                alert('Please select a subscription tier.');
+                return;
+            }
+
+            // Get form data
+            const formData = {
+                companyName: document.getElementById('companyName').value,
+                contactEmail: document.getElementById('contactEmail').value,
+                contactName: document.getElementById('contactName').value,
+                whyJoin: document.getElementById('whyJoin').value,
+                rewards: Array.from(rewards).map(r => r.value),
+                rewardDetails: document.getElementById('rewardDetails').value,
+                tier: tier
+            };
+
+            // Store form data temporarily
+            localStorage.setItem('auxeira_onboarding_data', JSON.stringify(formData));
+
+            // Proceed to payment
+            initiatePayment(formData);
+        });
+
+        function initiatePayment(formData) {
+            const email = formData.contactEmail;
+            const tier = formData.tier;
+            
+            // Paystack amounts in cents (USD)
+            const amounts = {
+                silver: 4900,   // $49
+                gold: 9900,     // $99
+                platinum: 19900 // $199
+            };
+
+            const handler = PaystackPop.setup({
+                key: 'pk_test_PLACEHOLDER_KEY', // Replace with your Paystack public key
+                email: email,
+                amount: amounts[tier],
+                currency: 'USD',
+                ref: 'AUX-' + Math.floor((Math.random() * 1000000000) + 1),
+                metadata: {
+                    tier: tier,
+                    companyName: formData.companyName,
+                    custom_fields: [
+                        {
+                            display_name: "Company Name",
+                            variable_name: "company_name",
+                            value: formData.companyName
+                        },
+                        {
+                            display_name: "Tier",
+                            variable_name: "tier",
+                            value: tier.toUpperCase()
+                        }
+                    ]
+                },
+                callback: function(response) {
+                    // Payment successful
+                    handlePaymentSuccess(response, formData);
+                },
+                onClose: function() {
+                    alert('Payment window closed. Please complete payment to access your dashboard.');
+                }
+            });
+            
+            handler.openIframe();
+        }
+
+        function handlePaymentSuccess(paymentResponse, formData) {
+            // Store authentication tokens
+            localStorage.setItem('auxeira_partner_authenticated', 'true');
+            localStorage.setItem('auxeira_payment_verified', 'true');
+            localStorage.setItem('auxeira_payment_reference', paymentResponse.reference);
+            localStorage.setItem('auxeira_partner_tier', formData.tier);
+            localStorage.setItem('auxeira_partner_email', formData.contactEmail);
+            localStorage.setItem('auxeira_partner_company', formData.companyName);
+
+            // In production, send data to backend for verification and account creation
+            // await fetch('/api/partner/verify-payment', { ... })
+
+            // Show success message
+            alert('Payment successful! Welcome to Auxeira. Redirecting to your dashboard...');
+
+            // Redirect to dashboard
+            setTimeout(() => {
+                window.location.href = '/frontend/dashboard/share_value_partner_enhanced.html';
+            }, 1500);
+        }
+
+        // Check if already authenticated
+        window.addEventListener('DOMContentLoaded', function() {
+            const isAuthenticated = localStorage.getItem('auxeira_partner_authenticated');
+            const paymentVerified = localStorage.getItem('auxeira_payment_verified');
+            
+            if (isAuthenticated && paymentVerified) {
+                // Already authenticated, redirect to dashboard
+                window.location.href = '/frontend/dashboard/share_value_partner_enhanced.html';
+            }
+        });
+    </script>
+</body>
+</html>
+

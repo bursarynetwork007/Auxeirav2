@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auxeira - Startup Founder Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">
+                <i class="fas fa-rocket me-2"></i>
+                Auxeira - Startup Founder Dashboard
+            </span>
+            <button class="btn btn-outline-light btn-sm" onclick="logout()">
+                <i class="fas fa-sign-out-alt me-1"></i>
+                Logout
+            </button>
+        </div>
+    </nav>
+    
+    <div class="container mt-4">
+        <!-- Tabs -->
+        <ul class="nav nav-tabs mb-4" id="dashboardTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab">
+                    <i class="fas fa-tachometer-alt me-2"></i>Overview
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="metrics-tab" data-bs-toggle="tab" data-bs-target="#metrics" type="button" role="tab">
+                    <i class="fas fa-chart-line me-2"></i>Metrics
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="funding-tab" data-bs-toggle="tab" data-bs-target="#funding" type="button" role="tab">
+                    <i class="fas fa-money-bill-wave me-2"></i>Funding
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="dashboardTabContent">
+            <!-- Overview Tab -->
+            <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                <!-- Welcome Section -->
+                <div class="glass-card mb-4">
+                    <h2>Welcome, <span id="founderName">Founder</span>!</h2>
+                    <p class="text-secondary mb-0">
+                        <span id="companyName">Your Company</span> | 
+                        <span id="companyStage">Stage</span> | 
+                        SSE Score: <strong id="sseScore">--</strong>
+                    </p>
+                </div>
+
+                <!-- Key Metrics -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="metric-card">
+                            <div class="metric-value" id="mrrValue">$0</div>
+                            <div class="metric-label">Monthly Recurring Revenue</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="metric-card">
+                            <div class="metric-value" id="customersValue">0</div>
+                            <div class="metric-label">Total Customers</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="metric-card">
+                            <div class="metric-value" id="employeesValue">0</div>
+                            <div class="metric-label">Team Size</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="metric-card">
+                            <div class="metric-value" id="runwayValue">0</div>
+                            <div class="metric-label">Runway (Months)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coach Gina Section -->
+                <div class="glass-card mb-4" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15)); border: 2px solid rgba(59, 130, 246, 0.3);">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h4><i class="fas fa-robot me-2 text-primary"></i>Coach Gina - AI Startup Mentor</h4>
+                            <p class="mb-0 text-secondary">Get personalized insights and guidance based on your startup's metrics and stage</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <button class="btn btn-primary" id="openCoachGina">
+                                <i class="fas fa-comments me-2"></i>Chat with Coach Gina
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Metrics Tab -->
+            <div class="tab-pane fade" id="metrics" role="tabpanel">
+                <div class="glass-card">
+                    <h4>Detailed Metrics</h4>
+                    <p>Coming soon...</p>
+                </div>
+            </div>
+
+            <!-- Funding Tab -->
+            <div class="tab-pane fade" id="funding" role="tabpanel">
+                <div class="glass-card">
+                    <h4>Funding Readiness</h4>
+                    <p>Coming soon...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/coach-gina-chat.js"></script>
+    
+    <script>
+        // Configuration
+        const COACH_GINA_API_ENDPOINT = 'https://9t3nivd6wg.execute-api.us-east-1.amazonaws.com/prod/api/coach-gina';
+        
+        // Initialize Coach Gina
+        let coachGina;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Coach Gina Chat
+            coachGina = new CoachGinaChat(null, COACH_GINA_API_ENDPOINT);
+            
+            // Load founder data
+            loadFounderData();
+            
+            // Open Coach Gina button
+            document.getElementById('openCoachGina').addEventListener('click', function() {
+                coachGina.openChat();
+            });
+        });
+        
+        async function loadFounderData() {
+            try {
+                // Get founder data from localStorage or API
+                const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+                
+                // Update UI
+                document.getElementById('founderName').textContent = userData.name || 'Founder';
+                document.getElementById('companyName').textContent = userData.companyName || 'Your Company';
+                document.getElementById('companyStage').textContent = userData.stage || 'Early Stage';
+                document.getElementById('sseScore').textContent = userData.sseScore || '--';
+                
+                // Update metrics
+                document.getElementById('mrrValue').textContent = formatCurrency(userData.mrr || 0);
+                document.getElementById('customersValue').textContent = userData.customers || 0;
+                document.getElementById('employeesValue').textContent = userData.employees || 0;
+                document.getElementById('runwayValue').textContent = userData.runway || 0;
+                
+                // Update Coach Gina context
+                if (coachGina) {
+                    coachGina.updateFounderContext({
+                        stage: userData.stage || 'Early traction',
+                        industry: userData.industry || 'FinTech',
+                        geography: userData.geography || 'Unknown',
+                        teamSize: userData.employees || 0,
+                        runway: userData.runway || 0,
+                        mrr: userData.mrr || 0,
+                        customers: userData.customers || 0,
+                        cac: userData.cac || 0,
+                        ltv: userData.ltv || 0,
+                        churnRate: userData.churnRate || 0,
+                        nps: userData.nps || 0
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading founder data:', error);
+            }
+        }
+        
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(value);
+        }
+        
+        function logout() {
+            localStorage.clear();
+            window.location.href = '/index.html';
+        }
+    </script>
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .metric-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00d4ff;
+        }
+        
+        .metric-label {
+            color: #a1a1aa;
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+        
+        .navbar-dark {
+            background: rgba(0, 0, 0, 0.8) !important;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-tabs {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-tabs .nav-link {
+            color: #a1a1aa;
+            border: none;
+            padding: 12px 24px;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: #00d4ff;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 2px solid #00d4ff;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+        }
+    </style>
+</body>
+</html>
