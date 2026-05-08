@@ -6,20 +6,19 @@ import { sendEmail } from "@/lib/mailer";
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 const TABLE = process.env.DYNAMODB_HEALTH_CHECK_TABLE ?? "auxeira-health-checks";
-const MANUS_BASE = "https://api.manus.ai";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 interface ManusWebhookPayload {
-  task_id?: string;
-  submission_id?: string;
-  status?: string;
-}
-
-interface ManusMessage {
-  role: string;
-  content: string;
-  created_at?: string;
+  event_type: string;
+  task_detail: {
+    task_id: string;
+    stop_reason: "finish" | "ask" | string;
+    structured_output?: {
+      success: boolean;
+      value?: ManusResearchResult;
+    };
+  };
 }
 
 interface ManusResearchResult {
@@ -29,7 +28,6 @@ interface ManusResearchResult {
   sector_context?: string;
   gap_risks?: string;
   funding_risk_estimate?: string;
-  [key: string]: unknown;
 }
 
 interface SubmissionRecord {
@@ -43,53 +41,6 @@ interface SubmissionRecord {
   topGaps: string[];
   tierRecommendation: number;
   manusTaskId?: string;
-  answers: Record<string, string>;
-}
-
-// ── Manus API helpers ─────────────────────────────────────────────────────────
-
-function manusHeaders(): HeadersInit {
-  return {
-    "Content-Type": "application/json",
-    "x-manus-api-key": process.env.MANUS_API_KEY!,
-  };
-}
-
-async function fetchManusMessages(taskId: string): Promise<ManusMessage[]> {
-  const res = await fetch(`${MANUS_BASE}/v2/task.listMessages?task_id=${taskId}`, {
-    headers: manusHeaders(),
-  });
-  if (!res.ok) throw new Error(`Manus listMessages ${res.status}: ${await res.text()}`);
-  const data = await res.json() as { messages?: ManusMessage[] };
-  return data.messages ?? [];
-}
-
-async function fetchManusTaskDetail(taskId: string): Promise<{ status: string; result?: string }> {
-  const res = await fetch(`${MANUS_BASE}/v2/task.detail?task_id=${taskId}`, {
-    headers: manusHeaders(),
-  });
-  if (!res.ok) throw new Error(`Manus task.detail ${res.status}: ${await res.text()}`);
-  return res.json() as Promise<{ status: string; result?: string }>;
-}
-
-function extractResearchFromMessages(messages: ManusMessage[]): ManusResearchResult | null {
-  // Walk assistant messages newest-first, looking for a JSON block
-  const assistantMessages = messages.filter((m) => m.role === "assistant").reverse();
-
-  for (const msg of assistantMessages) {
-    const jsonMatch = msg.content.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      try {
-        return JSON.parse(jsonMatch[0]) as ManusResearchResult;
-      } catch {
-        // Not valid JSON — try next message
-      }
-    }
-  }
-
-  // Fallback: use the last assistant message as the overview
-  const last = assistantMessages[0];
-  return last ? { overview: last.content } : null;
 }
 
 // ── Webhook handler ───────────────────────────────────────────────────────────
@@ -106,52 +57,47 @@ export async function POST(req: NextRequest) {
     }
 
     const payload = (await req.json()) as ManusWebhookPayload;
-    const { task_id: taskId, submission_id: submissionId } = payload;
+    const { event_type, task_detail } = payload;
 
-    if (!taskId && !submissionId) {
-      return NextResponse.json({ error: "Missing task_id or submission_id" }, { status: 400 });
+    // Only process task completion events
+    if (event_type !== "task_stopped") {
+      return NextResponse.json({ received: true });
     }
 
-    // Look up the submission
-    const submission = submissionId
-      ? await getSubmissionById(submissionId)
-      : taskId
-      ? await getSubmissionByTaskId(taskId)
-      : null;
+    const { task_id, stop_reason, structured_output } = task_detail;
 
+    // Task needs clarification — log and return; no report generated
+    if (stop_reason === "ask") {
+      console.warn(`Manus task ${task_id} stopped with stop_reason=ask — needs clarification`);
+      await markFailed(task_id, "Manus task stopped: needs clarification");
+      return NextResponse.json({ received: true });
+    }
+
+    // Task finished but structured output missing or failed
+    if (stop_reason !== "finish" || !structured_output?.success || !structured_output.value) {
+      console.error(`Manus task ${task_id} finished without usable structured output`, structured_output);
+      await markFailed(task_id, `stop_reason=${stop_reason}, structured_output.success=${structured_output?.success}`);
+      return NextResponse.json({ received: true });
+    }
+
+    const research = structured_output.value;
+
+    // Look up the submission by task_id
+    const submission = await getSubmissionByTaskId(task_id);
     if (!submission) {
-      console.error("No submission found — task_id:", taskId, "submission_id:", submissionId);
+      console.error("No submission found for Manus task_id:", task_id);
       return NextResponse.json({ error: "Submission not found" }, { status: 404 });
     }
 
-    const resolvedTaskId = taskId ?? submission.manusTaskId;
-    if (!resolvedTaskId) {
-      return NextResponse.json({ error: "No Manus task_id on record" }, { status: 400 });
-    }
-
-    // Verify task is complete via task.detail
-    let taskDetail: { status: string };
-    try {
-      taskDetail = await fetchManusTaskDetail(resolvedTaskId);
-    } catch (err) {
-      console.error("Manus task.detail failed:", err);
-      return NextResponse.json({ error: "Failed to fetch task detail" }, { status: 502 });
-    }
-
-    if (taskDetail.status !== "completed") {
-      // Return 200 — Manus will retry or we'll receive another webhook
-      console.log(`Manus task ${resolvedTaskId} not yet complete: ${taskDetail.status}`);
-      return NextResponse.json({ received: true, status: taskDetail.status });
-    }
-
-    // Pull messages and extract research output
-    let research: ManusResearchResult = {};
-    try {
-      const messages = await fetchManusMessages(resolvedTaskId);
-      research = extractResearchFromMessages(messages) ?? {};
-    } catch (err) {
-      console.error("Manus listMessages failed:", err);
-    }
+    // Mark as processing
+    await dynamo.send(
+      new UpdateCommand({
+        TableName: TABLE,
+        Key: { id: submission.id },
+        UpdateExpression: "SET reportStatus = :s",
+        ExpressionAttributeValues: { ":s": "processing" },
+      })
+    );
 
     // Generate the full report with Claude
     const reportHtml = await generateReport(submission, research);
@@ -163,7 +109,7 @@ export async function POST(req: NextRequest) {
       html: reportHtml,
     });
 
-    // Mark as sent in DynamoDB
+    // Mark as sent
     await dynamo.send(
       new UpdateCommand({
         TableName: TABLE,
@@ -182,7 +128,7 @@ export async function POST(req: NextRequest) {
       await sendEmail({
         to: notifyEmail,
         subject: `Report sent: ${submission.orgName} (${submission.email})`,
-        html: `<p>Entity Evidence Risk Report delivered to <strong>${submission.email}</strong> for <strong>${submission.orgName}</strong>.</p><p>Manus task: <code>${resolvedTaskId}</code></p>`,
+        html: `<p>Entity Evidence Risk Report delivered to <strong>${submission.email}</strong> for <strong>${submission.orgName}</strong>.</p><p>Manus task: <code>${task_id}</code></p>`,
       });
     } catch {
       // Non-critical
@@ -195,24 +141,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// ── DynamoDB lookups ──────────────────────────────────────────────────────────
-
-async function getSubmissionById(id: string): Promise<SubmissionRecord | null> {
-  try {
-    const result = await dynamo.send(
-      new UpdateCommand({
-        TableName: TABLE,
-        Key: { id },
-        UpdateExpression: "SET reportStatus = :s",
-        ExpressionAttributeValues: { ":s": "processing" },
-        ReturnValues: "ALL_NEW",
-      })
-    ) as { Attributes?: SubmissionRecord };
-    return result.Attributes ?? null;
-  } catch {
-    return null;
-  }
-}
+// ── DynamoDB helpers ──────────────────────────────────────────────────────────
 
 async function getSubmissionByTaskId(taskId: string): Promise<SubmissionRecord | null> {
   try {
@@ -226,9 +155,27 @@ async function getSubmissionByTaskId(taskId: string): Promise<SubmissionRecord |
       })
     );
     return (result.Items?.[0] as SubmissionRecord) ?? null;
-  } catch {
-    console.warn("GSI lookup failed — include submission_id in webhook payload for reliability");
+  } catch (err) {
+    console.error("DynamoDB GSI lookup failed:", err);
     return null;
+  }
+}
+
+async function markFailed(taskId: string, reason: string) {
+  try {
+    // Best-effort — look up by task_id and mark failed
+    const submission = await getSubmissionByTaskId(taskId);
+    if (!submission) return;
+    await dynamo.send(
+      new UpdateCommand({
+        TableName: TABLE,
+        Key: { id: submission.id },
+        UpdateExpression: "SET reportStatus = :s, reportFailReason = :r",
+        ExpressionAttributeValues: { ":s": "failed", ":r": reason },
+      })
+    );
+  } catch {
+    // Best-effort
   }
 }
 

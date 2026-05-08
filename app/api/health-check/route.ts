@@ -59,6 +59,19 @@ Return a JSON object with exactly these keys:
 
 Be specific to this organisation. Use publicly available information only.`;
 
+  const structuredOutputSchema = {
+    type: "object",
+    properties: {
+      overview:                { type: "string" },
+      evidence_landscape:      { type: "string" },
+      funders:                 { type: "string" },
+      sector_context:          { type: "string" },
+      gap_risks:               { type: "string" },
+      funding_risk_estimate:   { type: "string" },
+    },
+    required: ["overview", "evidence_landscape", "funders", "sector_context", "gap_risks", "funding_risk_estimate"],
+  };
+
   try {
     const res = await fetch(`${MANUS_BASE}/v2/task.create`, {
       method: "POST",
@@ -66,7 +79,10 @@ Be specific to this organisation. Use publicly available information only.`;
         "Content-Type": "application/json",
         "x-manus-api-key": apiKey,
       },
-      body: JSON.stringify({ prompt }),
+      body: JSON.stringify({
+        prompt,
+        structured_output_schema: structuredOutputSchema,
+      }),
     });
 
     if (!res.ok) {
@@ -75,7 +91,6 @@ Be specific to this organisation. Use publicly available information only.`;
     }
 
     const data = await res.json() as Record<string, unknown>;
-    // Manus v2 returns { task_id: "..." }
     return (data.task_id ?? data.id) as string | null;
   } catch (err) {
     console.error("Manus trigger failed:", err);
