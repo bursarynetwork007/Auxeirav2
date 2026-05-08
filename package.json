@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.95.1",
     "@aws-sdk/client-amplify": "^3.1044.0",
     "@aws-sdk/client-dynamodb": "^3.1043.0",
     "@aws-sdk/client-iam": "^3.1043.0",
@@ -24,6 +25,7 @@
     "react": "19.2.4",
     "react-chartjs-2": "^5.3.1",
     "react-dom": "19.2.4",
+    "resend": "^6.12.3",
     "uuid": "^14.0.0"
   },
   "devDependencies": {

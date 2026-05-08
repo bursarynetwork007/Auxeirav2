@@ -129,6 +129,16 @@ export function getTierRecommendation(answers: HealthCheckAnswers): {
   };
 }
 
+export function getPrimaryGapLabel(answers: HealthCheckAnswers): string {
+  const map: Record<string, string> = {
+    "strong-data-not-acting": "Translation",
+    "havent-measured-return": "Economic Evidence",
+    "reports-wrong-format": "Communication Architecture",
+    "not-enough-data": "Evidence Foundation",
+  };
+  return map[answers.q6] ?? "Translation";
+}
+
 export function getTopGaps(answers: HealthCheckAnswers): string[] {
   const gaps: string[] = [];
 

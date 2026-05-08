@@ -59,7 +59,7 @@ function parseInsight(text: string) {
 
 export async function POST(req: NextRequest) {
   try {
-    const { orgType, audience, score, challenge } = await req.json();
+    const { orgType, audience, score, challenge, orgName, orgUrl, orgSize } = await req.json();
 
     const apiKey = process.env.ANTHROPIC_API_KEY;
 
@@ -68,10 +68,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ insight: parseInsight(FALLBACK), source: "fallback" });
     }
 
+    const orgContext = [
+      orgName ? `Organisation name: ${orgName}` : null,
+      orgUrl ? `Website: ${orgUrl}` : null,
+      orgSize ? `Organisation size: ${orgSize}` : null,
+    ].filter(Boolean).join("\n");
+
     const userPrompt = `Organisation type: ${orgType}
 Primary audience: ${audience}
 Evidence Health Score: ${score}/100
-Biggest evidence challenge: ${challenge}
+Biggest evidence challenge: ${challenge}${orgContext ? `\n${orgContext}` : ""}
 
 Generate the competitive landscape insight.`;
 

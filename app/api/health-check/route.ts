@@ -1,28 +1,102 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PutCommand } from "@aws-sdk/lib-dynamodb";
+import { PutCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from "uuid";
 import { dynamo } from "@/lib/dynamodb";
 import { sendEmail } from "@/lib/mailer";
 import { subscribeToForm } from "@/lib/convertkit";
 import {
-  calculateScore,
   getScoreBand,
   getTierRecommendation,
   getTopGaps,
+  getPrimaryGapLabel,
   type HealthCheckAnswers,
 } from "@/lib/healthCheckScoring";
 
+// ── Types ─────────────────────────────────────────────────────────────────────
+
+interface HealthCheckBody {
+  answers: HealthCheckAnswers;
+  score: number;
+  firstName: string;
+  lastName?: string;
+  orgName: string;
+  jobTitle?: string;
+  email: string;
+  orgUrl?: string;
+  orgSize?: string;
+}
+
+// ── Manus research task ───────────────────────────────────────────────────────
+
+async function triggerManusResearch(params: {
+  submissionId: string;
+  orgName: string;
+  orgUrl?: string;
+  primaryGap: string;
+  score: number;
+}): Promise<string | null> {
+  const endpoint = process.env.MANUS_API_ENDPOINT;
+  const apiKey = process.env.MANUS_API_KEY;
+
+  if (!endpoint || endpoint === "your_endpoint" || !apiKey) {
+    console.warn("Manus API not configured — skipping research task");
+    return null;
+  }
+
+  try {
+    const res = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        task: `Research the organisation "${params.orgName}" for an Evidence Risk Report.
+Website: ${params.orgUrl ?? "unknown"}
+Primary evidence gap: ${params.primaryGap}
+Evidence Health Score: ${params.score}/100
+
+Provide:
+1. Organisation overview (mission, programmes, scale, geography)
+2. Current evidence and evaluation landscape
+3. Key funders and decision-maker audience
+4. Sector competitive context
+5. Specific risks related to the primary gap: ${params.primaryGap}
+6. 3-year funding risk estimate based on evidence gaps
+
+Return structured JSON with keys: overview, evidence_landscape, funders, sector_context, gap_risks, funding_risk_estimate`,
+        metadata: {
+          submission_id: params.submissionId,
+          webhook_url: `${process.env.NEXT_PUBLIC_SITE_URL ?? ""}/api/webhooks/manus`,
+        },
+      }),
+    });
+
+    if (!res.ok) {
+      console.error("Manus API error:", res.status, await res.text());
+      return null;
+    }
+
+    const data = await res.json() as Record<string, unknown>;
+    // Field name confirmed once Manus docs are available
+    return (data.task_id ?? data.id ?? data.taskId) as string | null;
+  } catch (err) {
+    console.error("Manus trigger failed:", err);
+    return null;
+  }
+}
+
+// ── Route handler ─────────────────────────────────────────────────────────────
+
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { answers, score, firstName, email } = body as {
-      answers: HealthCheckAnswers;
-      score: number;
-      firstName?: string;
-      email: string;
-    };
+    const body = (await req.json()) as HealthCheckBody;
+    const {
+      answers, score,
+      firstName, lastName, orgName, jobTitle, email, orgUrl, orgSize,
+    } = body;
 
-    if (!email || !answers) {
+    if (!email || !answers || !firstName || !orgName) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
@@ -31,8 +105,9 @@ export async function POST(req: NextRequest) {
     const scoreBand = getScoreBand(score);
     const tierRec = getTierRecommendation(answers);
     const topGaps = getTopGaps(answers);
+    const primaryGap = getPrimaryGapLabel(answers);
 
-    // 1. Store in DynamoDB
+    // 1. Store submission
     try {
       await dynamo.send(
         new PutCommand({
@@ -41,21 +116,52 @@ export async function POST(req: NextRequest) {
             id,
             timestamp,
             email,
-            firstName: firstName ?? "",
+            firstName,
+            lastName: lastName ?? "",
+            orgName,
+            jobTitle: jobTitle ?? "",
+            orgUrl: orgUrl ?? "",
+            orgSize: orgSize ?? "",
             answers,
             score,
             scoreBand: scoreBand.label,
             tierRecommendation: tierRec.tier,
             topGaps,
+            primaryGap,
+            manusTaskId: null,
+            reportStatus: "pending",
           },
         })
       );
     } catch (dbErr) {
       console.error("DynamoDB write failed:", dbErr);
-      // Continue, don't block the user
     }
 
-    // 2. Subscribe to ConvertKit (health-check form)
+    // 2. Trigger Manus research (async — result delivered via webhook)
+    const manusTaskId = await triggerManusResearch({
+      submissionId: id,
+      orgName,
+      orgUrl,
+      primaryGap,
+      score,
+    });
+
+    if (manusTaskId) {
+      try {
+        await dynamo.send(
+          new UpdateCommand({
+            TableName: process.env.DYNAMODB_HEALTH_CHECK_TABLE ?? "auxeira-health-checks",
+            Key: { id },
+            UpdateExpression: "SET manusTaskId = :tid, reportStatus = :s",
+            ExpressionAttributeValues: { ":tid": manusTaskId, ":s": "researching" },
+          })
+        );
+      } catch (dbErr) {
+        console.error("DynamoDB task_id update failed:", dbErr);
+      }
+    }
+
+    // 3. ConvertKit subscribe
     try {
       const formId = process.env.CONVERTKIT_FORM_ID_CAPABILITY;
       if (formId && formId !== "placeholder") {
@@ -69,6 +175,7 @@ export async function POST(req: NextRequest) {
             tier_recommendation: String(tierRec.tier),
             top_gap_1: topGaps[0] ?? "",
             top_gap_2: topGaps[1] ?? "",
+            org_name: orgName,
           },
         });
       }
@@ -76,59 +183,54 @@ export async function POST(req: NextRequest) {
       console.error("ConvertKit subscribe failed:", ckErr);
     }
 
-    // 3. Send results email to respondent via SES
+    // 4. Acknowledgement email to respondent
     try {
-      const resultsHtml = buildResultsEmail({
-        firstName,
-        score,
-        scoreBand,
-        tierRec,
-        topGaps,
-      });
       await sendEmail({
         to: email,
-        subject: `Your Auxeira Evidence Health Check, Score: ${score}/100`,
-        html: resultsHtml,
+        subject: "Your Auxeira Evidence Risk Report is being prepared",
+        html: buildAckEmail({ firstName, orgName, primaryGap, score, scoreBand }),
       });
-    } catch (sesErr) {
-      console.error("SES results email failed:", sesErr);
+    } catch (emailErr) {
+      console.error("Ack email failed:", emailErr);
     }
 
-    // 4. Notify Auxeira internally
+    // 5. Internal lead notification
     try {
       const notifyEmail = process.env.LEAD_NOTIFICATION_EMAIL ?? "info@auxeira.com";
       await sendEmail({
         to: notifyEmail,
-        subject: `New Health Check Lead, Score ${score}/100, ${email}`,
-        html: buildLeadNotificationEmail({ email, firstName, score, answers, scoreBand, tierRec, topGaps }),
+        subject: `New Health Check: ${orgName} — Score ${score}/100`,
+        html: buildLeadNotificationEmail({
+          email, firstName, lastName, orgName, jobTitle, orgUrl, orgSize,
+          score, answers, scoreBand, tierRec, topGaps, primaryGap, manusTaskId,
+        }),
       });
     } catch (notifyErr) {
-      console.error("Lead notification email failed:", notifyErr);
+      console.error("Lead notification failed:", notifyErr);
     }
 
-    return NextResponse.json({ success: true, score, id });
+    return NextResponse.json({ success: true, score, id, primaryGap, manusTaskId });
   } catch (err) {
     console.error("Health check API error:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
-// ─── Email templates ──────────────────────────────────────────────────────────
+// ── Email templates ───────────────────────────────────────────────────────────
 
-function buildResultsEmail({
+function buildAckEmail({
   firstName,
+  orgName,
+  primaryGap,
   score,
   scoreBand,
-  tierRec,
-  topGaps,
 }: {
-  firstName?: string;
+  firstName: string;
+  orgName: string;
+  primaryGap: string;
   score: number;
   scoreBand: ReturnType<typeof getScoreBand>;
-  tierRec: ReturnType<typeof getTierRecommendation>;
-  topGaps: string[];
 }) {
-  const name = firstName ? `, ${firstName}` : "";
   const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL ?? "https://auxeira.com/#cta";
 
   return `<!DOCTYPE html>
@@ -138,42 +240,46 @@ function buildResultsEmail({
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#F5F0E8;padding:40px 20px;">
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
-        <!-- Header -->
         <tr><td style="background:#0A1628;padding:32px 40px;">
           <p style="margin:0;font-size:22px;font-weight:600;color:#C9A84C;letter-spacing:4px;text-transform:uppercase;">Auxeira</p>
         </td></tr>
-        <!-- Score -->
         <tr><td style="background:#0A1628;padding:0 40px 40px;">
-          <p style="margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:3px;color:#C9A84C;">Your Evidence Health Score</p>
-          <p style="margin:0;font-size:64px;font-weight:700;color:#C9A84C;line-height:1;">${score}<span style="font-size:24px;color:#F5F0E8;opacity:0.4;">/100</span></p>
-          <p style="margin:8px 0 0;font-size:18px;color:#F5F0E8;font-weight:500;">${scoreBand.label}</p>
-          <p style="margin:4px 0 0;font-size:14px;color:#F5F0E8;opacity:0.6;">${scoreBand.description}</p>
+          <p style="margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:3px;color:#C9A84C;">Evidence Health Score</p>
+          <p style="margin:0;font-size:56px;font-weight:700;color:#C9A84C;line-height:1;">${score}<span style="font-size:20px;color:#F5F0E8;opacity:0.4;">/100</span></p>
+          <p style="margin:8px 0 0;font-size:16px;color:#F5F0E8;font-weight:500;">${scoreBand.label}</p>
         </td></tr>
-        <!-- Body -->
         <tr><td style="background:#ffffff;padding:40px;">
-          <p style="margin:0 0 24px;font-size:16px;line-height:1.6;color:#1A1A2A;">Hi${name},</p>
-          <p style="margin:0 0 24px;font-size:15px;line-height:1.7;color:#1A1A2A;opacity:0.8;">Here is your full Evidence Impact Report, your score, your two biggest gaps, and a recommended next step.</p>
-
-          ${topGaps.length > 0 ? `
-          <p style="margin:0 0 12px;font-size:11px;text-transform:uppercase;letter-spacing:3px;color:#C9A84C;font-weight:600;">Your Two Biggest Gaps</p>
-          ${topGaps.map(gap => `
-          <div style="border:1px solid #C9A84C;border-left:3px solid #C9A84C;padding:14px 16px;margin-bottom:10px;">
-            <p style="margin:0;font-size:14px;line-height:1.6;color:#1A1A2A;">${gap}</p>
-          </div>`).join("")}
-          <br>` : ""}
-
-          <p style="margin:0 0 12px;font-size:11px;text-transform:uppercase;letter-spacing:3px;color:#C9A84C;font-weight:600;">Recommended Starting Point</p>
-          <div style="background:#0A1628;padding:20px 24px;margin-bottom:32px;">
-            <p style="margin:0 0 4px;font-size:16px;font-weight:600;color:#F5F0E8;">${tierRec.label}</p>
-            <p style="margin:0;font-size:13px;color:#F5F0E8;opacity:0.6;">${tierRec.description}</p>
+          <p style="margin:0 0 20px;font-size:16px;line-height:1.6;">Hi ${firstName},</p>
+          <p style="margin:0 0 20px;font-size:15px;line-height:1.7;opacity:0.8;">
+            We're researching <strong>${orgName}</strong> and running your diagnostic through Auxeira's Evidence Intelligence Framework.
+            Your full <strong>Entity Evidence Risk Report</strong> will arrive within 2 hours.
+          </p>
+          <div style="border-left:3px solid #C9A84C;padding:14px 20px;margin:24px 0;background:#F5F0E8;">
+            <p style="margin:0 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:3px;color:#C9A84C;font-weight:600;">Your primary evidence gap</p>
+            <p style="margin:0;font-size:18px;font-weight:600;color:#0A1628;">${primaryGap}</p>
           </div>
-
-          <a href="${calendlyUrl}" style="display:inline-block;background:#C9A84C;color:#0A1628;padding:14px 28px;font-size:14px;font-weight:600;text-decoration:none;letter-spacing:1px;">${scoreBand.ctaText}</a>
+          <p style="margin:0 0 12px;font-size:13px;opacity:0.6;">Your full report will include:</p>
+          <ul style="margin:0 0 32px;padding-left:20px;">
+            ${[
+              "Evidence Health Score with sector benchmark",
+              "Top 3 risks and estimated funding at risk",
+              "3-year counterfactual funding forecast",
+              "Recommended Auxeira intervention and tier",
+              "Sector competitive landscape analysis",
+            ].map(item => `<li style="font-size:13px;line-height:1.8;opacity:0.75;">${item}</li>`).join("")}
+          </ul>
+          <div style="background:#0A1628;padding:20px 24px;margin-bottom:32px;">
+            <p style="margin:0 0 12px;font-size:14px;color:#F5F0E8;opacity:0.7;line-height:1.6;">
+              You're at peak clarity about your evidence gaps right now. Book your Evidence Strategy Call while it's fresh.
+            </p>
+            <a href="${calendlyUrl}" style="display:inline-block;background:#C9A84C;color:#0A1628;padding:12px 24px;font-size:13px;font-weight:600;text-decoration:none;letter-spacing:1px;">
+              Book your Evidence Strategy Call →
+            </a>
+          </div>
+          <p style="margin:0;font-size:12px;opacity:0.4;">Can't find the report? Check your spam folder or reply to this email.</p>
         </td></tr>
-        <!-- Footer -->
         <tr><td style="background:#0A1628;padding:24px 40px;">
           <p style="margin:0;font-size:12px;color:#F5F0E8;opacity:0.4;">Auxeira · info@auxeira.com · Johannesburg, South Africa</p>
-          <p style="margin:8px 0 0;font-size:11px;color:#F5F0E8;opacity:0.3;">You received this because you completed the Auxeira Evidence Health Check. <a href="#" style="color:#C9A84C;">Unsubscribe</a></p>
         </td></tr>
       </table>
     </td></tr>
@@ -183,38 +289,51 @@ function buildResultsEmail({
 }
 
 function buildLeadNotificationEmail({
-  email,
-  firstName,
-  score,
-  answers,
-  scoreBand,
-  tierRec,
-  topGaps,
+  email, firstName, lastName, orgName, jobTitle, orgUrl, orgSize,
+  score, answers, scoreBand, tierRec, topGaps, primaryGap, manusTaskId,
 }: {
   email: string;
-  firstName?: string;
+  firstName: string;
+  lastName?: string;
+  orgName: string;
+  jobTitle?: string;
+  orgUrl?: string;
+  orgSize?: string;
   score: number;
   answers: HealthCheckAnswers;
   scoreBand: ReturnType<typeof getScoreBand>;
   tierRec: ReturnType<typeof getTierRecommendation>;
   topGaps: string[];
+  primaryGap: string;
+  manusTaskId: string | null;
 }) {
   const answerRows = Object.entries(answers)
-    .map(([k, v]) => `<tr><td style="padding:6px 12px;font-size:13px;color:#666;border-bottom:1px solid #eee;">${k}</td><td style="padding:6px 12px;font-size:13px;color:#1A1A2A;border-bottom:1px solid #eee;">${v}</td></tr>`)
+    .map(([k, v]) => `<tr><td style="padding:6px 12px;font-size:13px;color:#666;border-bottom:1px solid #eee;width:100px;">${k}</td><td style="padding:6px 12px;font-size:13px;color:#1A1A2A;border-bottom:1px solid #eee;">${v}</td></tr>`)
     .join("");
 
   return `<!DOCTYPE html>
-<html><body style="font-family:Arial,sans-serif;color:#1A1A2A;padding:32px;">
-  <h2 style="color:#0A1628;">New Health Check Lead</h2>
-  <p><strong>Email:</strong> ${email}</p>
-  <p><strong>Name:</strong> ${firstName ?? ","}</p>
-  <p><strong>Score:</strong> ${score}/100, ${scoreBand.label}</p>
-  <p><strong>Tier Recommendation:</strong> ${tierRec.label}</p>
-  <p><strong>Top Gaps:</strong></p>
-  <ul>${topGaps.map(g => `<li>${g}</li>`).join("")}</ul>
-  <h3>Full Answers</h3>
-  <table style="border-collapse:collapse;width:100%;max-width:500px;">
-    <thead><tr><th style="text-align:left;padding:6px 12px;background:#f5f5f5;">Question</th><th style="text-align:left;padding:6px 12px;background:#f5f5f5;">Answer</th></tr></thead>
+<html><body style="font-family:Arial,sans-serif;color:#1A1A2A;padding:32px;max-width:600px;">
+  <h2 style="color:#0A1628;margin-bottom:4px;">New Health Check Submission</h2>
+  <p style="color:#C9A84C;font-size:13px;margin-top:0;">${new Date().toISOString()}</p>
+  <table style="border-collapse:collapse;width:100%;margin-bottom:24px;">
+    <tr><td style="padding:6px 12px;font-size:13px;color:#666;border-bottom:1px solid #eee;width:140px;">Name</td><td style="padding:6px 12px;font-size:13px;">${firstName} ${lastName ?? ""}</td></tr>
+    <tr><td style="padding:6px 12px;font-size:13px;color:#666;border-bottom:1px solid #eee;">Email</td><td style="padding:6px 12px;font-size:13px;">${email}</td></tr>
+    <tr><td style="padding:6px 12px;font-size:13px;color:#666;border-bottom:1px solid #eee;">Organisation</td><td style="padding:6px 12px;font-size:13px;">${orgName}</td></tr>
+    <tr><td style="padding:6px 12px;font-size:13px;color:#666;border-bottom:1px solid #eee;">Job Title</td><td style="padding:6px 12px;font-size:13px;">${jobTitle ?? "—"}</td></tr>
+    <tr><td style="padding:6px 12px;font-size:13px;color:#666;border-bottom:1px solid #eee;">Website</td><td style="padding:6px 12px;font-size:13px;">${orgUrl ? `<a href="${orgUrl}">${orgUrl}</a>` : "—"}</td></tr>
+    <tr><td style="padding:6px 12px;font-size:13px;color:#666;border-bottom:1px solid #eee;">Org Size</td><td style="padding:6px 12px;font-size:13px;">${orgSize ?? "—"}</td></tr>
+    <tr><td style="padding:6px 12px;font-size:13px;color:#666;border-bottom:1px solid #eee;">Score</td><td style="padding:6px 12px;font-size:13px;font-weight:bold;">${score}/100 — ${scoreBand.label}</td></tr>
+    <tr><td style="padding:6px 12px;font-size:13px;color:#666;border-bottom:1px solid #eee;">Primary Gap</td><td style="padding:6px 12px;font-size:13px;color:#C9A84C;font-weight:bold;">${primaryGap}</td></tr>
+    <tr><td style="padding:6px 12px;font-size:13px;color:#666;border-bottom:1px solid #eee;">Tier Rec.</td><td style="padding:6px 12px;font-size:13px;">${tierRec.label}</td></tr>
+    <tr><td style="padding:6px 12px;font-size:13px;color:#666;border-bottom:1px solid #eee;">Manus Task ID</td><td style="padding:6px 12px;font-size:13px;">${manusTaskId ?? "not triggered"}</td></tr>
+  </table>
+  <p style="font-size:13px;color:#666;">Top gaps: ${topGaps.join(" · ")}</p>
+  <h3 style="margin-top:24px;">Full Answers</h3>
+  <table style="border-collapse:collapse;width:100%;">
+    <thead><tr>
+      <th style="text-align:left;padding:6px 12px;background:#f5f5f5;font-size:12px;">Question</th>
+      <th style="text-align:left;padding:6px 12px;background:#f5f5f5;font-size:12px;">Answer</th>
+    </tr></thead>
     <tbody>${answerRows}</tbody>
   </table>
 </body></html>`;
