@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auxeira — Evidence Health Check Results</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#F5F0E8;padding:1.5rem;color:#1A1A2A;max-width:680px;margin:0 auto}
+.navy-card{background:#0A1628;border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1rem}
+.gold{color:#C9A84C}
+.label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;margin-bottom:8px}
+.section-card{border:0.5px solid #DDDDDD;border-radius:12px;padding:1.25rem;margin-bottom:1rem;background:#FFFFFF}
+.risk-row{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:0.5px solid #EEEEEE}
+.risk-row:last-child{border-bottom:none}
+.risk-num{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
+.proj-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:1rem}
+.proj-card{border-radius:8px;padding:10px 12px;border:0.5px solid}
+.score-ring{width:88px;height:88px;border-radius:50%;border:3px solid #C9A84C;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+.grade-badge{display:inline-block;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:700;margin-bottom:6px}
+.btn-gold{background:#C9A84C;color:#0A1628;border:none;padding:13px 22px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;width:100%;margin-bottom:8px}
+.btn-ghost{background:transparent;color:#666;border:0.5px solid #BBBBBB;padding:11px 18px;border-radius:8px;font-size:12px;cursor:pointer;width:100%}
+.metric-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid #EEEEEE;font-size:12px}
+.metric-row:last-child{border-bottom:none}
+.loss-box{background:#FDF8EE;border:1px solid #C9A84C;border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1rem}
+.demo-bar{background:#E8E8E8;border-radius:8px;padding:10px 14px;margin-bottom:1rem;font-size:12px;color:#555;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.scale-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;text-align:center}
+</style>
+</head>
+<body>
+
+<div class="demo-bar">
+  <strong style="color:#1A1A2A">Demo — adjust score and budget:</strong>
+  Score: <input type="range" min="0" max="100" value="58" id="scoreSlider" oninput="updateScore(this.value)" style="flex:1;min-width:80px">
+  <strong id="scoreVal" style="color:#C9A84C;min-width:30px">58</strong>
+  Budget:
+  <select id="budgetSel" onchange="render()" style="font-size:12px;padding:3px 6px">
+    <option value="1">Under R5M</option>
+    <option value="2" selected>R5M–R20M</option>
+    <option value="3">R20M–R100M</option>
+    <option value="4">Over R100M</option>
+  </select>
+</div>
+
+<div id="results"></div>
+
+<script>
+let score = 58;
+
+const BANDS = [
+  {min:75,max:100,label:'Strong foundation',grade:'Strong',gradeColor:'#1D9E75',gradeBg:'rgba(29,158,117,0.12)',headline:'Your evidence is strong. Your gap is translation.',riskLevel:'Low'},
+  {min:50,max:74,label:'Solid base, significant gap',grade:'Moderate',gradeColor:'#C9A84C',gradeBg:'rgba(201,168,76,0.15)',headline:'You have more evidence than you think. It\'s not working hard enough.',riskLevel:'Medium'},
+  {min:25,max:49,label:'Significant gaps — urgent',grade:'Needs attention',gradeColor:'#D85A30',gradeBg:'rgba(216,90,48,0.12)',headline:'Your evidence gaps are likely costing you funding and policy traction right now.',riskLevel:'High'},
+  {min:0,max:24,label:'Critical gaps',grade:'Critical',gradeColor:'#E24B4A',gradeBg:'rgba(226,75,74,0.12)',headline:'Critical evidence gaps. Important decisions are being made without your story.',riskLevel:'Critical'}
+];
+
+const PROJECTIONS = {
+  1:{funding:'R500K–R2M',influence:'25–40%',opportunity:'R1–3M over 3 years',scale:'R5M+ unlocked with strong evidence framing'},
+  2:{funding:'R2M–R8M',influence:'30–45%',opportunity:'R5–15M over 3 years',scale:'R15M+ unlocked with strong evidence framing'},
+  3:{funding:'R8M–R25M',influence:'35–50%',opportunity:'R15–40M over 3 years',scale:'R40M+ unlocked with strong evidence framing'},
+  4:{funding:'R25M–R80M',influence:'40–60%',opportunity:'R50M+ over 3 years',scale:'Portfolio-level impact across multiple funding streams'}
+};
+
+const RISKS = [
+  {score:[0,49],
+   r1:'Weak economic framing — likely difficulty securing large Treasury allocations or government co-funding.',
+   r2:'Low persuasiveness — funder proposals may be deprioritised in competitive funding rounds.',
+   r3:'Poor audience alignment — policy influence remains limited despite strong programme delivery.'},
+  {score:[50,74],
+   r1:'Partial economic framing — SROI or fiscal impact data exists but isn\'t being used to maximum effect in funder conversations.',
+   r2:'Translation gap — evidence reaches funders but isn\'t converting to decisions at the rate it should.',
+   r3:'Sector positioning — the economic case for your work hasn\'t been made at Treasury or policy level.'},
+  {score:[75,100],
+   r1:'Translation polish — strong evidence base, but audience-specific framing can be sharpened further.',
+   r2:'Economic narrative — the full fiscal return of your programme may not yet be quantified.',
+   r3:'Funder language — the gap between your evidence quality and funding success can still be closed.'}
+];
+
+function getBand(s){return BANDS.find(b=>s>=b.min&&s<=b.max)||BANDS[3];}
+function getProj(){return PROJECTIONS[parseInt(document.getElementById('budgetSel').value||2)];}
+function getRisks(s){return RISKS.find(r=>s>=r.score[0]&&s<=r.score[1])||RISKS[1];}
+function sc(s){return s>=75?'#1D9E75':s>=50?'#C9A84C':s>=25?'#D85A30':'#E24B4A';}
+
+function updateScore(v){score=parseInt(v);document.getElementById('scoreVal').textContent=v;render();}
+
+function render(){
+  const band=getBand(score);
+  const proj=getProj();
+  const risks=getRisks(score);
+  const col=sc(score);
+
+  document.getElementById('results').innerHTML=`
+  <div class="navy-card">
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:1.25rem;align-items:center;margin-bottom:1rem">
+      <div class="score-ring">
+        <div style="font-size:26px;font-weight:700;color:#C9A84C">${score}</div>
+        <div style="font-size:10px;color:rgba(245,240,232,0.4)">/100</div>
+      </div>
+      <div>
+        <span class="grade-badge" style="background:${band.gradeBg};color:${band.gradeColor}">${band.grade} &nbsp;·&nbsp; ${band.riskLevel} risk</span>
+        <div style="font-size:14px;font-weight:700;color:#F5F0E8;line-height:1.4;margin-bottom:4px">${band.headline}</div>
+        <div style="font-size:11px;color:rgba(245,240,232,0.5)">${band.label}</div>
+      </div>
+    </div>
+    <div style="height:6px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden">
+      <div style="height:6px;width:${score}%;background:${col};border-radius:3px"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:4px">
+      <span style="font-size:10px;color:rgba(245,240,232,0.25)">Critical (0)</span>
+      <span style="font-size:10px;color:rgba(245,240,232,0.25)">Strong (100)</span>
+    </div>
+  </div>
+
+  <div class="label">Key projections</div>
+  <div class="proj-grid">
+    <div class="proj-card" style="border-color:rgba(226,75,74,0.35);background:rgba(226,75,74,0.05)">
+      <div style="font-size:10px;color:#E24B4A;font-weight:700;text-transform:uppercase;margin-bottom:4px">Funding at risk</div>
+      <div style="font-size:16px;font-weight:700;color:#1A1A2A;margin-bottom:3px">${proj.funding}</div>
+      <div style="font-size:11px;color:#666">annually — based on current evidence maturity</div>
+    </div>
+    <div class="proj-card" style="border-color:rgba(216,90,48,0.35);background:rgba(216,90,48,0.05)">
+      <div style="font-size:10px;color:#D85A30;font-weight:700;text-transform:uppercase;margin-bottom:4px">Influence gap</div>
+      <div style="font-size:16px;font-weight:700;color:#1A1A2A;margin-bottom:3px">${proj.influence}</div>
+      <div style="font-size:11px;color:#666">potential impact not reaching Treasury or funders</div>
+    </div>
+    <div class="proj-card" style="border-color:rgba(201,168,76,0.4);background:rgba(201,168,76,0.07)">
+      <div style="font-size:10px;color:#8B6914;font-weight:700;text-transform:uppercase;margin-bottom:4px">Opportunity cost</div>
+      <div style="font-size:16px;font-weight:700;color:#1A1A2A;margin-bottom:3px">${proj.opportunity}</div>
+      <div style="font-size:11px;color:#666">in reachable funding left on the table</div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="label">Market context</div>
+    <div style="font-size:13px;color:#1A1A2A;line-height:1.65;margin-bottom:12px">Organisations in South Africa's social impact sector with similar evidence profiles typically secure <strong>30–40% less funding</strong> than those with strong economic framing and funder-ready narratives — based on sector funding data across ECD, health, and economic development.</div>
+    <div class="metric-row"><span style="color:#666">Organisations with strong SROI framing</span><span style="font-weight:700;color:#1D9E75">3.3× more likely to secure co-funding</span></div>
+    <div class="metric-row"><span style="color:#666">Treasury proposals without economic case</span><span style="font-weight:700;color:#E24B4A">Deprioritised in 70% of cases</span></div>
+    <div class="metric-row"><span style="color:#666">Evidence translation gap — sector average</span><span style="font-weight:700;color:#D85A30">R5M–R15M annual opportunity cost</span></div>
+    <div style="font-size:10px;color:#999;margin-top:10px;font-style:italic">Based on sector benchmarks. Percentile rankings available once Auxeira has assessed 20+ organisations in your sector.</div>
+  </div>
+
+  <div class="section-card">
+    <div class="label">Top 3 risks</div>
+    <div class="risk-row">
+      <div class="risk-num" style="background:rgba(226,75,74,0.12);color:#E24B4A">1</div>
+      <div><div style="font-size:12px;font-weight:700;color:#1A1A2A;margin-bottom:3px">Risk 1</div><div style="font-size:12px;color:#555;line-height:1.55">${risks.r1}</div></div>
+    </div>
+    <div class="risk-row">
+      <div class="risk-num" style="background:rgba(216,90,48,0.12);color:#D85A30">2</div>
+      <div><div style="font-size:12px;font-weight:700;color:#1A1A2A;margin-bottom:3px">Risk 2</div><div style="font-size:12px;color:#555;line-height:1.55">${risks.r2}</div></div>
+    </div>
+    <div class="risk-row">
+      <div class="risk-num" style="background:rgba(201,168,76,0.12);color:#8B6914">3</div>
+      <div><div style="font-size:12px;font-weight:700;color:#1A1A2A;margin-bottom:3px">Risk 3</div><div style="font-size:12px;color:#555;line-height:1.55">${risks.r3}</div></div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="label">Growth & scale impact</div>
+    <div style="font-size:13px;color:#1A1A2A;line-height:1.65;margin-bottom:12px">Organisations that close their evidence translation gap typically unlock <strong>2–3× more decision-maker engagement</strong> within 24 months. For your budget profile, that translates to an estimated <strong>${proj.scale}</strong>.</div>
+    <div class="scale-grid">
+      ${['6 months','12 months','24 months'].map((t,i)=>`
+        <div style="background:#F5F5F5;border-radius:8px;padding:10px 8px">
+          <div style="font-size:10px;color:#999;margin-bottom:4px">${t}</div>
+          <div style="font-size:11px;font-weight:700;color:#1A1A2A">${['Evidence gaps identified & closed','Funder narratives deployed','Scale unlocked'][i]}</div>
+        </div>`).join('')}
+    </div>
+  </div>
+
+  <div class="loss-box">
+    <div style="font-size:13px;font-weight:700;color:#8B6914;margin-bottom:8px">The honest truth</div>
+    <div style="font-size:13px;color:#6B4F0A;line-height:1.7;margin-bottom:10px">The evidence gap you have today is quietly costing your organisation influence, funding, and impact. Every funding round without a fiscal impact narrative, every policy window without an economic case, every funder conversation without an SROI — these have a cumulative cost. The good news is this is fixable. Auxeira fixes it in weeks, not years.</div>
+    <div style="font-size:12px;color:#8B6914;font-style:italic">"The question isn't whether you can afford Auxeira. It's what a misallocated funding round, a missed policy window, or an unseen SROI is costing you right now."</div>
+  </div>
+
+  <button class="btn-gold">Ready to close these gaps? Book your Evidence Strategy Call</button>
+  <button class="btn-ghost">Download the Auxeira Capability Overview</button>
+  <div style="text-align:center;margin-top:10px;font-size:11px;color:#999">30 minutes. Free. No pitch. &nbsp;·&nbsp; info@auxeira.com</div>
+  `;
+}
+
+render();
+</script>
+</body>
+</html>
