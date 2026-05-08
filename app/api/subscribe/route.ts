@@ -118,7 +118,7 @@ function buildCapabilityEmail({ firstName }: { firstName?: string }) {
           <p style="font-size:16px;line-height:1.6;">Hi${name},</p>
           <p style="font-size:15px;line-height:1.7;opacity:0.8;">Here is your Auxeira Capability Overview, a 2-page summary of what we do, what we've delivered, and what a partnership looks like.</p>
           <a href="${CAPABILITY_PDF_URL}" style="display:inline-block;background:#C9A84C;color:#0A1628;padding:14px 28px;font-size:14px;font-weight:600;text-decoration:none;margin:16px 0;">Download Capability Overview →</a>
-          <p style="font-size:14px;line-height:1.7;opacity:0.7;margin-top:24px;">If you'd like to talk through what Auxeira could do for your organisation, <a href="${process.env.NEXT_PUBLIC_CALENDLY_URL ?? "https://auxeira.com/#cta"}" style="color:#C9A84C;">book a 30-minute Evidence Diagnostic Call</a>.</p>
+          <p style="font-size:14px;line-height:1.7;opacity:0.7;margin-top:24px;">If you'd like to talk through what Auxeira could do for your organisation, <a href="${process.env.NEXT_PUBLIC_CALENDLY_URL ?? "https://auxeira.com/#cta"}" style="color:#C9A84C;">book a 30-minute Evidence Strategy Call</a>.</p>
         </td></tr>
         <tr><td style="background:#0A1628;padding:24px 40px;">
           <p style="margin:0;font-size:12px;color:#F5F0E8;opacity:0.4;">Auxeira · info@auxeira.com · Johannesburg, South Africa</p>

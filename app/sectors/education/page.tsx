@@ -165,7 +165,7 @@ export default function EducationSectorPage() {
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <RevealOnScroll>
               <h2 className="font-display text-3xl lg:text-4xl font-semibold text-[#0A1628] max-w-xl leading-tight mb-6">
-                Book an ECD Evidence Diagnostic Call
+                Book an ECD Evidence Strategy Call
               </h2>
               <p className="text-[#0A1628]/65 text-base leading-relaxed max-w-lg mb-8">
                 30 minutes. Free. We&apos;ll assess your evidence base, identify your gaps, and

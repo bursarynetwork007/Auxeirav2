@@ -77,7 +77,7 @@ export default function MultiPointCTA() {
                 01
               </p>
               <h3 className="font-display text-xl font-semibold text-[#0A1628] mb-3">
-                Book an Evidence Diagnostic Call
+                Book an Evidence Strategy Call
               </h3>
               <p className="text-[#0A1628]/65 text-sm leading-relaxed mb-6 flex-1">
                 30 minutes. Free. No pitch. We&apos;ll look at what evidence you have, where the

@@ -76,21 +76,21 @@ export function getScoreBand(score: number): {
     return {
       label: "Strong evidence foundation",
       description: "Your gap is translation, not data.",
-      ctaText: "Book a 30-minute Evidence Diagnostic Call — we'll show you exactly where your translation gap is.",
+      ctaText: "Book a 30-minute Evidence Strategy Call — we'll show you exactly where your translation gap is.",
     };
   }
   if (score >= 50) {
     return {
       label: "Solid evidence base",
       description: "Significant untapped potential.",
-      ctaText: "Book a 30-minute Evidence Diagnostic Call — your gaps are specific and solvable.",
+      ctaText: "Book a 30-minute Evidence Strategy Call — your gaps are specific and solvable.",
     };
   }
   if (score >= 25) {
     return {
       label: "Evidence gaps are likely costing you",
       description: "Funding and policy traction are at risk.",
-      ctaText: "Book a 30-minute Evidence Diagnostic Call — your gaps are specific and solvable.",
+      ctaText: "Book a 30-minute Evidence Strategy Call — your gaps are specific and solvable.",
     };
   }
   return {

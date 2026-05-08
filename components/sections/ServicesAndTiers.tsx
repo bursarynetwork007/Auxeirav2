@@ -36,7 +36,7 @@ const TIERS = [
     ],
     timeline: "6 – 10 weeks",
     price: "R180,000 – R350,000",
-    cta: "This Is What We Did for SmartStart",
+    cta: "See What This Produces",
     ctaHref: "#proof-of-work",
     featured: true,
   },
@@ -179,8 +179,8 @@ export default function ServicesAndTiers() {
         {/* Scarcity signal */}
         <RevealOnScroll delay={400}>
           <p className="mt-10 text-center text-sm text-[#1A1A2A]/50 max-w-xl mx-auto">
-            We run a maximum of four active engagements at any time. If you&apos;re considering
-            Tier 2 or Tier 3, early conversation is worth it.
+            Tier 1 and Tier 2 are capped at four active engagements at any time. Tier 3 scales
+            independently. If you&apos;re considering either, early conversation is worth it.
           </p>
         </RevealOnScroll>
       </div>

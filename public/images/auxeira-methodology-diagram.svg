@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500" width="1200" height="500">
+  <defs>
+    <linearGradient id="navyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0A1628;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0D1F35;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#D4A853;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#C9A84C;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="cardGrad1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#112240;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0D1B34;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+    <marker id="arrowGold" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#C9A84C"/>
+    </marker>
+    <pattern id="dots" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#C9A84C" opacity="0.08"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="500" fill="url(#navyGrad)"/>
+  <rect width="1200" height="500" fill="url(#dots)"/>
+  <rect x="0" y="0" width="1200" height="2" fill="url(#goldGrad)" opacity="0.6"/>
+
+  <text x="600" y="44" text-anchor="middle" font-family="Georgia, serif" font-size="11" letter-spacing="4" fill="#C9A84C" opacity="0.9" font-weight="400">THE AUXEIRA EVIDENCE INTELLIGENCE FRAMEWORK</text>
+
+  <!-- CARD 1 — EXTRACT -->
+  <g filter="url(#softShadow)">
+    <rect x="60" y="80" width="300" height="360" rx="12" fill="url(#cardGrad1)" stroke="#C9A84C" stroke-width="1" stroke-opacity="0.3"/>
+  </g>
+  <rect x="60" y="80" width="300" height="4" rx="2" fill="url(#goldGrad)"/>
+  <text x="90" y="124" font-family="Georgia, serif" font-size="36" fill="#C9A84C" opacity="0.25" font-weight="700">01</text>
+  <text x="90" y="124" font-family="Georgia, serif" font-size="14" letter-spacing="3" fill="#C9A84C" font-weight="400">EXTRACT</text>
+  <text x="90" y="158" font-family="Georgia, serif" font-size="22" fill="#F5F0E8" font-weight="600">The Longitudinal</text>
+  <text x="90" y="184" font-family="Georgia, serif" font-size="22" fill="#F5F0E8" font-weight="600">Evidence Audit</text>
+  <line x1="90" y1="200" x2="320" y2="200" stroke="#C9A84C" stroke-width="0.5" opacity="0.4"/>
+  <circle cx="90" cy="228" r="3" fill="#C9A84C" opacity="0.8"/>
+  <text x="104" y="233" font-family="Arial, sans-serif" font-size="12.5" fill="#F5F0E8" opacity="0.8">Stakeholder interviews</text>
+  <circle cx="90" cy="256" r="3" fill="#C9A84C" opacity="0.8"/>
+  <text x="104" y="261" font-family="Arial, sans-serif" font-size="12.5" fill="#F5F0E8" opacity="0.8">Longitudinal data mining</text>
+  <circle cx="90" cy="284" r="3" fill="#C9A84C" opacity="0.8"/>
+  <text x="104" y="289" font-family="Arial, sans-serif" font-size="12.5" fill="#F5F0E8" opacity="0.8">Financial reconciliation</text>
+  <circle cx="90" cy="312" r="3" fill="#C9A84C" opacity="0.8"/>
+  <text x="104" y="317" font-family="Arial, sans-serif" font-size="12.5" fill="#F5F0E8" opacity="0.8">Qualitative research</text>
+  <circle cx="90" cy="340" r="3" fill="#C9A84C" opacity="0.8"/>
+  <text x="104" y="345" font-family="Arial, sans-serif" font-size="12.5" fill="#F5F0E8" opacity="0.8">Evidence synthesis</text>
+  <rect x="90" y="368" width="232" height="44" rx="6" fill="#C9A84C" opacity="0.12" stroke="#C9A84C" stroke-width="0.5" stroke-opacity="0.5"/>
+  <text x="206" y="387" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" letter-spacing="1.5" fill="#C9A84C" font-weight="600">OUTPUT</text>
+  <text x="206" y="403" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#F5F0E8" opacity="0.9">Sector Intelligence Machine</text>
+
+  <!-- CONNECTOR 1 → 2 -->
+  <line x1="368" y1="260" x2="424" y2="260" stroke="#C9A84C" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.7" marker-end="url(#arrowGold)"/>
+  <text x="396" y="250" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" letter-spacing="1" fill="#C9A84C" opacity="0.7">FEEDS</text>
+
+  <!-- CARD 2 — SYNTHESISE -->
+  <g filter="url(#softShadow)">
+    <rect x="432" y="80" width="336" height="360" rx="12" fill="url(#cardGrad1)" stroke="#C9A84C" stroke-width="1.5" stroke-opacity="0.6"/>
+  </g>
+  <rect x="432" y="80" width="336" height="5" rx="2" fill="url(#goldGrad)"/>
+  <rect x="432" y="80" width="336" height="360" rx="12" fill="#C9A84C" opacity="0.025"/>
+  <text x="462" y="124" font-family="Georgia, serif" font-size="36" fill="#C9A84C" opacity="0.25" font-weight="700">02</text>
+  <text x="462" y="124" font-family="Georgia, serif" font-size="14" letter-spacing="3" fill="#C9A84C" font-weight="400">SYNTHESISE</text>
+  <text x="462" y="158" font-family="Georgia, serif" font-size="22" fill="#F5F0E8" font-weight="600">The Decision-Ready</text>
+  <text x="462" y="184" font-family="Georgia, serif" font-size="22" fill="#F5F0E8" font-weight="600">Synthesis Engine</text>
+  <line x1="462" y1="200" x2="734" y2="200" stroke="#C9A84C" stroke-width="0.5" opacity="0.4"/>
+  <rect x="462" y="214" width="140" height="28" rx="4" fill="#C9A84C" opacity="0.15" stroke="#C9A84C" stroke-width="0.5" stroke-opacity="0.4"/>
+  <text x="532" y="232" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#C9A84C" font-weight="600">Behavioural Science</text>
+  <rect x="614" y="214" width="140" height="28" rx="4" fill="#C9A84C" opacity="0.15" stroke="#C9A84C" stroke-width="0.5" stroke-opacity="0.4"/>
+  <text x="684" y="232" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#C9A84C" font-weight="600">Artificial Intelligence</text>
+  <rect x="462" y="252" width="140" height="28" rx="4" fill="#C9A84C" opacity="0.15" stroke="#C9A84C" stroke-width="0.5" stroke-opacity="0.4"/>
+  <text x="532" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#C9A84C" font-weight="600">Data Science</text>
+  <rect x="614" y="252" width="140" height="28" rx="4" fill="#C9A84C" opacity="0.15" stroke="#C9A84C" stroke-width="0.5" stroke-opacity="0.4"/>
+  <text x="684" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#C9A84C" font-weight="600">Actuarial Analysis</text>
+  <rect x="462" y="290" width="140" height="28" rx="4" fill="#C9A84C" opacity="0.15" stroke="#C9A84C" stroke-width="0.5" stroke-opacity="0.4"/>
+  <text x="532" y="308" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#C9A84C" font-weight="600">Systems Thinking</text>
+  <rect x="614" y="290" width="140" height="28" rx="4" fill="#C9A84C" opacity="0.15" stroke="#C9A84C" stroke-width="0.5" stroke-opacity="0.4"/>
+  <text x="684" y="308" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#C9A84C" font-weight="600">Qualitative Synthesis</text>
+  <line x1="462" y1="334" x2="734" y2="334" stroke="#C9A84C" stroke-width="0.5" opacity="0.2"/>
+  <rect x="462" y="348" width="272" height="44" rx="6" fill="#C9A84C" opacity="0.12" stroke="#C9A84C" stroke-width="0.5" stroke-opacity="0.5"/>
+  <text x="598" y="367" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" letter-spacing="1.5" fill="#C9A84C" font-weight="600">OUTPUT</text>
+  <text x="598" y="383" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#F5F0E8" opacity="0.9">Decision-Ready Intelligence</text>
+
+  <!-- CONNECTOR 2 → 3 -->
+  <line x1="776" y1="260" x2="832" y2="260" stroke="#C9A84C" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.7" marker-end="url(#arrowGold)"/>
+  <text x="804" y="250" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" letter-spacing="1" fill="#C9A84C" opacity="0.7">DRIVES</text>
+
+  <!-- CARD 3 — MOVE -->
+  <g filter="url(#softShadow)">
+    <rect x="840" y="80" width="300" height="360" rx="12" fill="url(#cardGrad1)" stroke="#C9A84C" stroke-width="1" stroke-opacity="0.3"/>
+  </g>
+  <rect x="840" y="80" width="300" height="4" rx="2" fill="url(#goldGrad)"/>
+  <text x="870" y="124" font-family="Georgia, serif" font-size="36" fill="#C9A84C" opacity="0.25" font-weight="700">03</text>
+  <text x="870" y="124" font-family="Georgia, serif" font-size="14" letter-spacing="3" fill="#C9A84C" font-weight="400">MOVE</text>
+  <text x="870" y="158" font-family="Georgia, serif" font-size="22" fill="#F5F0E8" font-weight="600">Knowledge Products</text>
+  <text x="870" y="184" font-family="Georgia, serif" font-size="22" fill="#F5F0E8" font-weight="600">That Move</text>
+  <line x1="870" y1="200" x2="1100" y2="200" stroke="#C9A84C" stroke-width="0.5" opacity="0.4"/>
+  <circle cx="870" cy="228" r="3" fill="#C9A84C" opacity="0.8"/>
+  <text x="884" y="233" font-family="Arial, sans-serif" font-size="12.5" fill="#F5F0E8" opacity="0.8">Impact &amp; annual reports</text>
+  <circle cx="870" cy="256" r="3" fill="#C9A84C" opacity="0.8"/>
+  <text x="884" y="261" font-family="Arial, sans-serif" font-size="12.5" fill="#F5F0E8" opacity="0.8">Policy &amp; funder briefs</text>
+  <circle cx="870" cy="284" r="3" fill="#C9A84C" opacity="0.8"/>
+  <text x="884" y="289" font-family="Arial, sans-serif" font-size="12.5" fill="#F5F0E8" opacity="0.8">Economic multiplier analysis</text>
+  <circle cx="870" cy="312" r="3" fill="#C9A84C" opacity="0.8"/>
+  <text x="884" y="317" font-family="Arial, sans-serif" font-size="12.5" fill="#F5F0E8" opacity="0.8">Practitioner narratives</text>
+  <circle cx="870" cy="340" r="3" fill="#C9A84C" opacity="0.8"/>
+  <text x="884" y="345" font-family="Arial, sans-serif" font-size="12.5" fill="#F5F0E8" opacity="0.8">Infographic systems</text>
+  <rect x="870" y="368" width="232" height="44" rx="6" fill="#C9A84C" opacity="0.12" stroke="#C9A84C" stroke-width="0.5" stroke-opacity="0.5"/>
+  <text x="986" y="387" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" letter-spacing="1.5" fill="#C9A84C" font-weight="600">OUTPUT</text>
+  <text x="986" y="403" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#F5F0E8" opacity="0.9">Evidence That Moves</text>
+
+  <!-- BOTTOM TAGLINE -->
+  <line x1="100" y1="466" x2="1100" y2="466" stroke="#C9A84C" stroke-width="0.5" opacity="0.2"/>
+  <text x="600" y="486" text-anchor="middle" font-family="Georgia, serif" font-size="12" fill="#C9A84C" opacity="0.55" letter-spacing="1">auxeira.com · Evidence Intelligence for Africa</text>
+</svg>
