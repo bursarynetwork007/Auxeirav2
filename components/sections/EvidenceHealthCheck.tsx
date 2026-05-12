@@ -90,14 +90,6 @@ const QUESTIONS = [
   },
 ];
 
-const ORG_SIZE_OPTIONS = [
-  "Under 10 staff",
-  "10–50 staff",
-  "50–200 staff",
-  "200+ staff",
-  "Government department",
-  "Foundation / Funder",
-];
 
 type Step = "quiz" | "org-info" | "confirmation";
 
@@ -105,10 +97,7 @@ interface OrgInfo {
   firstName: string;
   lastName: string;
   orgName: string;
-  jobTitle: string;
   email: string;
-  orgUrl: string;
-  orgSize: string;
 }
 
 // ── Confirmation screen ───────────────────────────────────────────────────────
@@ -219,10 +208,7 @@ export default function EvidenceHealthCheck() {
     firstName: "",
     lastName: "",
     orgName: "",
-    jobTitle: "",
     email: "",
-    orgUrl: "",
-    orgSize: "",
   });
   const [privacyChecked, setPrivacyChecked] = useState(false);
 
@@ -274,7 +260,6 @@ export default function EvidenceHealthCheck() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           answers: finalAnswers,
-          score,
           ...orgInfo,
         }),
       });
@@ -291,7 +276,7 @@ export default function EvidenceHealthCheck() {
     setCurrentQ(0);
     setAnswers({});
     setSelected(null);
-    setOrgInfo({ firstName: "", lastName: "", orgName: "", jobTitle: "", email: "", orgUrl: "", orgSize: "" });
+    setOrgInfo({ firstName: "", lastName: "", orgName: "", email: "" });
     setPrivacyChecked(false);
     setPrimaryGap("");
     setSubmitError("");
@@ -434,34 +419,6 @@ export default function EvidenceHealthCheck() {
                     </div>
                   </div>
 
-                  {/* Org name */}
-                  <div>
-                    <label className="block text-xs text-[#1A1A2A]/50 mb-1.5 uppercase tracking-wider">
-                      Organisation name <span className="text-[#C9A84C]">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={orgInfo.orgName}
-                      onChange={(e) => setOrgInfo({ ...orgInfo, orgName: e.target.value })}
-                      required
-                      className="w-full border border-[#1A1A2A]/15 bg-white px-4 py-3 text-sm text-[#1A1A2A] placeholder-[#1A1A2A]/30 focus:outline-none focus:border-[#C9A84C]"
-                    />
-                  </div>
-
-                  {/* Job title */}
-                  <div>
-                    <label className="block text-xs text-[#1A1A2A]/50 mb-1.5 uppercase tracking-wider">
-                      Job title / role <span className="text-[#C9A84C]">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={orgInfo.jobTitle}
-                      onChange={(e) => setOrgInfo({ ...orgInfo, jobTitle: e.target.value })}
-                      required
-                      className="w-full border border-[#1A1A2A]/15 bg-white px-4 py-3 text-sm text-[#1A1A2A] placeholder-[#1A1A2A]/30 focus:outline-none focus:border-[#C9A84C]"
-                    />
-                  </div>
-
                   {/* Work email */}
                   <div>
                     <label className="block text-xs text-[#1A1A2A]/50 mb-1.5 uppercase tracking-wider">
@@ -476,38 +433,18 @@ export default function EvidenceHealthCheck() {
                     />
                   </div>
 
-                  {/* Website */}
+                  {/* Org name */}
                   <div>
                     <label className="block text-xs text-[#1A1A2A]/50 mb-1.5 uppercase tracking-wider">
-                      Organisation website
-                      <span className="text-[#1A1A2A]/30 ml-1 normal-case tracking-normal">
-                        (recommended)
-                      </span>
+                      Organisation <span className="text-[#C9A84C]">*</span>
                     </label>
                     <input
-                      type="url"
-                      placeholder="https://"
-                      value={orgInfo.orgUrl}
-                      onChange={(e) => setOrgInfo({ ...orgInfo, orgUrl: e.target.value })}
+                      type="text"
+                      value={orgInfo.orgName}
+                      onChange={(e) => setOrgInfo({ ...orgInfo, orgName: e.target.value })}
+                      required
                       className="w-full border border-[#1A1A2A]/15 bg-white px-4 py-3 text-sm text-[#1A1A2A] placeholder-[#1A1A2A]/30 focus:outline-none focus:border-[#C9A84C]"
                     />
-                  </div>
-
-                  {/* Org size */}
-                  <div>
-                    <label className="block text-xs text-[#1A1A2A]/50 mb-1.5 uppercase tracking-wider">
-                      Organisation size
-                    </label>
-                    <select
-                      value={orgInfo.orgSize}
-                      onChange={(e) => setOrgInfo({ ...orgInfo, orgSize: e.target.value })}
-                      className="w-full border border-[#1A1A2A]/15 bg-white px-4 py-3 text-sm text-[#1A1A2A] focus:outline-none focus:border-[#C9A84C] appearance-none"
-                    >
-                      <option value="">Select...</option>
-                      {ORG_SIZE_OPTIONS.map((o) => (
-                        <option key={o} value={o}>{o}</option>
-                      ))}
-                    </select>
                   </div>
 
                   {/* Privacy */}
@@ -534,7 +471,7 @@ export default function EvidenceHealthCheck() {
                   <Button
                     variant="gold-filled"
                     className="w-full justify-center py-4 text-base"
-                    disabled={submitting || !orgInfo.email || !orgInfo.firstName || !orgInfo.orgName || !orgInfo.jobTitle}
+                    disabled={submitting || !orgInfo.email || !orgInfo.firstName || !orgInfo.lastName || !orgInfo.orgName}
                   >
                     {submitting ? "Preparing your report..." : "Get my Entity Evidence Risk Report →"}
                   </Button>

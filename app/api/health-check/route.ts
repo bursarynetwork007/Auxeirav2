@@ -5,6 +5,7 @@ import { dynamo } from "@/lib/dynamodb";
 import { sendEmail } from "@/lib/mailer";
 import { subscribeToForm } from "@/lib/convertkit";
 import {
+  calculateScore,
   getScoreBand,
   getTierRecommendation,
   getTopGaps,
@@ -16,14 +17,10 @@ import {
 
 interface HealthCheckBody {
   answers: HealthCheckAnswers;
-  score: number;
   firstName: string;
-  lastName?: string;
+  lastName: string;
   orgName: string;
-  jobTitle?: string;
   email: string;
-  orgUrl?: string;
-  orgSize?: string;
 }
 
 // ── Manus research task ───────────────────────────────────────────────────────
@@ -103,21 +100,25 @@ Be specific to this organisation. Use publicly available information only.`;
 export async function POST(req: NextRequest) {
   try {
     const body = (await req.json()) as HealthCheckBody;
-    const {
-      answers, score,
-      firstName, lastName, orgName, jobTitle, email, orgUrl, orgSize,
-    } = body;
+    const { answers, firstName, lastName, orgName, email } = body;
 
-    if (!email || !answers || !firstName || !orgName) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    if (!email || !answers || !firstName || !lastName || !orgName) {
+      return NextResponse.json({ error: "firstName, lastName, email and orgName are required" }, { status: 400 });
     }
 
-    const id = uuidv4();
-    const timestamp = new Date().toISOString();
+    // Score calculated server-side — never trust client
+    const score = calculateScore(answers);
     const scoreBand = getScoreBand(score);
     const tierRec = getTierRecommendation(answers);
     const topGaps = getTopGaps(answers);
     const primaryGap = getPrimaryGapLabel(answers);
+
+    // Infer org website from work email domain
+    const emailDomain = email.split("@")[1] ?? "";
+    const orgWebsite = `https://${emailDomain}`;
+
+    const id = uuidv4();
+    const timestamp = new Date().toISOString();
 
     // 1. Store submission
     try {
@@ -125,21 +126,11 @@ export async function POST(req: NextRequest) {
         new PutCommand({
           TableName: process.env.DYNAMODB_HEALTH_CHECK_TABLE ?? "auxeira-health-checks",
           Item: {
-            id,
-            timestamp,
-            email,
-            firstName,
-            lastName: lastName ?? "",
-            orgName,
-            jobTitle: jobTitle ?? "",
-            orgUrl: orgUrl ?? "",
-            orgSize: orgSize ?? "",
-            answers,
-            score,
+            id, timestamp, email, firstName, lastName, orgName, orgWebsite,
+            answers, score,
             scoreBand: scoreBand.label,
             tierRecommendation: tierRec.tier,
-            topGaps,
-            primaryGap,
+            topGaps, primaryGap,
             manusTaskId: null,
             reportStatus: "pending",
           },
@@ -153,7 +144,7 @@ export async function POST(req: NextRequest) {
     const manusTaskId = await triggerManusResearch({
       submissionId: id,
       orgName,
-      orgUrl,
+      orgUrl: orgWebsite,
       primaryGap,
       score,
     });
@@ -213,7 +204,7 @@ export async function POST(req: NextRequest) {
         to: notifyEmail,
         subject: `New Health Check: ${orgName} — Score ${score}/100`,
         html: buildLeadNotificationEmail({
-          email, firstName, lastName, orgName, jobTitle, orgUrl, orgSize,
+          email, firstName, lastName, orgName,
           score, answers, scoreBand, tierRec, topGaps, primaryGap, manusTaskId,
         }),
       });
@@ -317,16 +308,13 @@ function buildAckEmail({
 }
 
 function buildLeadNotificationEmail({
-  email, firstName, lastName, orgName, jobTitle, orgUrl, orgSize,
+  email, firstName, lastName, orgName,
   score, answers, scoreBand, tierRec, topGaps, primaryGap, manusTaskId,
 }: {
   email: string;
   firstName: string;
-  lastName?: string;
+  lastName: string;
   orgName: string;
-  jobTitle?: string;
-  orgUrl?: string;
-  orgSize?: string;
   score: number;
   answers: HealthCheckAnswers;
   scoreBand: ReturnType<typeof getScoreBand>;
@@ -344,12 +332,9 @@ function buildLeadNotificationEmail({
   <h2 style="color:#0A1628;margin-bottom:4px;">New Health Check Submission</h2>
   <p style="color:#C9A84C;font-size:13px;margin-top:0;">${new Date().toISOString()}</p>
   <table style="border-collapse:collapse;width:100%;margin-bottom:24px;">
-    <tr><td style="padding:6px 12px;font-size:13px;color:#666;border-bottom:1px solid #eee;width:140px;">Name</td><td style="padding:6px 12px;font-size:13px;">${firstName} ${lastName ?? ""}</td></tr>
+    <tr><td style="padding:6px 12px;font-size:13px;color:#666;border-bottom:1px solid #eee;width:140px;">Name</td><td style="padding:6px 12px;font-size:13px;">${firstName} ${lastName}</td></tr>
     <tr><td style="padding:6px 12px;font-size:13px;color:#666;border-bottom:1px solid #eee;">Email</td><td style="padding:6px 12px;font-size:13px;">${email}</td></tr>
     <tr><td style="padding:6px 12px;font-size:13px;color:#666;border-bottom:1px solid #eee;">Organisation</td><td style="padding:6px 12px;font-size:13px;">${orgName}</td></tr>
-    <tr><td style="padding:6px 12px;font-size:13px;color:#666;border-bottom:1px solid #eee;">Job Title</td><td style="padding:6px 12px;font-size:13px;">${jobTitle ?? "—"}</td></tr>
-    <tr><td style="padding:6px 12px;font-size:13px;color:#666;border-bottom:1px solid #eee;">Website</td><td style="padding:6px 12px;font-size:13px;">${orgUrl ? `<a href="${orgUrl}">${orgUrl}</a>` : "—"}</td></tr>
-    <tr><td style="padding:6px 12px;font-size:13px;color:#666;border-bottom:1px solid #eee;">Org Size</td><td style="padding:6px 12px;font-size:13px;">${orgSize ?? "—"}</td></tr>
     <tr><td style="padding:6px 12px;font-size:13px;color:#666;border-bottom:1px solid #eee;">Score</td><td style="padding:6px 12px;font-size:13px;font-weight:bold;">${score}/100 — ${scoreBand.label}</td></tr>
     <tr><td style="padding:6px 12px;font-size:13px;color:#666;border-bottom:1px solid #eee;">Primary Gap</td><td style="padding:6px 12px;font-size:13px;color:#C9A84C;font-weight:bold;">${primaryGap}</td></tr>
     <tr><td style="padding:6px 12px;font-size:13px;color:#666;border-bottom:1px solid #eee;">Tier Rec.</td><td style="padding:6px 12px;font-size:13px;">${tierRec.label}</td></tr>
