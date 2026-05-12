@@ -14,6 +14,7 @@ export async function sendEmail(opts: {
   subject: string;
   html: string;
   text?: string;
+  replyTo?: string;
 }): Promise<void> {
   if (!process.env.RESEND_API_KEY) {
     console.warn("RESEND_API_KEY not set — email skipped");
@@ -22,6 +23,7 @@ export async function sendEmail(opts: {
 
   const { error } = await getResend().emails.send({
     from: FROM,
+    replyTo: opts.replyTo ?? "info@auxeira.com",
     to: Array.isArray(opts.to) ? opts.to : [opts.to],
     subject: opts.subject,
     html: opts.html,

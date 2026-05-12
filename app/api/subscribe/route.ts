@@ -5,6 +5,7 @@ import { dynamo } from "@/lib/dynamodb";
 import { sendEmail } from "@/lib/mailer";
 import { subscribeToForm } from "@/lib/convertkit";
 import { buildNewsletterWelcomeEmail } from "@/lib/emailTemplates/newsletterWelcome";
+import { normaliseUrl } from "@/lib/normaliseUrl";
 
 type SubscribeSource =
   | "newsletter"
@@ -19,7 +20,10 @@ const FORM_MAP: Record<SubscribeSource, string | undefined> = {
   "health-sector-waitlist": process.env.CONVERTKIT_FORM_ID_NOTIFY,
 };
 
-const CAPABILITY_PDF_URL = "https://auxeira.com/capability-overview.pdf"; // swap when ready
+// Set CAPABILITY_PDF_URL in AWS Secrets Manager once the PDF is uploaded to S3/CloudFront.
+// Until then, the email CTA links to the contact page instead of a broken PDF URL.
+const CAPABILITY_PDF_URL =
+  process.env.CAPABILITY_PDF_URL ?? "https://auxeira.com/#cta";
 
 export async function POST(req: NextRequest) {
   try {
@@ -37,9 +41,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "firstName, lastName, email and orgName are required" }, { status: 400 });
     }
 
-    // Infer website from work email domain when not explicitly supplied
+    // Normalise supplied URL (handles missing protocol), or infer from email domain
     const emailDomain = email.split("@")[1] ?? "";
-    const resolvedWebsite = orgWebsite || `https://${emailDomain}`;
+    const resolvedWebsite = normaliseUrl(orgWebsite) || `https://${emailDomain}`;
 
     const id = uuidv4();
     const timestamp = new Date().toISOString();
@@ -218,7 +222,7 @@ function buildCapabilityEmail({ firstName }: { firstName?: string }) {
         </td></tr>
         <tr><td style="background:#ffffff;padding:40px;">
           <p style="font-size:16px;line-height:1.6;">Hi${name},</p>
-          <p style="font-size:15px;line-height:1.7;opacity:0.8;">Here is your Auxeira Capability Overview, a 2-page summary of what we do, what we've delivered, and what a partnership looks like.</p>
+          <p style="font-size:15px;line-height:1.7;opacity:0.8;">Here is your Auxeira Capability Overview — a 2-page summary of what we do, what we have delivered, and what a partnership looks like.</p>
           <a href="${CAPABILITY_PDF_URL}" style="display:inline-block;background:#C9A84C;color:#0A1628;padding:14px 28px;font-size:14px;font-weight:600;text-decoration:none;margin:16px 0;">Download Capability Overview →</a>
           <p style="font-size:14px;line-height:1.7;opacity:0.7;margin-top:24px;">If you'd like to talk through what Auxeira could do for your organisation, <a href="${process.env.NEXT_PUBLIC_CALENDLY_URL ?? "https://auxeira.com/#cta"}" style="color:#C9A84C;">book a 30-minute Evidence Strategy Call</a>.</p>
         </td></tr>

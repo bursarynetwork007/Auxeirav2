@@ -12,6 +12,7 @@ import {
   getPrimaryGapLabel,
   type HealthCheckAnswers,
 } from "@/lib/healthCheckScoring";
+import { normaliseUrl } from "@/lib/normaliseUrl";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
