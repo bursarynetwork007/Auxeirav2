@@ -344,6 +344,11 @@ function wrapReportInEmail({
           <a href="${calendlyUrl}" style="display:inline-block;background:#C9A84C;color:#0A1628;padding:14px 28px;font-size:13px;font-weight:600;text-decoration:none;letter-spacing:1px;">
             Book your Evidence Strategy Call →
           </a>
+          <p style="margin:24px 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:3px;color:#C9A84C;opacity:0.7;">Also useful</p>
+          <a href="${process.env.NEXT_PUBLIC_SITE_URL ?? "https://auxeira.com"}/capability-overview.html"
+             style="font-size:13px;color:#F5F0E8;opacity:0.5;text-decoration:underline;">
+            Download the Auxeira Capability Overview →
+          </a>
         </td></tr>
         <tr><td style="background:#0A1628;border-top:1px solid rgba(255,255,255,0.08);padding:20px 40px;">
           <p style="margin:0;font-size:11px;color:#F5F0E8;opacity:0.3;">Auxeira · info@auxeira.com · Johannesburg, South Africa</p>

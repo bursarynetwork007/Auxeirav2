@@ -271,7 +271,7 @@ function buildAckEmail({
             <p style="margin:0;font-size:18px;font-weight:600;color:#0A1628;">${primaryGap}</p>
           </div>
           <p style="margin:0 0 12px;font-size:13px;opacity:0.6;">Your full report will include:</p>
-          <ul style="margin:0 0 32px;padding-left:20px;">
+          <ul style="margin:0 0 24px;padding-left:20px;">
             ${[
               "Evidence Health Score with sector benchmark",
               "Top 3 risks and estimated funding at risk",
@@ -280,6 +280,22 @@ function buildAckEmail({
               "Sector competitive landscape analysis",
             ].map(item => `<li style="font-size:13px;line-height:1.8;opacity:0.75;">${item}</li>`).join("")}
           </ul>
+
+          <table cellpadding="0" cellspacing="0" style="width:100%;border:1px solid #C9A84C22;margin-bottom:32px;">
+            <tr>
+              <td style="padding:20px 24px;">
+                <p style="margin:0 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:3px;color:#C9A84C;font-weight:600;">While you wait</p>
+                <p style="margin:0 0 12px;font-size:14px;font-weight:600;color:#0A1628;">Download the Auxeira Capability Overview</p>
+                <p style="margin:0 0 16px;font-size:13px;color:#1A1A2A;opacity:0.65;line-height:1.6;">
+                  2 pages. What we do, what we've delivered, and what a partnership looks like.
+                </p>
+                <a href="${process.env.NEXT_PUBLIC_SITE_URL ?? "https://auxeira.com"}/capability-overview.html"
+                   style="display:inline-block;background:#0A1628;color:#C9A84C;padding:10px 20px;font-size:12px;font-weight:600;text-decoration:none;letter-spacing:1px;">
+                  Download Capability Overview →
+                </a>
+              </td>
+            </tr>
+          </table>
           <div style="background:#0A1628;padding:20px 24px;margin-bottom:32px;">
             <p style="margin:0 0 12px;font-size:14px;color:#F5F0E8;opacity:0.7;line-height:1.6;">
               You're at peak clarity about your evidence gaps right now. Book your Evidence Strategy Call while it's fresh.
