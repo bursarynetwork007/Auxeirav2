@@ -14,6 +14,7 @@ import WhoWeWorkWith from "@/components/sections/WhoWeWorkWith";
 import Insights from "@/components/sections/Insights";
 import Founder from "@/components/sections/Founder";
 import Team from "@/components/sections/Team";
+import CapabilityDownload from "@/components/sections/CapabilityDownload";
 import MultiPointCTA from "@/components/sections/MultiPointCTA";
 
 export default function Home() {
@@ -35,6 +36,7 @@ export default function Home() {
         <Insights />
         <Founder />
         <Team />
+        <CapabilityDownload />
         <MultiPointCTA />
       </main>
       <Footer />
