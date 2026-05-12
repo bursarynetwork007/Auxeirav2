@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { dynamo } from "@/lib/dynamodb";
 import { sendEmail } from "@/lib/mailer";
 import { subscribeToForm } from "@/lib/convertkit";
+import { buildNewsletterWelcomeEmail } from "@/lib/emailTemplates/newsletterWelcome";
 
 type SubscribeSource =
   | "newsletter"
@@ -72,6 +73,7 @@ export async function POST(req: NextRequest) {
           subject: "Welcome to Auxeira Intelligence",
           html: buildNewsletterWelcomeEmail({ firstName }),
         });
+
       } else if (source === "health-sector-waitlist") {
         await sendEmail({
           to: email,
@@ -129,31 +131,7 @@ function buildCapabilityEmail({ firstName }: { firstName?: string }) {
 </body></html>`;
 }
 
-function buildNewsletterWelcomeEmail({ firstName }: { firstName?: string }) {
-  const name = firstName ? `, ${firstName}` : "";
-  return `<!DOCTYPE html>
-<html><body style="font-family:Arial,sans-serif;color:#1A1A2A;background:#F5F0E8;padding:0;margin:0;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 20px;">
-    <tr><td align="center">
-      <table width="600" style="max-width:600px;width:100%;">
-        <tr><td style="background:#0A1628;padding:32px 40px;">
-          <p style="margin:0;font-size:22px;font-weight:600;color:#C9A84C;letter-spacing:4px;text-transform:uppercase;">Auxeira</p>
-          <p style="margin:8px 0 0;font-size:13px;color:#F5F0E8;opacity:0.5;letter-spacing:2px;text-transform:uppercase;">Intelligence</p>
-        </td></tr>
-        <tr><td style="background:#ffffff;padding:40px;">
-          <p style="font-size:16px;line-height:1.6;">Welcome${name}.</p>
-          <p style="font-size:15px;line-height:1.7;opacity:0.8;">You're now subscribed to Auxeira Intelligence, monthly insights on evidence, behavioural science, and the decisions that shape Africa's future.</p>
-          <p style="font-size:15px;line-height:1.7;opacity:0.8;">No noise. No pitch. Just the thinking that matters.</p>
-          <p style="font-size:14px;line-height:1.7;opacity:0.6;margin-top:24px;">While you're here, if your organisation has evidence that deserves to move decisions, <a href="${process.env.NEXT_PUBLIC_CALENDLY_URL ?? "https://auxeira.com/#cta"}" style="color:#C9A84C;">let's talk</a>.</p>
-        </td></tr>
-        <tr><td style="background:#0A1628;padding:24px 40px;">
-          <p style="margin:0;font-size:12px;color:#F5F0E8;opacity:0.4;">Auxeira · info@auxeira.com · Johannesburg, South Africa</p>
-        </td></tr>
-      </table>
-    </td></tr>
-  </table>
-</body></html>`;
-}
+
 
 function buildWaitlistEmail({ firstName }: { firstName?: string }) {
   const name = firstName ? `, ${firstName}` : "";

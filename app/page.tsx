@@ -15,6 +15,7 @@ import Insights from "@/components/sections/Insights";
 import Founder from "@/components/sections/Founder";
 import Team from "@/components/sections/Team";
 import CapabilityDownload from "@/components/sections/CapabilityDownload";
+import AuxeiraIntelligence from "@/components/sections/AuxeiraIntelligence";
 import MultiPointCTA from "@/components/sections/MultiPointCTA";
 
 export default function Home() {
@@ -37,6 +38,7 @@ export default function Home() {
         <Founder />
         <Team />
         <CapabilityDownload />
+        <AuxeiraIntelligence />
         <MultiPointCTA />
       </main>
       <Footer />
