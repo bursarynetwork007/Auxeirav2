@@ -130,6 +130,12 @@ export function buildNewsletterWelcomeEmail({
       </p>
       <table role="presentation" cellspacing="0" cellpadding="0" border="0">
         <tr>
+          <td style="vertical-align:top;padding-right:12px;">
+            <img src="${SITE_URL}/assets/lante-photo.jpg"
+                 alt="Lante Emmanuel Luthuli"
+                 width="48" height="48"
+                 style="border-radius:50%;display:block;">
+          </td>
           <td style="vertical-align:top;">
             <p style="font-family:Arial,sans-serif;font-size:13px;font-weight:600;color:#0A1628;margin:0 0 2px;">Lante</p>
             <p style="font-family:Arial,sans-serif;font-size:11px;color:#666;margin:0 0 2px;">Founder, Auxeira</p>
@@ -173,11 +179,9 @@ export function buildNewsletterWelcomeEmail({
           </td>
           <td align="right" style="vertical-align:middle;">
             <a href="https://za.linkedin.com/in/emmanuel-luthuli-193194146" style="display:inline-block;margin-left:8px;">
-              <table cellpadding="0" cellspacing="0" border="0">
-                <tr><td style="background:#C9A84C;width:18px;height:18px;border-radius:3px;text-align:center;vertical-align:middle;">
-                  <span style="font-family:Arial,sans-serif;font-size:10px;font-weight:700;color:#0A1628;">in</span>
-                </td></tr>
-              </table>
+              <img src="${SITE_URL}/assets/icon-linkedin-gold.png"
+                   alt="LinkedIn" width="18" height="18"
+                   style="display:inline-block;vertical-align:middle;">
             </a>
           </td>
         </tr>
