@@ -1,13 +1,9 @@
-import { Resend } from "resend";
+// ZeptoMail transactional email — REST API, no SDK dependency.
+// Docs: https://www.zoho.com/zeptomail/help/api/email-sending.html
 
-const FROM = process.env.RESEND_FROM_ADDRESS ?? "Auxeira <info@auxeira.com>";
-
-// Lazy-initialised so the module loads cleanly at build time without a key
-let _resend: Resend | null = null;
-function getResend(): Resend {
-  if (!_resend) _resend = new Resend(process.env.RESEND_API_KEY!);
-  return _resend;
-}
+const ZEPTO_API_URL = "https://api.zeptomail.com/v1.1/email";
+const FROM_ADDRESS = "info@auxeira.com";
+const FROM_NAME = "Lante at Auxeira";
 
 export async function sendEmail(opts: {
   to: string | string[];
@@ -16,21 +12,37 @@ export async function sendEmail(opts: {
   text?: string;
   replyTo?: string;
 }): Promise<void> {
-  if (!process.env.RESEND_API_KEY) {
-    console.warn("RESEND_API_KEY not set — email skipped");
+  const token = process.env.ZEPTOMAIL_TOKEN;
+  if (!token) {
+    console.warn("ZEPTOMAIL_TOKEN not set — email skipped");
     return;
   }
 
-  const { error } = await getResend().emails.send({
-    from: FROM,
-    replyTo: opts.replyTo ?? "info@auxeira.com",
-    to: Array.isArray(opts.to) ? opts.to : [opts.to],
+  const recipients = Array.isArray(opts.to) ? opts.to : [opts.to];
+  const replyTo = opts.replyTo ?? FROM_ADDRESS;
+
+  const body = {
+    from: { address: FROM_ADDRESS, name: FROM_NAME },
+    to: recipients.map((address) => ({ email_address: { address } })),
+    reply_to: [{ address: replyTo }],
     subject: opts.subject,
-    html: opts.html,
-    text: opts.text,
+    htmlbody: opts.html,
+    ...(opts.text ? { textbody: opts.text } : {}),
+    track_opens: true,
+    track_clicks: false,
+  };
+
+  const res = await fetch(ZEPTO_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Zoho-enczapikey ${token}`,
+    },
+    body: JSON.stringify(body),
   });
 
-  if (error) {
-    throw new Error(`Resend error: ${error.message}`);
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`ZeptoMail error ${res.status}: ${err}`);
   }
 }
