@@ -134,7 +134,7 @@ export function buildNewsletterWelcomeEmail({
             <p style="font-family:Arial,sans-serif;font-size:13px;font-weight:600;color:#0A1628;margin:0 0 2px;">Lante</p>
             <p style="font-family:Arial,sans-serif;font-size:11px;color:#666;margin:0 0 2px;">Founder, Auxeira</p>
             <p style="font-family:Arial,sans-serif;font-size:11px;color:#C9A84C;margin:0;">
-              <a href="mailto:lante@auxeira.com" style="color:#C9A84C;text-decoration:none;">lante@auxeira.com</a>
+              <a href="mailto:info@auxeira.com" style="color:#C9A84C;text-decoration:none;">info@auxeira.com</a>
             </p>
           </td>
         </tr>
@@ -189,7 +189,7 @@ export function buildNewsletterWelcomeEmail({
         Johannesburg · London · New York — Global from Africa<br>
         <a href="${SITE_URL}" style="color:rgba(201,168,76,0.6);text-decoration:none;">auxeira.com</a>
         &nbsp;&middot;&nbsp;
-        <a href="mailto:lante@auxeira.com" style="color:rgba(201,168,76,0.6);text-decoration:none;">lante@auxeira.com</a>
+        <a href="mailto:info@auxeira.com" style="color:rgba(201,168,76,0.6);text-decoration:none;">info@auxeira.com</a>
         &nbsp;&middot;&nbsp;
         <a href="${unsubscribeUrl}" style="color:rgba(245,240,232,0.3);text-decoration:none;">Unsubscribe</a>
       </p>
