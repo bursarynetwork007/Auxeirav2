@@ -4,15 +4,39 @@ import { useState } from "react";
 import Button from "@/components/ui/Button";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 
+const PERSONAL_DOMAINS = new Set([
+  "gmail.com", "googlemail.com",
+  "outlook.com", "hotmail.com", "hotmail.co.uk", "live.com",
+  "yahoo.com", "yahoo.co.uk", "yahoo.co.za",
+  "icloud.com", "me.com", "mac.com",
+]);
+
+function isPersonalEmail(email: string): boolean {
+  const domain = email.split("@")[1]?.toLowerCase() ?? "";
+  return PERSONAL_DOMAINS.has(domain);
+}
+
+interface SubFields {
+  firstName: string;
+  lastName: string;
+  email: string;
+  orgName: string;
+  orgWebsite: string;
+}
+
 export default function MultiPointCTA() {
   const [capEmail, setCapEmail] = useState("");
   const [capName, setCapName] = useState("");
   const [capSubmitted, setCapSubmitted] = useState(false);
   const [capLoading, setCapLoading] = useState(false);
 
-  const [subEmail, setSubEmail] = useState("");
+  const [sub, setSub] = useState<SubFields>({
+    firstName: "", lastName: "", email: "", orgName: "", orgWebsite: "",
+  });
   const [subSubmitted, setSubSubmitted] = useState(false);
   const [subLoading, setSubLoading] = useState(false);
+
+  const showSubWebsite = isPersonalEmail(sub.email);
 
   const calendlyUrl =
     typeof window !== "undefined"
@@ -38,19 +62,31 @@ export default function MultiPointCTA() {
 
   async function handleSubscribe(e: React.FormEvent) {
     e.preventDefault();
-    if (!subEmail) return;
+    if (!sub.firstName || !sub.lastName || !sub.email || !sub.orgName) return;
     setSubLoading(true);
     try {
       await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: subEmail, source: "newsletter-cta" }),
+        body: JSON.stringify({
+          firstName: sub.firstName,
+          lastName: sub.lastName,
+          email: sub.email,
+          orgName: sub.orgName,
+          orgWebsite: showSubWebsite ? sub.orgWebsite : undefined,
+          source: "newsletter-cta",
+        }),
       });
     } catch {
       // Non-blocking
     }
     setSubLoading(false);
     setSubSubmitted(true);
+  }
+
+  function setSub_(key: keyof SubFields) {
+    return (e: React.ChangeEvent<HTMLInputElement>) =>
+      setSub((f) => ({ ...f, [key]: e.target.value }));
   }
 
   return (
@@ -156,25 +192,60 @@ export default function MultiPointCTA() {
               </p>
               {!subSubmitted ? (
                 <form onSubmit={handleSubscribe} className="space-y-3">
+                  <div className="grid grid-cols-2 gap-2">
+                    <input
+                      type="text"
+                      placeholder="First name *"
+                      value={sub.firstName}
+                      onChange={setSub_("firstName")}
+                      required
+                      className="w-full bg-[#b8963e]/30 border border-[#0A1628]/20 px-4 py-3 text-sm text-[#0A1628] placeholder-[#0A1628]/40 focus:outline-none focus:border-[#0A1628]/50"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Last name *"
+                      value={sub.lastName}
+                      onChange={setSub_("lastName")}
+                      required
+                      className="w-full bg-[#b8963e]/30 border border-[#0A1628]/20 px-4 py-3 text-sm text-[#0A1628] placeholder-[#0A1628]/40 focus:outline-none focus:border-[#0A1628]/50"
+                    />
+                  </div>
                   <input
                     type="email"
-                    placeholder="Email address"
-                    value={subEmail}
-                    onChange={(e) => setSubEmail(e.target.value)}
+                    placeholder="Work email *"
+                    value={sub.email}
+                    onChange={setSub_("email")}
                     required
                     className="w-full bg-[#b8963e]/30 border border-[#0A1628]/20 px-4 py-3 text-sm text-[#0A1628] placeholder-[#0A1628]/40 focus:outline-none focus:border-[#0A1628]/50"
                   />
+                  <input
+                    type="text"
+                    placeholder="Organisation *"
+                    value={sub.orgName}
+                    onChange={setSub_("orgName")}
+                    required
+                    className="w-full bg-[#b8963e]/30 border border-[#0A1628]/20 px-4 py-3 text-sm text-[#0A1628] placeholder-[#0A1628]/40 focus:outline-none focus:border-[#0A1628]/50"
+                  />
+                  {showSubWebsite && (
+                    <input
+                      type="url"
+                      placeholder="Organisation website (https://…)"
+                      value={sub.orgWebsite}
+                      onChange={setSub_("orgWebsite")}
+                      className="w-full bg-[#b8963e]/30 border border-[#0A1628]/20 px-4 py-3 text-sm text-[#0A1628] placeholder-[#0A1628]/40 focus:outline-none focus:border-[#0A1628]/50"
+                    />
+                  )}
                   <Button
                     variant="dark-filled"
                     className="w-full justify-center py-3 text-sm"
-                    disabled={subLoading}
+                    disabled={subLoading || !sub.firstName || !sub.lastName || !sub.email || !sub.orgName}
                   >
                     {subLoading ? "Subscribing…" : "Subscribe →"}
                   </Button>
                 </form>
               ) : (
                 <p className="text-[#0A1628] text-sm font-medium">
-                  ✓ You&apos;re subscribed to Auxeira Intelligence.
+                  You are subscribed. First edition arrives on the first Monday of next month.
                 </p>
               )}
             </div>

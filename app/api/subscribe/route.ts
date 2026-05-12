@@ -24,44 +24,38 @@ const CAPABILITY_PDF_URL = "https://auxeira.com/capability-overview.pdf"; // swa
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const {
-      email, firstName, lastName, orgName, jobTitle,
-      sector, audienceType, orgUrl, source,
-    } = body as {
+    const { email, firstName, lastName, orgName, orgWebsite, source } = body as {
       email: string;
       firstName?: string;
       lastName?: string;
       orgName?: string;
-      jobTitle?: string;
-      sector?: string;
-      audienceType?: string;
-      orgUrl?: string;
+      orgWebsite?: string;
       source: SubscribeSource;
     };
 
-    if (!email) {
-      return NextResponse.json({ error: "Email required" }, { status: 400 });
+    if (!email || !firstName || !lastName || !orgName) {
+      return NextResponse.json({ error: "firstName, lastName, email and orgName are required" }, { status: 400 });
     }
+
+    // Infer website from work email domain when not explicitly supplied
+    const emailDomain = email.split("@")[1] ?? "";
+    const resolvedWebsite = orgWebsite || `https://${emailDomain}`;
 
     const id = uuidv4();
     const timestamp = new Date().toISOString();
 
-    // 1. Store subscriber in DynamoDB with all profile fields
+    // 1. Store subscriber in DynamoDB
     try {
       await dynamo.send(
         new PutCommand({
           TableName: process.env.DYNAMODB_LEADS_TABLE ?? "auxeira-leads",
           Item: {
             id, timestamp, email, source,
-            firstName: firstName ?? "",
-            lastName: lastName ?? "",
-            orgName: orgName ?? "",
-            jobTitle: jobTitle ?? "",
-            sector: sector ?? "",
-            audienceType: audienceType ?? "",
-            orgUrl: orgUrl ?? "",
-            // Grok will enrich this async after subscribe
-            grokResearchStatus: orgName ? "pending" : "skipped",
+            firstName,
+            lastName,
+            orgName,
+            orgWebsite: resolvedWebsite,
+            grokResearchStatus: "pending",
           },
         })
       );
@@ -69,13 +63,13 @@ export async function POST(req: NextRequest) {
       console.error("DynamoDB write failed:", dbErr);
     }
 
-    // 2. Trigger Grok org research if website provided (async — enriches newsletter personalisation)
-    if ((source === "newsletter" || source === "newsletter-cta") && orgName) {
-      triggerGrokSubscriberResearch({ subscriberId: id, orgName, orgUrl, sector, audienceType })
+    // 2. Trigger Grok org research async — enriches newsletter personalisation
+    if (source === "newsletter" || source === "newsletter-cta") {
+      triggerGrokSubscriberResearch({ subscriberId: id, orgName, orgWebsite: resolvedWebsite })
         .catch((err) => console.error("Grok subscriber research failed:", err));
     }
 
-    // 2. Subscribe to ConvertKit
+    // 3. Subscribe to ConvertKit
     try {
       const formId = FORM_MAP[source];
       if (formId && formId !== "placeholder") {
@@ -96,7 +90,7 @@ export async function POST(req: NextRequest) {
       } else if (source === "newsletter" || source === "newsletter-cta") {
         await sendEmail({
           to: email,
-          subject: "Welcome to Auxeira Intelligence",
+          subject: "You are subscribed to Auxeira Intelligence",
           html: buildNewsletterWelcomeEmail({ firstName }),
         });
 
@@ -116,8 +110,8 @@ export async function POST(req: NextRequest) {
       const notifyAddr = process.env.LEAD_NOTIFICATION_EMAIL ?? "info@auxeira.com";
       await sendEmail({
         to: notifyAddr,
-        subject: `New Lead [${source}], ${email}`,
-        html: `<p><strong>Source:</strong> ${source}</p><p><strong>Email:</strong> ${email}</p><p><strong>Name:</strong> ${firstName ?? ","}</p>`,
+        subject: `New subscriber [${source}] — ${firstName} ${lastName}, ${orgName}`,
+        html: `<p><strong>Source:</strong> ${source}</p><p><strong>Name:</strong> ${firstName} ${lastName}</p><p><strong>Email:</strong> ${email}</p><p><strong>Organisation:</strong> ${orgName}</p><p><strong>Website:</strong> ${resolvedWebsite}</p>`,
       });
     } catch (notifyErr) {
       console.error("Lead notification failed:", notifyErr);
@@ -137,17 +131,13 @@ export async function POST(req: NextRequest) {
 async function triggerGrokSubscriberResearch(params: {
   subscriberId: string;
   orgName: string;
-  orgUrl?: string;
-  sector?: string;
-  audienceType?: string;
+  orgWebsite?: string;
 }): Promise<void> {
   const apiKey = process.env.XAI_API_KEY;
   if (!apiKey) return;
 
   const prompt = `Research the organisation "${params.orgName}" for newsletter personalisation.
-${params.orgUrl ? `Website: ${params.orgUrl}` : ""}
-Sector: ${params.sector ?? "unknown"}
-Organisation type: ${params.audienceType ?? "unknown"}
+${params.orgWebsite ? `Website: ${params.orgWebsite}` : ""}
 
 Return a JSON object with exactly these keys:
 - overview: 2-3 sentence description of the organisation's mission and programmes
