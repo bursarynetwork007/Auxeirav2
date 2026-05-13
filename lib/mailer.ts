@@ -13,8 +13,9 @@ export async function sendEmail(opts: {
   replyTo?: string;
 }): Promise<void> {
   const token = process.env.ZEPTOMAIL_TOKEN;
+  console.log("[mailer] ZEPTOMAIL_TOKEN present:", !!token, "| to:", opts.to, "| subject:", opts.subject);
   if (!token) {
-    console.warn("ZEPTOMAIL_TOKEN not set — email skipped");
+    console.warn("[mailer] ZEPTOMAIL_TOKEN not set — email skipped");
     return;
   }
 
@@ -41,8 +42,10 @@ export async function sendEmail(opts: {
     body: JSON.stringify(body),
   });
 
+  const responseText = await res.text();
   if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`ZeptoMail error ${res.status}: ${err}`);
+    console.error("[mailer] ZeptoMail error:", res.status, responseText);
+    throw new Error(`ZeptoMail error ${res.status}: ${responseText}`);
   }
+  console.log("[mailer] ZeptoMail accepted:", res.status, responseText.slice(0, 120));
 }
