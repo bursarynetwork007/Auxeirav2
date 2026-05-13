@@ -37,7 +37,12 @@ export async function POST(req: NextRequest) {
       source: SubscribeSource;
     };
 
-    if (!email || !firstName || !lastName || !orgName) {
+    // capability-pdf only requires email; newsletter sources require all four fields
+    const isNewsletter = source === "newsletter" || source === "newsletter-cta";
+    if (!email) {
+      return NextResponse.json({ error: "email is required" }, { status: 400 });
+    }
+    if (isNewsletter && (!firstName || !lastName || !orgName)) {
       return NextResponse.json({ error: "firstName, lastName, email and orgName are required" }, { status: 400 });
     }
 
@@ -68,7 +73,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 2. Trigger Grok org research async — enriches newsletter personalisation
-    if (source === "newsletter" || source === "newsletter-cta") {
+    if ((source === "newsletter" || source === "newsletter-cta") && orgName) {
       triggerGrokSubscriberResearch({ subscriberId: id, orgName, orgWebsite: resolvedWebsite })
         .catch((err) => console.error("Grok subscriber research failed:", err));
     }

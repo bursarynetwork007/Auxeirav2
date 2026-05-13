@@ -25,7 +25,7 @@ export default function CapabilityDownload() {
             </p>
 
             <a
-              href="/capability-overview.html"
+              href="/capability-overview.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-3 bg-[#C9A84C] text-[#0A1628] px-8 py-4 text-sm font-semibold tracking-wide hover:bg-[#F0E6C8] transition-colors"
@@ -44,10 +44,6 @@ export default function CapabilityDownload() {
               </svg>
               Download Capability Overview
             </a>
-
-            <p className="mt-4 text-[#F5F0E8]/25 text-xs">
-              Opens in browser — use File → Print → Save as PDF
-            </p>
           </RevealOnScroll>
         </div>
       </div>
