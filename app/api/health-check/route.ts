@@ -36,9 +36,10 @@ async function triggerManusResearch(params: {
   score: number;
 }): Promise<string | null> {
   const apiKey = process.env.MANUS_API_KEY;
+  console.log("[manus] MANUS_API_KEY present:", !!apiKey, "| MANUS_BASE:", MANUS_BASE);
 
   if (!apiKey) {
-    console.warn("MANUS_API_KEY not set — skipping research task");
+    console.warn("[manus] MANUS_API_KEY not set — skipping research task");
     return null;
   }
 
@@ -71,6 +72,7 @@ Be specific to this organisation. Use publicly available information only.`;
   };
 
   try {
+    console.log("[manus] Calling task.create for:", params.orgName);
     const res = await fetch(`${MANUS_BASE}/v2/task.create`, {
       method: "POST",
       headers: {
@@ -83,15 +85,19 @@ Be specific to this organisation. Use publicly available information only.`;
       }),
     });
 
+    const responseText = await res.text();
+    console.log("[manus] task.create response:", res.status, responseText.slice(0, 300));
     if (!res.ok) {
-      console.error("Manus task.create error:", res.status, await res.text());
+      console.error("[manus] task.create error:", res.status, responseText);
       return null;
     }
 
-    const data = await res.json() as Record<string, unknown>;
-    return (data.task_id ?? data.id) as string | null;
+    const data = JSON.parse(responseText) as Record<string, unknown>;
+    const taskId = (data.task_id ?? data.id) as string | null;
+    console.log("[manus] task created:", taskId);
+    return taskId;
   } catch (err) {
-    console.error("Manus trigger failed:", err);
+    console.error("[manus] trigger failed:", err);
     return null;
   }
 }
