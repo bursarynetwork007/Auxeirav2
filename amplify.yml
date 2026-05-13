@@ -6,6 +6,20 @@ frontend:
         - npm ci
     build:
       commands:
+        - echo "ZEPTOMAIL_TOKEN=$ZEPTOMAIL_TOKEN" >> .env.production
+        - echo "ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY" >> .env.production
+        - echo "XAI_API_KEY=$XAI_API_KEY" >> .env.production
+        - echo "GROK_API_KEY=$GROK_API_KEY" >> .env.production
+        - echo "DYNAMODB_LEADS_TABLE=$DYNAMODB_LEADS_TABLE" >> .env.production
+        - echo "DYNAMODB_HEALTH_CHECK_TABLE=$DYNAMODB_HEALTH_CHECK_TABLE" >> .env.production
+        - echo "DYNAMODB_TOPIC_BANK_TABLE=$DYNAMODB_TOPIC_BANK_TABLE" >> .env.production
+        - echo "MANUS_API_KEY=$MANUS_API_KEY" >> .env.production
+        - echo "MANUS_API_ENDPOINT=$MANUS_API_ENDPOINT" >> .env.production
+        - echo "LEAD_NOTIFICATION_EMAIL=$LEAD_NOTIFICATION_EMAIL" >> .env.production
+        - echo "CRON_SECRET=$CRON_SECRET" >> .env.production
+        - echo "NEXT_PUBLIC_CALENDLY_URL=$NEXT_PUBLIC_CALENDLY_URL" >> .env.production
+        - echo "NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL" >> .env.production
+        - echo "CAPABILITY_PDF_URL=$CAPABILITY_PDF_URL" >> .env.production
         - npm run build
   artifacts:
     baseDirectory: .next
