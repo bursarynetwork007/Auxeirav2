@@ -9,8 +9,8 @@ frontend:
         - |
           python3 -c "
           import subprocess, json, os
-          keys = ['ZEPTOMAIL_TOKEN','ANTHROPIC_API_KEY','XAI_API_KEY','MANUS_API_KEY',
-                  'MANUS_API_ENDPOINT','DYNAMODB_LEADS_TABLE','DYNAMODB_HEALTH_CHECK_TABLE',
+          keys = ['ZEPTOMAIL_TOKEN','ANTHROPIC_API_KEY','XAI_API_KEY',
+                  'DYNAMODB_LEADS_TABLE','DYNAMODB_HEALTH_CHECK_TABLE',
                   'DYNAMODB_TOPIC_BANK_TABLE','LEAD_NOTIFICATION_EMAIL','CAPABILITY_PDF_URL',
                   'NEXT_PUBLIC_CALENDLY_URL','NEXT_PUBLIC_SITE_URL']
           secrets = {}

@@ -29,9 +29,11 @@ export interface GrokTopicDiscoveryResult {
 }
 
 function grokHeaders(): HeadersInit {
+  // XAI_API_KEY is the canonical env var name (matches SSM and Amplify config)
+  const key = process.env.XAI_API_KEY ?? process.env.GROK_API_KEY ?? "";
   return {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${process.env.GROK_API_KEY}`,
+    Authorization: `Bearer ${key}`,
   };
 }
 
@@ -129,8 +131,8 @@ const SECTORS = [
 ];
 
 export async function discoverWeeklyTopics(): Promise<GrokTopicDiscoveryResult> {
-  if (!process.env.GROK_API_KEY) {
-    throw new Error("GROK_API_KEY not set");
+  if (!(process.env.XAI_API_KEY ?? process.env.GROK_API_KEY)) {
+    throw new Error("XAI_API_KEY not set");
   }
 
   const sectorList = SECTORS.join(", ");
@@ -185,8 +187,8 @@ Return 5–8 topics. Prioritise African context. Score relevance 1–10 where 10
 export async function selectMonthlyTheme(
   topicBank: GrokTopicDiscoveryResult[]
 ): Promise<{ theme: string; rationale: string; top_topics: string[] }> {
-  if (!process.env.GROK_API_KEY) {
-    throw new Error("GROK_API_KEY not set");
+  if (!(process.env.XAI_API_KEY ?? process.env.GROK_API_KEY)) {
+    throw new Error("XAI_API_KEY not set");
   }
 
   const allTopics = topicBank
@@ -284,8 +286,8 @@ export async function researchOrganisation(params: {
   primaryGap: string;
   score: number;
 }): Promise<GrokOrgResearch> {
-  if (!process.env.GROK_API_KEY) {
-    throw new Error("GROK_API_KEY not set");
+  if (!(process.env.XAI_API_KEY ?? process.env.GROK_API_KEY)) {
+    throw new Error("XAI_API_KEY not set");
   }
 
   const personName = `${params.personFirstName} ${params.personLastName}`.trim();
