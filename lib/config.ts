@@ -4,6 +4,8 @@
 // module-level cache so each Lambda instance only calls SSM once.
 
 import { SSMClient, GetParametersCommand } from "@aws-sdk/client-ssm";
+import { existsSync, readFileSync } from "fs";
+import { join } from "path";
 
 const SSM_REGION = "us-east-1";
 const SSM_PREFIX = "/auxeira/";
@@ -59,24 +61,25 @@ export async function getConfig(): Promise<Partial<Record<ConfigKey, string>>> {
   // Try reading from bundled secrets file first (written by amplify.yml at build time)
   if (!cache) {
     const candidates = [
-      `${process.cwd()}/lib/secrets.json`,
-      `${__dirname}/secrets.json`,
+      join(process.cwd(), "lib", "secrets.json"),
+      join(__dirname, "secrets.json"),
       "/var/task/lib/secrets.json",
     ];
     for (const p of candidates) {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        const bundled = require(p) as Partial<Record<ConfigKey, string>>;
-        if (bundled && Object.keys(bundled).length > 0) {
-          cache = bundled;
-          console.log("[config] Loaded from", p, ":", Object.keys(cache).join(", "));
-          return cache;
+        if (existsSync(p)) {
+          const bundled = JSON.parse(readFileSync(p, "utf-8")) as Partial<Record<ConfigKey, string>>;
+          if (bundled && Object.keys(bundled).length > 0) {
+            cache = bundled;
+            console.log("[config] Loaded from", p, ":", Object.keys(cache).join(", "));
+            return cache;
+          }
         }
       } catch {
         // try next path
       }
     }
-    console.log("[config] secrets.json not found at any candidate path — falling back to SSM");
+    console.log("[config] secrets.json not found — falling back to SSM");
   }
 
   if (!cache) {
