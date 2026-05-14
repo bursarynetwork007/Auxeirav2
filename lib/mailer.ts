@@ -1,6 +1,8 @@
 // ZeptoMail transactional email — REST API, no SDK dependency.
 // Docs: https://www.zoho.com/zeptomail/help/api/email-sending.html
 
+import { getEnv } from "@/lib/config";
+
 const ZEPTO_API_URL = "https://api.zeptomail.com/v1.1/email";
 const FROM_ADDRESS = "info@auxeira.com";
 const FROM_NAME = "Lante at Auxeira";
@@ -12,7 +14,7 @@ export async function sendEmail(opts: {
   text?: string;
   replyTo?: string;
 }): Promise<void> {
-  const token = process.env.ZEPTOMAIL_TOKEN;
+  const token = await getEnv("ZEPTOMAIL_TOKEN");
   console.log("[mailer] ZEPTOMAIL_TOKEN present:", !!token, "| to:", opts.to, "| subject:", opts.subject);
   if (!token) {
     console.warn("[mailer] ZEPTOMAIL_TOKEN not set — email skipped");

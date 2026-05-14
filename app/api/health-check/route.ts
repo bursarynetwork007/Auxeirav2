@@ -13,6 +13,7 @@ import {
   type HealthCheckAnswers,
 } from "@/lib/healthCheckScoring";
 import { normaliseUrl } from "@/lib/normaliseUrl";
+import { getEnv } from "@/lib/config";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -35,7 +36,7 @@ async function triggerManusResearch(params: {
   primaryGap: string;
   score: number;
 }): Promise<string | null> {
-  const apiKey = process.env.MANUS_API_KEY;
+  const apiKey = await getEnv("MANUS_API_KEY");
   console.log("[manus] MANUS_API_KEY present:", !!apiKey, "| MANUS_BASE:", MANUS_BASE);
 
   if (!apiKey) {
