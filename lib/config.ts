@@ -56,6 +56,21 @@ export async function getConfig(): Promise<Partial<Record<ConfigKey, string>>> {
     return {};
   }
 
+  // Try reading from bundled secrets file first (written by amplify.yml at build time)
+  if (!cache) {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const bundled = require("@/lib/secrets.json") as Partial<Record<ConfigKey, string>>;
+      if (bundled && Object.keys(bundled).length > 0) {
+        cache = bundled;
+        console.log("[config] Loaded from bundled secrets:", Object.keys(cache).join(", "));
+        return cache;
+      }
+    } catch {
+      // File doesn't exist locally — fall through to SSM
+    }
+  }
+
   if (!cache) {
     try {
       cache = await loadFromSSM();
