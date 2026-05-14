@@ -103,13 +103,22 @@ const GAP_LABELS: Record<string, string> = {
 };
 
 // ── Score calculation ─────────────────────────────────────────────────────────
+// Raw max = 10+14+14+15+15+12+10+14 = 104
+// Final score = round(raw / 104 × 100), normalised to 0–100
 
-export function calculateScore(answers: HealthCheckAnswers): number {
+const RAW_MAX = 104;
+
+export function calculateRawScore(answers: HealthCheckAnswers): number {
   let total = 0;
   for (const q of Object.keys(SCORING) as (keyof HealthCheckAnswers)[]) {
     total += SCORING[q][answers[q]] ?? 0;
   }
-  return Math.min(100, total);
+  return total;
+}
+
+export function calculateScore(answers: HealthCheckAnswers): number {
+  const raw = calculateRawScore(answers);
+  return Math.round((raw / RAW_MAX) * 100);
 }
 
 export function getQuestionScores(
