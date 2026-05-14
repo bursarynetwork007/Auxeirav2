@@ -8,7 +8,7 @@ frontend:
       commands:
         - |
           python3 -c "
-          import subprocess, json
+          import subprocess, json, os
           keys = ['ZEPTOMAIL_TOKEN','ANTHROPIC_API_KEY','XAI_API_KEY','MANUS_API_KEY',
                   'MANUS_API_ENDPOINT','DYNAMODB_LEADS_TABLE','DYNAMODB_HEALTH_CHECK_TABLE',
                   'DYNAMODB_TOPIC_BANK_TABLE','LEAD_NOTIFICATION_EMAIL','CAPABILITY_PDF_URL',
@@ -29,6 +29,9 @@ frontend:
           print('[config] secrets.json written with', len(secrets), 'keys')
           "
         - npm run build
+        - mkdir -p .next/server/lib
+        - cp lib/secrets.json .next/server/lib/secrets.json
+        - echo "[config] secrets.json copied to .next/server/lib/"
   artifacts:
     baseDirectory: .next
     files:

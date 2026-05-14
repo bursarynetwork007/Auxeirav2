@@ -63,7 +63,9 @@ export async function getConfig(): Promise<Partial<Record<ConfigKey, string>>> {
     const candidates = [
       join(process.cwd(), "lib", "secrets.json"),
       join(__dirname, "secrets.json"),
+      join(__dirname, "..", "lib", "secrets.json"),
       "/var/task/lib/secrets.json",
+      "/var/task/.next/server/lib/secrets.json",
     ];
     for (const p of candidates) {
       try {
