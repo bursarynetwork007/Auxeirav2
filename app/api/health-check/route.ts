@@ -104,7 +104,7 @@ export async function POST(req: NextRequest) {
     try {
       await sendEmail({
         to: email,
-        subject: `Your Auxeira Evidence Risk Report — ${orgName}`,
+        subject: `Your Auxeira Evidence Risk Report: ${orgName}`,
         html: reportHtml,
       });
     } catch (emailErr) {
@@ -132,7 +132,7 @@ export async function POST(req: NextRequest) {
       const notifyEmail = process.env.LEAD_NOTIFICATION_EMAIL ?? "info@auxeira.com";
       await sendEmail({
         to: notifyEmail,
-        subject: `New Health Check: ${orgName} — Score ${score}/100`,
+        subject: `New Health Check: ${orgName} Score ${score}/100`,
         html: buildLeadNotificationEmail({
           email, firstName, lastName, orgName,
           score, rawScore, answers, scoreBand, tierRec, topGaps, primaryGap, research,
@@ -193,7 +193,7 @@ const PROJ: Record<string, { fund: string; inf: string; opp: string; scale: stri
 const BAND_META: Record<string, { grade: string; gc: string; gb: string; rl: string; sb: number }> = {
   "Strong foundation":          { grade: "Strong",         gc: "#1D9E75", gb: "rgba(29,158,117,0.12)",  rl: "Low",      sb: 85 },
   "Solid base, significant gap":{ grade: "Moderate",       gc: "#C9A84C", gb: "rgba(201,168,76,0.15)",  rl: "Medium",   sb: 60 },
-  "Significant gaps — urgent":  { grade: "Needs attention",gc: "#D85A30", gb: "rgba(216,90,48,0.12)",   rl: "High",     sb: 35 },
+  "Significant gaps, urgent":   { grade: "Needs attention",gc: "#D85A30", gb: "rgba(216,90,48,0.12)",   rl: "High",     sb: 35 },
   "Critical gaps":              { grade: "Critical",       gc: "#E24B4A", gb: "rgba(226,75,74,0.12)",   rl: "Critical", sb: 15 },
 };
 
@@ -201,26 +201,26 @@ const BAND_META: Record<string, { grade: string; gc: string; gb: string; rl: str
 
 const RISKS: Record<string, [string, string, string]> = {
   low: [
-    "Translation polish — strong evidence base, but audience-specific framing can be sharpened for higher-value funder conversations.",
-    "Economic narrative — the full fiscal return of your programme may not yet be fully quantified or communicated in Treasury language.",
-    "Funder language — the gap between evidence quality and funding conversion rate can still be narrowed with targeted translation work.",
+    "Translation polish: strong evidence base, but audience-specific framing can be sharpened for higher-value funder conversations.",
+    "Economic narrative: the full fiscal return of your programme may not yet be fully quantified or communicated in Treasury language.",
+    "Funder language: the gap between evidence quality and funding conversion rate can still be narrowed with targeted translation work.",
   ],
   med: [
-    "Partial economic framing — SROI or fiscal impact data exists but is not being maximised in funder conversations or government submissions.",
-    "Translation gap — evidence is reaching funders but not converting to decisions at the rate the programme quality warrants.",
-    "Sector positioning — the economic infrastructure case for your work has not been made at National Treasury or policy level.",
+    "Partial economic framing: SROI or fiscal impact data exists but is not being maximised in funder conversations or government submissions.",
+    "Translation gap: evidence is reaching funders but not converting to decisions at the rate the programme quality warrants.",
+    "Sector positioning: the economic infrastructure case for your work has not been made at National Treasury or policy level.",
   ],
   high: [
-    "Weak economic framing — likely difficulty securing Treasury allocations or government co-funding without a fiscal multiplier analysis.",
-    "Funder deprioritisation — proposals are likely being passed over in competitive rounds for organisations with stronger evidence narratives.",
-    "Limited policy influence — policy reach is constrained despite strong programme delivery because the economic case has not been made.",
+    "Weak economic framing: likely difficulty securing Treasury allocations or government co-funding without a fiscal multiplier analysis.",
+    "Funder deprioritisation: proposals are likely being passed over in competitive rounds for organisations with stronger evidence narratives.",
+    "Limited policy influence: policy reach is constrained despite strong programme delivery because the economic case has not been made.",
   ],
 };
 
 // ── Sector context — mirrors Evidence_Risk_Report.html CTX object ─────────────
 
 const SECTOR_CTX: Record<string, string> = {
-  ecd:    "South Africa's ECD sector is undergoing a major funding shift — the Bana Pele commitment puts R10B on the table but requires economic impact evidence, not just child outcome data. Organisations without fiscal framing are being structurally deprioritised.",
+  ecd:    "South Africa's ECD sector is undergoing a major funding shift. The Bana Pele commitment puts R10B on the table but requires economic impact evidence, not just child outcome data. Organisations without fiscal framing are being structurally deprioritised.",
   health: "Global health funders are tightening evidence requirements. South African health organisations without strong M&E frameworks and economic framing are losing ground to those that can demonstrate cost-per-outcome and long-term fiscal savings.",
   econ:   "Economic development funders are moving toward enterprise-level SROI and fiscal multiplier evidence. Organisations without verified economic contribution data face increasing competition for government and DFI co-funding.",
   other:  "Social impact funders globally are shifting toward evidence-weighted portfolio allocation. Organisations without strong evidence communication frameworks are structurally disadvantaged in competitive funding environments.",
@@ -228,7 +228,7 @@ const SECTOR_CTX: Record<string, string> = {
 
 // ── Sector intelligence insight — mirrors Evidence_Risk_Report.html getAI() ───
 
-const SECTOR_INSIGHT_FALLBACK = "Based on sector benchmarks, organisations with similar evidence profiles typically secure an estimated 30–40% less funding than sector leaders with strong economic framing. Closing this evidence gap through Auxeira's synthesis and translation methodology is estimated to unlock 2–3x more decision-maker engagement within 24 months — based on patterns across South Africa's social impact funding landscape.";
+const SECTOR_INSIGHT_FALLBACK = "Based on sector benchmarks, organisations with similar evidence profiles typically secure an estimated 30 to 40% less funding than sector leaders with strong economic framing. Closing this evidence gap through Auxeira's synthesis and translation methodology is estimated to unlock 2 to 3x more decision-maker engagement within 24 months, based on patterns across South Africa's social impact funding landscape.";
 
 async function getSectorInsight(score: number, bandLabel: string, sectorKey: string): Promise<string> {
   const prompt = `You are Auxeira's Evidence Risk Analyst. Auxeira is a Johannesburg-based evidence intelligence consultancy that translates complex programme data into economic narratives that move funders, government, and boards to act.
@@ -373,17 +373,20 @@ CLOSING QUESTION (1 sentence):
       system: CLAUDE_SYSTEM,
       messages: [{ role: "user", content: userPrompt }],
     });
-    claudeNarrative = msg.content
-      .filter((b) => b.type === "text")
-      .map((b) => (b as { type: "text"; text: string }).text)
-      .join("\n").trim();
+    claudeNarrative = sanitiseAIOutput(
+      msg.content
+        .filter((b) => b.type === "text")
+        .map((b) => (b as { type: "text"; text: string }).text)
+        .join("\n").trim()
+    );
   } catch (err) {
     console.error("[health-check] Claude generation failed:", err);
-    claudeNarrative = buildFallbackNarrative(p, research);
+    claudeNarrative = sanitiseAIOutput(buildFallbackNarrative(p, research));
   }
 
   // Sector intelligence insight (Claude with guardrails — no AI attribution in output)
-  const sectorInsight = await getSectorInsight(score, scoreBand.label, sectorKey);
+  const rawSectorInsight = await getSectorInsight(score, scoreBand.label, sectorKey);
+  const sectorInsight = sanitiseAIOutput(rawSectorInsight);
 
   // Render narrative sections as HTML paragraphs
   const narrativeHtml = claudeNarrative
@@ -404,7 +407,7 @@ CLOSING QUESTION (1 sentence):
   const forwardBox = showForward
     ? `<table width="100%" cellpadding="0" cellspacing="0" style="background:#EFF7FF;border:0.5px solid #B5D4F4;border-radius:8px;margin-bottom:12px;">
         <tr><td style="padding:10px 14px;font-size:12px;color:#185FA5;line-height:1.6;">
-          This report is most relevant to ${orgName}'s executive leadership. If the evidence architecture question is one for your CEO or board, forward this report to ${ceoName} — or reply to this email and we will take it from there.
+          This report is most relevant to ${orgName}'s executive leadership. If the evidence architecture question is one for your CEO or board, forward this report to ${ceoName}, or reply to this email and we will take it from there.
         </td></tr>
        </table>`
     : "";
@@ -413,7 +416,7 @@ CLOSING QUESTION (1 sentence):
   return `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Auxeira — Entity Evidence Risk Report</title>
+<title>Auxeira Entity Evidence Risk Report</title>
 </head>
 <body style="margin:0;padding:0;background:#F5F0E8;font-family:Arial,sans-serif;color:#1A1A2A;">
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#F5F0E8;padding:24px 16px;">
@@ -468,7 +471,7 @@ CLOSING QUESTION (1 sentence):
   <!-- Greeting -->
   <tr><td style="background:#fff;padding:20px 24px 0;">
     <p style="margin:0 0 8px;font-size:14px;line-height:1.6;">Hi ${firstName},</p>
-    <p style="margin:0 0 16px;font-size:13px;line-height:1.7;color:#555;">Your <strong>Entity Evidence Risk Report</strong> for <strong>${orgName}</strong> is below — based on your diagnostic answers and independent sector research.</p>
+    <p style="margin:0 0 16px;font-size:13px;line-height:1.7;color:#555;">Your <strong>Entity Evidence Risk Report</strong> for <strong>${orgName}</strong> is below, based on your diagnostic answers and independent sector research.</p>
     ${forwardBox}
   </td></tr>
 
@@ -512,10 +515,10 @@ CLOSING QUESTION (1 sentence):
   <tr><td style="background:#fff;padding:0 24px 16px;">
     <table width="100%" cellpadding="0" cellspacing="0" style="border:0.5px solid #DDD;border-radius:12px;padding:16px;">
       <tr><td>
-        <p style="margin:0 0 8px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;">Funding stability analysis — 36 months</p>
-        <p style="margin:0 0 12px;font-size:12px;color:#555;line-height:1.6;">Estimated probability of maintaining current funding levels over 36 months — comparing your current evidence trajectory against a scenario where the identified gaps are addressed. Based on actuarially-informed scenario modelling using South African sector funding benchmarks.</p>
+        <p style="margin:0 0 8px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;">Funding stability analysis: 36 months</p>
+        <p style="margin:0 0 12px;font-size:12px;color:#555;line-height:1.6;">Estimated probability of maintaining current funding levels over 36 months, comparing your current evidence trajectory against a scenario where the identified gaps are addressed. Based on actuarially-informed scenario modelling using South African sector funding benchmarks.</p>
         ${buildSurvivalChart(sp)}
-        <p style="margin:8px 0 0;font-size:10px;color:#999;font-style:italic;">Based on actuarially-informed scenario modelling using sector-level funding patterns. Illustrative — not a guarantee of outcome.</p>
+        <p style="margin:8px 0 0;font-size:10px;color:#999;font-style:italic;">Based on actuarially-informed scenario modelling using sector-level funding patterns. Illustrative, not a guarantee of outcome.</p>
       </td></tr>
     </table>
   </td></tr>
@@ -524,8 +527,8 @@ CLOSING QUESTION (1 sentence):
   <tr><td style="background:#fff;padding:0 24px 16px;">
     <table width="100%" cellpadding="0" cellspacing="0" style="border:0.5px solid #DDD;border-radius:12px;padding:16px;">
       <tr><td>
-        <p style="margin:0 0 8px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;">Counterfactual — 3-year funding divergence</p>
-        <p style="margin:0 0 12px;font-size:12px;color:#555;line-height:1.6;">Estimated cumulative funding secured over three years — comparing a trajectory without evidence improvement against one with a full Auxeira engagement. Based on sector funding benchmarks for your budget profile.</p>
+        <p style="margin:0 0 8px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;">Counterfactual: 3-year funding divergence</p>
+        <p style="margin:0 0 12px;font-size:12px;color:#555;line-height:1.6;">Estimated cumulative funding secured over three years, comparing a trajectory without evidence improvement against one with a full Auxeira engagement. Based on sector funding benchmarks for your budget profile.</p>
         ${buildCounterfactualChart(proj.base, proj.imp)}
         <p style="margin:8px 0 0;font-size:10px;color:#999;font-style:italic;">All figures estimated and illustrative. Based on sector funding benchmarks. Not a specific financial forecast.</p>
       </td></tr>
@@ -567,7 +570,7 @@ CLOSING QUESTION (1 sentence):
       <tr><td>
         <p style="margin:0 0 8px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;">Sector intelligence</p>
         <p style="margin:0 0 6px;font-size:12px;color:#555;line-height:1.7;">${sectorInsight}</p>
-        <p style="margin:0;font-size:10px;color:#999;font-style:italic;">Based on sector benchmarks. Illustrative — not a guarantee of outcome.</p>
+        <p style="margin:0;font-size:10px;color:#999;font-style:italic;">Based on sector benchmarks. Illustrative, not a guarantee of outcome.</p>
       </td></tr>
     </table>
   </td></tr>
@@ -592,14 +595,14 @@ CLOSING QUESTION (1 sentence):
 
   <!-- CTA -->
   <tr><td style="background:#0A1628;padding:24px;">
-    <p style="margin:0 0 12px;font-size:13px;color:rgba(245,240,232,0.7);line-height:1.6;">You are at peak clarity about your evidence gaps right now. Book your Evidence Strategy Call while it is fresh — we will walk through this report and map a specific intervention.</p>
-    <a href="${calendlyUrl}" style="display:block;background:#C9A84C;color:#0A1628;padding:13px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;text-align:center;margin-bottom:8px;">${scoreBand.ctaVariant === "urgent" ? "Talk to us today — book your Evidence Strategy Call" : "Book your Evidence Strategy Call"} →</a>
+    <p style="margin:0 0 12px;font-size:13px;color:rgba(245,240,232,0.7);line-height:1.6;">You are at peak clarity about your evidence gaps right now. Book your Evidence Strategy Call while it is fresh. We will walk through this report and map a specific intervention.</p>
+    <a href="${calendlyUrl}" style="display:block;background:#C9A84C;color:#0A1628;padding:13px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;text-align:center;margin-bottom:8px;">${scoreBand.ctaVariant === "urgent" ? "Talk to us today: book your Evidence Strategy Call" : "Book your Evidence Strategy Call"} →</a>
     <a href="${siteUrl}/capability-overview.pdf" style="display:block;background:transparent;color:rgba(245,240,232,0.5);border:0.5px solid rgba(255,255,255,0.2);padding:11px;border-radius:8px;font-size:12px;text-decoration:none;text-align:center;">Download Capability Overview →</a>
   </td></tr>
 
   <!-- Footer -->
   <tr><td style="background:#0A1628;border-top:0.5px solid rgba(255,255,255,0.08);border-radius:0 0 12px 12px;padding:16px 24px;">
-    <p style="margin:0;font-size:11px;color:rgba(245,240,232,0.3);">Auxeira &nbsp;·&nbsp; info@auxeira.com &nbsp;·&nbsp; auxeira.com<br>Johannesburg — Global from Africa</p>
+    <p style="margin:0;font-size:11px;color:rgba(245,240,232,0.3);">Auxeira &nbsp;·&nbsp; info@auxeira.com &nbsp;·&nbsp; auxeira.com<br>Johannesburg. Global from Africa</p>
     <p style="margin:4px 0 0;font-size:11px;color:rgba(245,240,232,0.2);">This report is confidential and prepared exclusively for ${orgName}.</p>
   </td></tr>
 
@@ -608,6 +611,44 @@ CLOSING QUESTION (1 sentence):
 </table>
 </body>
 </html>`;
+}
+
+// ── AI output sanitiser ───────────────────────────────────────────────────────
+// Enforces the voice rules from EVIDENCE_HEALTH_CHECK.md on any AI-generated text
+// before it reaches the client email. Belt-and-braces — the system prompt already
+// instructs Claude, but this catches any slippage.
+
+function sanitiseAIOutput(text: string): string {
+  return text
+    // Em dashes and long dashes -> comma or colon depending on context
+    .replace(/ \u2014 /g, ", ")          // " — " -> ", "
+    .replace(/\u2014/g, ", ")            // bare — -> ", "
+    .replace(/ \u2013 /g, ", ")          // " – " -> ", "
+    .replace(/\u2013/g, ", ")            // bare – -> ", "
+    .replace(/ --- /g, ", ")             // " --- " -> ", "
+    .replace(/---/g, ", ")
+    .replace(/ -- /g, ", ")
+    // Exclamation marks
+    .replace(/!/g, ".")
+    // Banned phrases
+    .replace(/\bleverage\b/gi, "use")
+    .replace(/\bsynergies\b/gi, "shared value")
+    .replace(/\btouch base\b/gi, "connect")
+    .replace(/\breaching out\b/gi, "writing")
+    .replace(/\bcircle back\b/gi, "follow up")
+    .replace(/I hope this finds you well[.,]?\s*/gi, "")
+    // AI self-references
+    .replace(/\b(Claude|ChatGPT|GPT-4|OpenAI|Anthropic|AI-generated|AI model|language model)\b/gi, "")
+    // Bold mid-paragraph: strip <strong> tags that aren't section headers
+    .replace(/<strong>(.*?)<\/strong>/g, "$1")
+    .replace(/<b>(.*?)<\/b>/g, "$1")
+    // Bullet points converted to prose connector
+    .replace(/^[\s]*[-*•]\s+/gm, "")
+    // Collapse multiple spaces/commas left by replacements
+    .replace(/, ,/g, ",")
+    .replace(/,\s*,/g, ",")
+    .replace(/\.\s*\./g, ".")
+    .trim();
 }
 
 // ── Email-safe chart builders ─────────────────────────────────────────────────
@@ -682,7 +723,7 @@ function buildSurvivalChart(sb: number): string {
         <td width="50%" style="padding-right:6px;">
           <table width="100%" cellpadding="8" cellspacing="0" style="background:#F5F5F5;border-radius:8px;text-align:center;">
             <tr><td>
-              <p style="margin:0 0 2px;font-size:10px;color:#999;">Current path — 36-month estimate</p>
+              <p style="margin:0 0 2px;font-size:10px;color:#999;">Current path, 36-month estimate</p>
               <p style="margin:0;font-size:20px;font-weight:700;color:#E24B4A;">~${cur[6]}%</p>
               <p style="margin:0;font-size:10px;color:#999;">funding stability probability</p>
             </td></tr>
@@ -829,7 +870,7 @@ function buildLeadNotificationEmail(p: {
     <tr><td style="padding:5px 10px;font-size:12px;color:#666;border-bottom:1px solid #eee;">Email</td><td style="padding:5px 10px;font-size:12px;">${email}</td></tr>
     <tr><td style="padding:5px 10px;font-size:12px;color:#666;border-bottom:1px solid #eee;">Organisation</td><td style="padding:5px 10px;font-size:12px;">${orgName}</td></tr>
     <tr><td style="padding:5px 10px;font-size:12px;color:#666;border-bottom:1px solid #eee;">Raw score</td><td style="padding:5px 10px;font-size:12px;">${rawScore} / 104</td></tr>
-    <tr><td style="padding:5px 10px;font-size:12px;color:#666;border-bottom:1px solid #eee;">Final score</td><td style="padding:5px 10px;font-size:12px;font-weight:bold;">${score} / 100 — ${scoreBand.label}</td></tr>
+    <tr><td style="padding:5px 10px;font-size:12px;color:#666;border-bottom:1px solid #eee;">Final score</td><td style="padding:5px 10px;font-size:12px;font-weight:bold;">${score} / 100, ${scoreBand.label}</td></tr>
     <tr><td style="padding:5px 10px;font-size:12px;color:#666;border-bottom:1px solid #eee;">Primary gap</td><td style="padding:5px 10px;font-size:12px;color:#C9A84C;font-weight:bold;">${primaryGap}</td></tr>
     <tr><td style="padding:5px 10px;font-size:12px;color:#666;border-bottom:1px solid #eee;">Tier rec.</td><td style="padding:5px 10px;font-size:12px;">${tierRec.label}</td></tr>
     <tr><td style="padding:5px 10px;font-size:12px;color:#666;border-bottom:1px solid #eee;">Seniority</td><td style="padding:5px 10px;font-size:12px;">${research?.seniority ?? "unknown"}</td></tr>

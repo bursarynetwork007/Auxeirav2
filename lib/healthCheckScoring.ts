@@ -148,12 +148,12 @@ export function getScoreBand(score: number): {
       label: "Strong foundation",
       headline: "Your evidence is strong. Your gap is translation.",
       description:
-        "Your data is solid. Your evaluations exist. But your evidence isn't moving the decisions it should — because it hasn't been translated into the language your audience responds to. That's a solvable problem. Auxeira solves it.",
+        "Your data is solid. Your evaluations exist. But your evidence isn't moving the decisions it should, because it hasn't been translated into the language your audience responds to. That's a solvable problem. Auxeira solves it.",
       ctaText:
         "Book a 30-minute Evidence Diagnostic Call. We'll show you exactly where your translation gap is costing you.",
       ctaVariant: "book",
-      priceRange: "R85,000 – R150,000",
-      timeline: "3–6 weeks",
+      priceRange: "R85,000 - R150,000",
+      timeline: "3-6 weeks",
     };
   }
   if (score >= 50) {
@@ -161,34 +161,34 @@ export function getScoreBand(score: number): {
       label: "Solid base, significant gap",
       headline: "You have more evidence than you think. It's not working as hard as it should.",
       description:
-        "You have programme data, evaluations, and sector knowledge that funders and government should be acting on. The gap is in how it's synthesised, framed, and communicated. Your SROI may never have been calculated. Your economic contribution may be invisible. These are fixable — and fixing them changes what you're able to raise and influence.",
+        "You have programme data, evaluations, and sector knowledge that funders and government should be acting on. The gap is in how it's synthesised, framed, and communicated. Your SROI may never have been calculated. Your economic contribution may be invisible. These are fixable, and fixing them changes what you're able to raise and influence.",
       ctaText:
         "Book a 30-minute Evidence Diagnostic Call. Your gaps are specific and solvable. Let's identify them.",
       ctaVariant: "book",
-      priceRange: "R180,000 – R350,000",
-      timeline: "6–10 weeks",
+      priceRange: "R180,000 - R350,000",
+      timeline: "6-10 weeks",
     };
   }
   if (score >= 25) {
     return {
-      label: "Significant gaps — urgent",
+      label: "Significant gaps, urgent",
       headline: "Your evidence gaps are likely costing you funding and policy traction right now.",
       description:
-        "Decision-makers aren't acting on your work — not because your work isn't good, but because the evidence of your impact hasn't reached them in a form they can act on. Your economic contribution is unmeasured. Your data exists but hasn't been synthesised. Every funding round and policy window you miss has a cost. Auxeira quantifies that cost — and closes the gap.",
+        "Decision-makers aren't acting on your work, not because your work isn't good, but because the evidence of your impact hasn't reached them in a form they can act on. Your economic contribution is unmeasured. Your data exists but hasn't been synthesised. Every funding round and policy window you miss has a cost. Auxeira quantifies that cost and closes the gap.",
       ctaText:
         "Talk to us today. Your evidence gaps have a direct, quantifiable cost. We can show you what it is.",
       ctaVariant: "urgent",
-      priceRange: "R180,000 – R350,000",
-      timeline: "6–10 weeks",
+      priceRange: "R180,000 - R350,000",
+      timeline: "6-10 weeks",
     };
   }
   return {
     label: "Critical gaps",
     headline: "Critical evidence gaps. Important decisions are being made without your story.",
     description:
-      "Your evidence is not reaching the people who need to act on it. Your economic and social contribution is unmeasured or uncommunicated. Funders, government, and boards are making decisions — about your sector, your funding, your policy environment — without the evidence that would change those decisions. This is not a data problem. It is an architecture problem. Auxeira fixes it.",
+      "Your evidence is not reaching the people who need to act on it. Your economic and social contribution is unmeasured or uncommunicated. Funders, government, and boards are making decisions about your sector, your funding, your policy environment, without the evidence that would change those decisions. This is not a data problem. It is an architecture problem. Auxeira fixes it.",
     ctaText:
-      "Talk to us today. We'll quantify what your evidence gaps are costing you — and show you the fastest path to closing them.",
+      "Talk to us today. We'll quantify what your evidence gaps are costing you, and show you the fastest path to closing them.",
     ctaVariant: "urgent",
     priceRange: "Scoping call required",
     timeline: "Book scoping call",
@@ -216,22 +216,22 @@ export function getTierRecommendation(answers: HealthCheckAnswers): {
     if (isPortfolioChallenge) {
       return {
         tier: 3,
-        label: "Tier 3 — Sector Intelligence Platform",
+        label: "Tier 3: Sector Intelligence Platform",
         description: "The long-term play for funders and sector leaders serious about scale.",
-        ctaText: "Talk to us today — scoping call required →",
+        ctaText: "Talk to us today, scoping call required →",
       };
     }
     if (score >= 50) {
       return {
         tier: 2,
-        label: "Tier 2 — Evidence Synthesis & Strategy",
+        label: "Tier 2: Evidence Synthesis and Strategy",
         description: "When you need the full picture built, not just translated.",
         ctaText: "Book a 30-minute Evidence Diagnostic Call →",
       };
     }
     return {
       tier: "2-3",
-      label: "Tier 2–3 — Scoping call required",
+      label: "Tier 2-3: Scoping call required",
       description: "Scale and complexity require a tailored engagement.",
       ctaText: "Talk to us today →",
     };
@@ -241,7 +241,7 @@ export function getTierRecommendation(answers: HealthCheckAnswers): {
   if (budget === "20m-100m") {
     return {
       tier: 2,
-      label: "Tier 2 — Evidence Synthesis & Strategy",
+      label: "Tier 2: Evidence Synthesis and Strategy",
       description: "When you need the full picture built, not just translated.",
       ctaText:
         score >= 50
@@ -255,7 +255,7 @@ export function getTierRecommendation(answers: HealthCheckAnswers): {
     if (isPortfolioChallenge && score >= 25 && score <= 74) {
       return {
         tier: 2,
-        label: "Tier 2 — Evidence Synthesis & Strategy",
+        label: "Tier 2: Evidence Synthesis and Strategy",
         description: "When you need the full picture built, not just translated.",
         ctaText: "Book a 30-minute Evidence Diagnostic Call →",
       };
@@ -263,14 +263,14 @@ export function getTierRecommendation(answers: HealthCheckAnswers): {
     if (!isPortfolioChallenge && score <= 49) {
       return {
         tier: 2,
-        label: "Tier 2 — Evidence Synthesis & Strategy",
+        label: "Tier 2: Evidence Synthesis and Strategy",
         description: "When you need the full picture built, not just translated.",
         ctaText: "Talk to us today →",
       };
     }
     return {
       tier: 1,
-      label: "Tier 1 — Evidence Translation",
+      label: "Tier 1: Evidence Translation",
       description: "The fastest path from strong evidence to decisions that move.",
       ctaText: "Book a 30-minute Evidence Diagnostic Call →",
     };
@@ -279,7 +279,7 @@ export function getTierRecommendation(answers: HealthCheckAnswers): {
   // Under R5M — always Tier 1
   return {
     tier: 1,
-    label: "Tier 1 — Evidence Translation",
+    label: "Tier 1: Evidence Translation",
     description: "The fastest path from strong evidence to decisions that move.",
     ctaText: "Book a 30-minute Evidence Diagnostic Call →",
   };
@@ -292,11 +292,11 @@ export function getTierRecommendation(answers: HealthCheckAnswers): {
 const Q_GAP_DESCRIPTIONS: Record<keyof HealthCheckAnswers, string> = {
   q1: "Your organisation type signals a systemic evidence gap that requires a tailored approach.",
   q2: "Your evidence isn't reaching the right decision-makers in the language they respond to.",
-  q3: "Your evidence base is still developing — a structured evidence strategy will compound value quickly.",
+  q3: "Your evidence base is still developing. A structured evidence strategy will compound value quickly.",
   q4: "Your evidence is not landing with decision-makers in a form they can act on.",
-  q5: "You have no economic or SROI analysis — the language funders and Treasury require.",
+  q5: "You have no economic or SROI analysis, the language funders and Treasury require.",
   q6: "Your core evidence challenge is unresolved and is directly limiting funding and policy traction.",
-  q7: "Decision-makers are consistently asking you to simplify — your evidence architecture needs redesigning.",
+  q7: "Decision-makers are consistently asking you to simplify. Your evidence architecture needs redesigning.",
   q8: "",
 };
 
