@@ -410,8 +410,6 @@ CLOSING QUESTION (1 sentence):
     : "";
 
   // Recoverable gap figure
-  const recoverableGap = Math.round(proj.imp - proj.base * 0.72);
-
   return `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -510,52 +508,25 @@ CLOSING QUESTION (1 sentence):
     </table>
   </td></tr>
 
-  <!-- Funding stability stats (no chart in email — static figures) -->
+  <!-- Funding stability chart -->
   <tr><td style="background:#fff;padding:0 24px 16px;">
     <table width="100%" cellpadding="0" cellspacing="0" style="border:0.5px solid #DDD;border-radius:12px;padding:16px;">
       <tr><td>
         <p style="margin:0 0 8px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;">Funding stability analysis — 36 months</p>
         <p style="margin:0 0 12px;font-size:12px;color:#555;line-height:1.6;">Estimated probability of maintaining current funding levels over 36 months — comparing your current evidence trajectory against a scenario where the identified gaps are addressed. Based on actuarially-informed scenario modelling using South African sector funding benchmarks.</p>
-        <table width="100%" cellpadding="0" cellspacing="0">
-          <tr>
-            <td width="50%" style="padding-right:6px;">
-              <table width="100%" cellpadding="10" cellspacing="0" style="background:#F5F5F5;border-radius:8px;text-align:center;">
-                <tr><td>
-                  <p style="margin:0 0 3px;font-size:10px;color:#999;">Current path — 36-month estimate</p>
-                  <p style="margin:0;font-size:22px;font-weight:700;color:#E24B4A;">~${sp}%</p>
-                  <p style="margin:0;font-size:10px;color:#999;">funding stability probability</p>
-                </td></tr>
-              </table>
-            </td>
-            <td width="50%" style="padding-left:6px;">
-              <table width="100%" cellpadding="10" cellspacing="0" style="background:#F5F5F5;border-radius:8px;text-align:center;">
-                <tr><td>
-                  <p style="margin:0 0 3px;font-size:10px;color:#999;">With evidence improvement</p>
-                  <p style="margin:0;font-size:22px;font-weight:700;color:#1D9E75;">~${Math.min(93, sp + 25)}%</p>
-                  <p style="margin:0;font-size:10px;color:#999;">estimated probability</p>
-                </td></tr>
-              </table>
-            </td>
-          </tr>
-        </table>
+        ${buildSurvivalChart(sp)}
         <p style="margin:8px 0 0;font-size:10px;color:#999;font-style:italic;">Based on actuarially-informed scenario modelling using sector-level funding patterns. Illustrative — not a guarantee of outcome.</p>
       </td></tr>
     </table>
   </td></tr>
 
-  <!-- Counterfactual recoverable gap -->
+  <!-- Counterfactual chart -->
   <tr><td style="background:#fff;padding:0 24px 16px;">
     <table width="100%" cellpadding="0" cellspacing="0" style="border:0.5px solid #DDD;border-radius:12px;padding:16px;">
       <tr><td>
         <p style="margin:0 0 8px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;">Counterfactual — 3-year funding divergence</p>
         <p style="margin:0 0 12px;font-size:12px;color:#555;line-height:1.6;">Estimated cumulative funding secured over three years — comparing a trajectory without evidence improvement against one with a full Auxeira engagement. Based on sector funding benchmarks for your budget profile.</p>
-        <table width="100%" cellpadding="10" cellspacing="0" style="background:#F0F9F4;border-radius:8px;">
-          <tr>
-            <td><p style="margin:0 0 2px;font-size:10px;color:#999;">Estimated 3-year recoverable gap</p>
-                <p style="margin:0;font-size:20px;font-weight:700;color:#1D9E75;">R${recoverableGap}M+</p></td>
-            <td style="text-align:right;font-size:11px;color:#1D9E75;font-weight:700;">with evidence<br>improvement</td>
-          </tr>
-        </table>
+        ${buildCounterfactualChart(proj.base, proj.imp)}
         <p style="margin:8px 0 0;font-size:10px;color:#999;font-style:italic;">All figures estimated and illustrative. Based on sector funding benchmarks. Not a specific financial forecast.</p>
       </td></tr>
     </table>
@@ -637,6 +608,168 @@ CLOSING QUESTION (1 sentence):
 </table>
 </body>
 </html>`;
+}
+
+// ── Email-safe chart builders ─────────────────────────────────────────────────
+// Pure HTML/CSS table bars — no JS, no canvas, renders in all email clients.
+// Data formulae mirror Evidence_Risk_Report.html survD() and cfD() exactly.
+
+function buildSurvivalChart(sb: number): string {
+  // survD() from the HTML template
+  const base = sb / 100;
+  const imp  = Math.min(0.93, (sb + 25) / 100);
+  const months = [0, 6, 12, 18, 24, 30, 36];
+  const cur  = months.map(m => Math.max(5,  Math.round((base - 0.018 * m) * 100)));
+  const good = months.map(m => Math.min(97, Math.round((imp  - 0.005 * m) * 100)));
+  const labels = months.map(m => m === 0 ? "Now" : `${m}m`);
+
+  // Bar chart rows: each month = one row, two side-by-side bars
+  const maxVal = 100;
+  const rows = labels.map((lbl, i) => {
+    const curW  = Math.round((cur[i]  / maxVal) * 100);
+    const goodW = Math.round((good[i] / maxVal) * 100);
+    return `
+      <tr>
+        <td style="width:28px;font-size:10px;color:#999;padding:2px 6px 2px 0;white-space:nowrap;">${lbl}</td>
+        <td style="padding:2px 0;">
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td style="padding-bottom:2px;">
+                <table cellpadding="0" cellspacing="0" style="width:${curW}%;min-width:2px;">
+                  <tr><td style="background:#E24B4A;height:8px;border-radius:2px;font-size:0;">&nbsp;</td></tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <table cellpadding="0" cellspacing="0" style="width:${goodW}%;min-width:2px;">
+                  <tr><td style="background:#1D9E75;height:8px;border-radius:2px;font-size:0;">&nbsp;</td></tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td style="width:52px;font-size:10px;color:#999;padding:2px 0 2px 6px;white-space:nowrap;">${cur[i]}% / ${good[i]}%</td>
+      </tr>`;
+  }).join("");
+
+  return `
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:8px;">
+      <tr>
+        <td colspan="3" style="padding-bottom:8px;">
+          <table cellpadding="0" cellspacing="0">
+            <tr>
+              <td style="padding-right:12px;">
+                <table cellpadding="0" cellspacing="0"><tr>
+                  <td style="width:10px;height:10px;background:#E24B4A;border-radius:2px;"></td>
+                  <td style="font-size:10px;color:#555;padding-left:4px;">Current trajectory</td>
+                </tr></table>
+              </td>
+              <td>
+                <table cellpadding="0" cellspacing="0"><tr>
+                  <td style="width:10px;height:10px;background:#1D9E75;border-radius:2px;"></td>
+                  <td style="font-size:10px;color:#555;padding-left:4px;">With evidence improvement</td>
+                </tr></table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      ${rows}
+    </table>
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:8px;">
+      <tr>
+        <td width="50%" style="padding-right:6px;">
+          <table width="100%" cellpadding="8" cellspacing="0" style="background:#F5F5F5;border-radius:8px;text-align:center;">
+            <tr><td>
+              <p style="margin:0 0 2px;font-size:10px;color:#999;">Current path — 36-month estimate</p>
+              <p style="margin:0;font-size:20px;font-weight:700;color:#E24B4A;">~${cur[6]}%</p>
+              <p style="margin:0;font-size:10px;color:#999;">funding stability probability</p>
+            </td></tr>
+          </table>
+        </td>
+        <td width="50%" style="padding-left:6px;">
+          <table width="100%" cellpadding="8" cellspacing="0" style="background:#F5F5F5;border-radius:8px;text-align:center;">
+            <tr><td>
+              <p style="margin:0 0 2px;font-size:10px;color:#999;">With evidence improvement</p>
+              <p style="margin:0;font-size:20px;font-weight:700;color:#1D9E75;">~${good[6]}%</p>
+              <p style="margin:0;font-size:10px;color:#999;">estimated probability</p>
+            </td></tr>
+          </table>
+        </td>
+      </tr>
+    </table>`;
+}
+
+function buildCounterfactualChart(base: number, imp: number): string {
+  // cfD() from the HTML template
+  const wo = [base, base * 0.85, base * 0.72];
+  const wi = [base * 1.3, imp * 0.65, imp];
+  const years = ["Year 1", "Year 2", "Year 3"];
+  const maxVal = Math.max(...wo, ...wi);
+  const recoverableGap = Math.round(imp - base * 0.72);
+
+  const rows = years.map((yr, i) => {
+    const woW = Math.round((wo[i] / maxVal) * 100);
+    const wiW = Math.round((wi[i] / maxVal) * 100);
+    return `
+      <tr>
+        <td style="width:44px;font-size:10px;color:#999;padding:3px 6px 3px 0;white-space:nowrap;vertical-align:middle;">${yr}</td>
+        <td style="padding:3px 0;vertical-align:middle;">
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td style="padding-bottom:3px;">
+                <table cellpadding="0" cellspacing="0" style="width:${woW}%;min-width:2px;">
+                  <tr><td style="background:rgba(226,75,74,0.7);height:14px;border-radius:3px;font-size:0;">&nbsp;</td></tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <table cellpadding="0" cellspacing="0" style="width:${wiW}%;min-width:2px;">
+                  <tr><td style="background:rgba(29,158,117,0.75);height:14px;border-radius:3px;font-size:0;">&nbsp;</td></tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td style="width:80px;font-size:10px;color:#999;padding:3px 0 3px 6px;white-space:nowrap;vertical-align:middle;">R${Math.round(wo[i])}M / R${Math.round(wi[i])}M</td>
+      </tr>`;
+  }).join("");
+
+  return `
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:8px;">
+      <tr>
+        <td colspan="3" style="padding-bottom:8px;">
+          <table cellpadding="0" cellspacing="0">
+            <tr>
+              <td style="padding-right:12px;">
+                <table cellpadding="0" cellspacing="0"><tr>
+                  <td style="width:10px;height:10px;background:rgba(226,75,74,0.7);border-radius:2px;"></td>
+                  <td style="font-size:10px;color:#555;padding-left:4px;">Without action</td>
+                </tr></table>
+              </td>
+              <td>
+                <table cellpadding="0" cellspacing="0"><tr>
+                  <td style="width:10px;height:10px;background:rgba(29,158,117,0.75);border-radius:2px;"></td>
+                  <td style="font-size:10px;color:#555;padding-left:4px;">With Auxeira</td>
+                </tr></table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      ${rows}
+    </table>
+    <table width="100%" cellpadding="8" cellspacing="0" style="background:#F0F9F4;border-radius:8px;margin-top:8px;">
+      <tr>
+        <td>
+          <p style="margin:0 0 2px;font-size:10px;color:#999;">Estimated 3-year recoverable gap</p>
+          <p style="margin:0;font-size:20px;font-weight:700;color:#1D9E75;">R${recoverableGap}M+</p>
+        </td>
+        <td style="text-align:right;font-size:11px;color:#1D9E75;font-weight:700;">with evidence<br>improvement</td>
+      </tr>
+    </table>`;
 }
 
 function buildFallbackNarrative(
