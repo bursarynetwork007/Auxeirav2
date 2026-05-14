@@ -43,13 +43,12 @@ a three-scenario forecast. The report arrives by email within
 
 ---
 
-### Phase 1 — Current build (Manus + Claude)
+### Phase 1 — Current build (Grok + Claude)
 
-Manus conducts deep autonomous research on the organisation
-using publicly available sources — website, annual reports,
-publications, LinkedIn, news coverage, funder relationships.
-Claude generates the full report narrative using the Manus
-research profile and diagnostic answers.
+Grok searches publicly available sources — website, annual
+reports, publications, LinkedIn, news coverage, funder
+relationships. Claude generates the full report narrative
+using the Grok research profile and diagnostic answers.
 
 This covers approximately 80% of the full vision through
 intelligent research rather than structured data pipelines.
@@ -81,7 +80,7 @@ approach is honest and defensible as stated.
 ### Phase 2 — Data ingestion pipeline
 
 Builds structured, regularly updated sector intelligence
-to supercharge report personalisation beyond what Manus
+to supercharge report personalisation beyond what Grok
 can find on demand.
 
 Layer 1 — Data ingestion pipeline:
@@ -252,15 +251,29 @@ recommendation, and the closing question.
 The completed report is sent to the subscriber's email address
 via Resend from info@auxeira.com.
 
-**Subject line format:**
+Subject line format:
 Your Auxeira Evidence Risk Report — [Organisation Name]
 
-**From:** Lante at Auxeira
-**From address:** info@auxeira.com
-**Reply-to:** info@auxeira.com
+From: Lante at Auxeira
+From address: info@auxeira.com
+Reply-to: info@auxeira.com
 
-The email body contains the full HTML report from the
-template file: auxeira_health_check_report_template.html
+The email body contains the full HTML report rendered
+from auxeira_enhanced_results_v2.html with all variables
+populated by Claude's output.
+
+---
+
+### Step 6 — Subscriber added to newsletter list
+If the submitter is not already on the newsletter list
+they are added to DynamoDB auxeira-leads and a Zoho CRM
+contact is created automatically.
+
+The Health Check data enriches their profile immediately:
+score, top gaps, tier recommendation, and Grok research
+profile are all stored alongside their contact record.
+The newsletter personalisation uses this data from the
+next edition onward.
 
 ---
 
@@ -278,7 +291,7 @@ personalisation uses this data from the next edition onward.
 
 ## SENIORITY DETECTION AND REPORT CALIBRATION
 
-Manus research returns a seniority level for the submitter:
+Grok research returns a seniority level for the submitter:
 
 **Executive** — CEO, Director, Chairperson, Trustee, Head of
 **Senior manager** — Programme Manager, M&E Manager, Senior Advisor
@@ -320,90 +333,6 @@ or "as an ECD organisation, Zenex could..."
 > are equally strong and equally unmade."
 
 The bridge is: same methodology, different sector, same gap.
-
----
-
-## PART A — GROK RESEARCH PROMPT
-
-Use this prompt verbatim when calling the Grok API.
-Grok's real-time web search handles the research.
-Uses XAI_API_KEY — already confirmed working in Amplify.
-
----
-
-```
-You are conducting an organisation intelligence briefing
-for a senior evidence consultant. Search the web
-thoroughly using all available public sources.
-
-Organisation: [ORGANISATION NAME]
-Website: [ORG WEBSITE — inferred from email domain]
-Person: [FIRST NAME] [LAST NAME]
-
-Return a structured report covering all of the following.
-If a section cannot be answered from public sources,
-write "Not found in public sources" — do not invent data.
-
-1. ORGANISATION OVERVIEW
-   What does this organisation do and who does it serve?
-   What sector does it operate in — be specific and precise,
-   not generic. Note any important distinctions
-   (e.g. foundation phase education is not ECD).
-   What is the approximate scale — beneficiaries, reach,
-   staff size if findable?
-
-2. PERSON PROFILE
-   What is [FIRST NAME] [LAST NAME]'s most likely job title
-   at this organisation?
-   What is their seniority level: executive, senior manager,
-   or programme level?
-   If the person is not the CEO, what is the CEO's name?
-   Any public activity — articles, talks, or publications
-   by this person?
-
-3. EVIDENCE PORTFOLIO
-   Has this organisation published evaluations, impact
-   reports, or research? List titles and dates if found.
-   How would you rate their evidence maturity:
-   strong, moderate, or weak — and why?
-   Have they done any SROI, economic multiplier, or
-   fiscal impact analysis? Any evidence of this publicly?
-
-4. FUNDER RELATIONSHIPS
-   Which funders are mentioned on their website or in
-   their reports? List any foundation, government, or
-   corporate funders named.
-
-5. POLICY AND GOVERNMENT CONNECTIONS
-   Any mention of government partnerships, DBE, DSD,
-   National Treasury, or provincial department relationships?
-   Any advocacy or policy work mentioned?
-
-6. RECENT ACTIVITY
-   Any news coverage, awards, launches, or sector mentions
-   in the last 24 months?
-
-7. EVIDENCE GAP SIGNALS
-   Based on everything found, what is the most likely
-   evidence gap this organisation has — between the
-   strength of their work and how that work is communicated
-   to funders and government?
-
-8. PERSONALISATION HOOK
-   One specific, concrete, recent detail from their
-   public presence that Auxeira could reference naturally
-   in the report — a named programme, a recent publication,
-   a specific initiative. Must be real and verifiable.
-   Not a generic observation.
-
-9. BD OPPORTUNITY
-   Based on the organisation's profile, which Auxeira
-   service is most relevant:
-   Tier 1 — Evidence Translation (3-6 weeks, R85K-R150K)
-   Tier 2 — Evidence Synthesis and Strategy (6-10 weeks,
-   R180K-R350K)
-   Tier 3 — Sector Intelligence Platform (ongoing retainer)
-```
 
 ---
 
@@ -459,7 +388,7 @@ not like an investigation.
 
 ---
 
-### User prompt — feed Manus output and diagnostic answers here
+### User prompt — feed Grok output and diagnostic answers here
 
 ```
 Generate a complete Entity Evidence Risk Report for this
@@ -472,7 +401,7 @@ First name: [FIRST NAME]
 Last name: [LAST NAME]
 Organisation: [ORGANISATION NAME]
 Seniority: [executive | senior_manager | programme_level]
-CEO name (if submitter is not CEO): [CEO NAME FROM MANUS]
+CEO name (if submitter is not CEO): [CEO NAME FROM GROK]
 
 DIAGNOSTIC ANSWERS AND SCORE:
 Q1 answer: [ANSWER] — [POINTS] points
@@ -489,8 +418,8 @@ Score band: [BAND]
 Gap 1: [QUESTION WITH HIGHEST DEFICIT]
 Gap 2: [QUESTION WITH SECOND HIGHEST DEFICIT]
 
-MANUS RESEARCH PROFILE:
-[PASTE FULL MANUS OUTPUT HERE]
+GROK RESEARCH PROFILE:
+[PASTE FULL GROK OUTPUT HERE]
 
 GENERATE EACH SECTION BELOW.
 Be specific to this organisation throughout.
@@ -502,7 +431,7 @@ not a generic statement. Reference their sector or work.
 
 EXECUTIVE SUMMARY (2 sentences):
 What they have and what it is not yet doing.
-Reference their specific evidence profile from Manus.
+Reference their specific evidence profile from Grok research.
 
 FUNDING AT RISK (rand range):
 Calibrate to their budget (Q8) and their primary gap.
@@ -517,7 +446,7 @@ What they could access if the gaps were closed.
 
 GAP 1 TITLE AND BODY (3-4 sentences):
 Name the gap precisely. Explain what it means for this
-organisation specifically. Reference their Manus profile.
+organisation specifically. Reference their Grok research profile.
 End with an estimated cost statement.
 
 GAP 2 TITLE AND BODY (3-4 sentences):
@@ -566,7 +495,7 @@ TIER LABEL:
 Tier 1 — Evidence Translation
 Tier 2 — Evidence Synthesis and Strategy
 Tier 3 — Sector Intelligence Platform
-(Select based on Manus research and Q8 budget)
+(Select based on Grok research and Q8 budget)
 
 URGENCY LABEL:
 Urgent — Within 3 months — Within 6 months
@@ -580,7 +509,7 @@ or portfolio. Make the output concrete, not abstract.
 CLOSING QUESTION (1 sentence):
 "What would it look like for [ORGANISATION NAME] to enter
 the next budget cycle with a ready fiscal case for
-[their specific focus area from Manus research]?"
+[their specific focus area from Grok research]?"
 
 TIER PRICE AND TIMELINE:
 Match to the recommended tier.
@@ -646,12 +575,11 @@ and CTA variants for every possible answer combination.
 
 ---
 
-## PART A — MANUS RESEARCH PROMPT
+## PART A — GROK RESEARCH PROMPT
 
-Manus is an autonomous research agent. Give it the company
-name and email domain and let it find everything.
-Do not limit what it searches for. Do not pre-specify
-return fields. The richer the research, the more impressive
+Grok uses real-time web search to research the organisation.
+Give it the organisation name, website, and person name.
+The richer the research output, the more personalised
 the report.
 
 Use this prompt verbatim:
