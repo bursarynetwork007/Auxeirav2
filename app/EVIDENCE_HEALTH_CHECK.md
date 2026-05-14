@@ -604,10 +604,10 @@ every page including About, Team, Board, Programmes,
 Impact, Reports, News, and any downloadable documents.
 Download and read any annual reports, evaluations,
 strategy documents, or publications available on the site.
-Search LinkedIn for both the organisation and the named
+Search LinkedIn or X for both the organisation and the named
 person. Search for news coverage in the last 36 months.
 Search for any academic papers, government references,
-or sector mentions. Look for any awards, recognition,
+or sector mentions (in SA NPO Directorate, SARS tax exemption database, published annual reports, DSD records, funder grant databases (Skoll, Ford, Mastercard Foundation all publish awards publicly), news mentions, LinkedIn, X, Trialogue, Stats SA, ECD information hub, DataDrive2030 (the thrive by Five Index), ECD Connect (DGMT), Grow ECD (Grow Giraffe) or other. Look for any awards, recognition,
 or notable events.
 
 BUILD A COMPLETE INTELLIGENCE PROFILE covering:
