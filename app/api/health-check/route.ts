@@ -80,8 +80,9 @@ Be specific to this organisation. Use publicly available information only.`;
         "x-manus-api-key": apiKey,
       },
       body: JSON.stringify({
-        prompt,
+        message: { content: prompt },
         structured_output_schema: structuredOutputSchema,
+        hide_in_task_list: true,
       }),
     });
 
