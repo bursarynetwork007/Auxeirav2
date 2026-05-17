@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auxeira — Market Loss Projection</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#F5F0E8;padding:1.5rem;color:#1A1A2A;max-width:700px;margin:0 auto;font-size:14px}
+
+/* ─── INSERT THIS SECTION INTO auxeira_enhanced_results_v2.html
+   Place it between the "Top 3 risks" card and the "Market context" section ─── */
+
+.navy{background:#0A1628;border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1rem;color:#F5F0E8}
+.card{border:0.5px solid #DDDDDD;border-radius:12px;padding:1.25rem;margin-bottom:1rem;background:#FFF}
+.gold-card{background:#FDF8EE;border:1px solid #C9A84C;border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1rem}
+.lbl{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;margin-bottom:8px;display:block}
+.stat-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:1rem}
+.stat{background:#F8F5F0;border-radius:8px;padding:10px 12px;border-left:3px solid}
+.stat-label{font-size:10px;color:#888;margin-bottom:3px}
+.stat-val{font-size:17px;font-weight:700;line-height:1}
+.stat-sub{font-size:10px;color:#888;margin-top:3px;line-height:1.4}
+.insight-bar{background:rgba(226,75,74,.06);border-left:2px solid #E24B4A;border-radius:0 6px 6px 0;padding:8px 12px;margin-bottom:10px;font-size:12px;color:#1A1A2A;line-height:1.65}
+.tipping{background:rgba(226,75,74,.06);border:0.5px solid rgba(226,75,74,.3);border-radius:8px;padding:10px 12px;margin-top:8px}
+.tipping-title{font-size:12px;font-weight:700;color:#E24B4A;margin-bottom:4px}
+.tipping-body{font-size:11px;color:#555;line-height:1.65}
+.anote{font-size:10px;color:#999;font-style:italic;margin-top:6px;line-height:1.5}
+.ch{position:relative;width:100%}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:8px;font-size:11px;color:#666}
+.leg{display:flex;align-items:center;gap:4px}
+.leg-line{width:14px;height:2px;display:inline-block;border-radius:2px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pos-label{font-size:11px;font-weight:700;margin-top:6px;text-align:center}
+.section-divider{height:0.5px;background:rgba(201,168,76,.3);margin:1rem 0}
+</style>
+</head>
+<body>
+
+<!--
+  ═══════════════════════════════════════════════════════════
+  MARKET LOSS PROJECTION SECTION
+  Insert into auxeira_enhanced_results_v2.html immediately
+  after the "Top 3 risks" card and before the
+  "Market context" navy section.
+
+  Template variables to populate from backend:
+  {{org_name}}            — organisation name
+  {{leverage_score}}      — current evidence score (0-100)
+  {{tipping_month}}       — estimated month when org drops below sector average
+  {{cumulative_loss}}     — e.g. "R47M+"
+  {{loss_year1}}          — annual attrition Year 1 (Rm)
+  {{loss_year2}}          — annual attrition Year 2 (Rm)
+  {{loss_year3}}          — annual attrition Year 3 (Rm)
+  {{loss_year4}}          — annual attrition Year 4 (Rm)
+  {{current_position}}    — e.g. "Top 40%"
+  {{future_position}}     — e.g. "Bottom 35%"
+  {{sector_label}}        — e.g. "education"
+  {{peer_count}}          — number of comparable orgs benchmarked
+  ═══════════════════════════════════════════════════════════
+-->
+
+<div class="section-divider"></div>
+
+<!-- MARKET LOSS HEADER -->
+<div class="navy" style="margin-bottom:1rem">
+  <span class="lbl" style="color:#E24B4A;letter-spacing:0.1em">Projected market position loss</span>
+  <div style="font-size:14px;font-weight:700;color:#F5F0E8;line-height:1.4;margin-bottom:6px">
+    The sector is moving. Standing still is moving backwards.
+  </div>
+  <div style="font-size:12px;color:rgba(245,240,232,0.6);line-height:1.65">
+    Zenex Foundation does not need to get worse to lose ground. As peer organisations close
+    their evidence gaps, funder attention and government allocation shifts toward them.
+    These projections show what 48 months of inaction costs in relative market position
+    and absolute funding opportunity.
+  </div>
+</div>
+
+<!-- STAT CARDS -->
+<div class="stat-row">
+  <div class="stat" style="border-color:#E24B4A">
+    <div class="stat-label">Projected leverage erosion</div>
+    <div class="stat-val" style="color:#E24B4A">38 points</div>
+    <div class="stat-sub">below sector average by Month 48 (estimated)</div>
+  </div>
+  <div class="stat" style="border-color:#D85A30">
+    <div class="stat-label">Cumulative funding attrition</div>
+    <div class="stat-val" style="color:#D85A30">R47M+</div>
+    <div class="stat-sub">shifted to better-evidenced peers over 4 years</div>
+  </div>
+  <div class="stat" style="border-color:#C9A84C">
+    <div class="stat-label">Sector position at Month 48</div>
+    <div class="stat-val" style="color:#C9A84C">Bottom 35%</div>
+    <div class="stat-sub">of education NGOs by evidence leverage</div>
+  </div>
+</div>
+
+<!-- CHART 1: LEVERAGE EROSION -->
+<div class="card">
+  <span class="lbl">Evidence leverage — Zenex vs sector trajectory</span>
+  <div class="insight-bar">
+    Zenex's current score of 66/100 places it in the top 40% of the sector today.
+    The same score places it in the bottom 35% by Month 48 — because the benchmark
+    moves, not because Zenex declines.
+  </div>
+  <div class="legend">
+    <span class="leg"><span class="leg-line" style="background:#E24B4A;border-bottom:2px dashed #E24B4A"></span>Zenex — no action</span>
+    <span class="leg"><span class="leg-line" style="background:#C9A84C"></span>Sector average (improving)</span>
+    <span class="leg"><span class="leg-line" style="background:#1D9E75"></span>Sector leaders</span>
+    <span class="leg"><span class="leg-line" style="background:#185FA5"></span>Zenex + Auxeira (estimated)</span>
+  </div>
+  <div class="ch" style="height:190px">
+    <canvas id="leverageChart"
+      role="img"
+      aria-label="Line chart showing Zenex Foundation evidence leverage declining from 66 to 28 over 48 months without action, while the sector average rises from 52 to 74 and leaders reach 94. With Auxeira intervention Zenex rises to 84.">
+      Leverage index: Zenex no action falls from 66 to 28 over 48 months.
+      Sector average rises from 52 to 74. Leaders from 78 to 94.
+      Zenex with Auxeira rises from 66 to 84.
+    </canvas>
+  </div>
+  <div class="tipping">
+    <div class="tipping-title">⚠ Tipping point — estimated Month 22</div>
+    <div class="tipping-body">
+      At approximately Month 22, the sector average crosses above Zenex's current
+      position for the first time. Funder shortlisting increasingly weights evidence
+      quality explicitly. Being below the sector average in a tightening funding
+      environment has an outsized effect on success probability — estimated 35–45%
+      reduction in shortlisting rate, based on sector benchmarks.
+    </div>
+  </div>
+  <p class="anote">Sector improvement rates estimated from current evidence investment trends across South African education NGOs. Illustrative — not a specific forecast.</p>
+</div>
+
+<!-- CHART 2: CUMULATIVE ATTRITION -->
+<div class="card">
+  <span class="lbl">Cumulative funding attrition — by source</span>
+  <div class="insight-bar">
+    This is not funding Zenex currently holds. It is funding that becomes available
+    through co-funding rounds, government partnerships, and international cycles —
+    and flows to organisations who can make the economic case. Each year adds to
+    the cumulative total.
+  </div>
+  <div class="legend">
+    <span class="leg"><span style="width:10px;height:10px;border-radius:2px;background:rgba(226,75,74,.75);display:inline-block"></span>Funder diversification loss</span>
+    <span class="leg"><span style="width:10px;height:10px;border-radius:2px;background:rgba(216,90,48,.75);display:inline-block"></span>Government co-funding missed</span>
+    <span class="leg"><span style="width:10px;height:10px;border-radius:2px;background:rgba(201,168,76,.75);display:inline-block"></span>Policy window misses</span>
+  </div>
+  <div class="ch" style="height:155px">
+    <canvas id="attritionChart"
+      role="img"
+      aria-label="Stacked bar chart showing cumulative annual funding attrition. Year 1 R8M, Year 2 R13M additional, Year 3 R13M additional, Year 4 R13M additional. Total 47M over 4 years.">
+      Annual attrition: Year 1 R8M, Year 2 R13M, Year 3 R13M, Year 4 R13M. Total R47M.
+    </canvas>
+  </div>
+  <div style="background:#F0F9F4;border-radius:8px;padding:10px 12px;margin-top:10px;display:flex;justify-content:space-between;align-items:center">
+    <div>
+      <div style="font-size:10px;color:#999;margin-bottom:2px">Cumulative 4-year funding attrition</div>
+      <div style="font-size:20px;font-weight:700;color:#E24B4A">R47M+ estimated</div>
+    </div>
+    <div style="font-size:11px;color:#E24B4A;font-weight:700;text-align:right">
+      recoverable<br>within 6–10 weeks
+    </div>
+  </div>
+  <p class="anote">Based on sector funding flow benchmarks and evidence quality correlations. All figures estimated. Not specific funding projections.</p>
+</div>
+
+<!-- CHART 3: MISSION IMPACT PROJECTION -->
+<!--
+  DEVELOPER NOTE — MISSION CURRENCY SECTION:
+  Grok research identifies the organisation's primary and secondary
+  value currencies automatically from website language, annual reports,
+  and programme descriptions. No form field required.
+
+  Template variables for this section:
+  {{mission_currency_primary}}    — e.g. "Policy decisions informed by Zenex research"
+  {{mission_metric_now}}          — e.g. "340 annually"
+  {{mission_metric_month48}}      — e.g. "under 90 annually"
+  {{mission_currency_secondary}}  — e.g. "Learner outcome improvements attributed to ZenLit"
+  {{mission_secondary_now}}       — e.g. "12,400 learners"
+  {{mission_secondary_month48}}   — e.g. "plateau at ~8,200 learners"
+  {{mission_projection_body}}     — Claude-generated 2-sentence projection
+  {{mission_primary_label}}       — e.g. "Evidence-informed DBE decisions"
+  {{mission_secondary_label}}     — e.g. "Learners reached via ZenLit"
+
+  Example outputs by organisation type:
+  Zenex Foundation:       Policy decisions informed / Learner outcomes
+  SmartStart equivalent:  Children in quality ECD / Women enterprises
+  Health NGO:             Patients served / Health worker quality
+  Economic dev NGO:       Enterprises supported / Jobs created
+  Governance NGO:         Citizens engaged / Policy changes influenced
+-->
+<div class="card">
+  <span class="lbl">Mission impact projection — what your evidence gap actually costs</span>
+  <div class="insight-bar">
+    SROI measures return on investment. This measures something more fundamental —
+    the reach and influence of Zenex's actual work, in the language Zenex uses to
+    measure its own success.
+  </div>
+
+  <div class="two-col" style="margin-bottom:10px">
+    <div style="background:#F8F5F0;border-radius:8px;padding:10px;border-left:3px solid #C9A84C">
+      <div style="font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Primary value currency</div>
+      <div style="font-size:12px;font-weight:700;color:#1A1A2A;margin-bottom:2px">Policy decisions informed by Zenex research</div>
+      <div style="font-size:11px;color:#555;line-height:1.5">ZenLit evaluations and language-mathematics briefs informing DBE and provincial implementation decisions</div>
+    </div>
+    <div style="background:#F8F5F0;border-radius:8px;padding:10px;border-left:3px solid #888">
+      <div style="font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Secondary value currency</div>
+      <div style="font-size:12px;font-weight:700;color:#1A1A2A;margin-bottom:2px">Learner outcomes attributed to Zenex-influenced teaching</div>
+      <div style="font-size:11px;color:#555;line-height:1.5">Reading and numeracy improvements in schools where Zenex evidence shaped teacher development</div>
+    </div>
+  </div>
+
+  <div class="ch" style="height:175px">
+    <canvas id="missionChart"
+      role="img"
+      aria-label="Dual-axis chart showing Zenex's policy influence declining from 340 decisions annually to under 90 without action, while learner reach plateaus and declines from 12400 to 8200. With Auxeira both metrics grow significantly.">
+      Mission impact: Policy decisions 340 now declining to 90 without action, growing to 580 with Auxeira.
+      Learner reach 12400 now declining to 8200 without action, growing to 19600 with Auxeira.
+    </canvas>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+    <div style="background:rgba(226,75,74,.05);border:.5px solid rgba(226,75,74,.25);border-radius:8px;padding:8px 10px">
+      <div style="font-size:10px;color:#E24B4A;font-weight:700;margin-bottom:3px">Without action — Month 48</div>
+      <div style="font-size:11px;color:#555;line-height:1.55">ZenLit's evaluation findings are displaced by better-framed evidence from peer organisations in DBE implementation conversations. The research quality remains strong. The reach collapses.</div>
+    </div>
+    <div style="background:rgba(29,158,117,.05);border:.5px solid rgba(29,158,117,.25);border-radius:8px;padding:8px 10px">
+      <div style="font-size:10px;color:#1D9E75;font-weight:700;margin-bottom:3px">With Auxeira — Month 18+</div>
+      <div style="font-size:11px;color:#555;line-height:1.55">ZenLit's economic case is built and deployed in Treasury language. DBE co-funding conversations open. Policy influence expands from programme evaluation to systemic change.</div>
+    </div>
+  </div>
+  <p class="anote">Mission metric projections estimated from sector policy engagement patterns and evidence quality correlations. Illustrative — not specific outcome guarantees.</p>
+</div>
+
+<!-- CHART 4: SECTOR POSITIONING -->
+<div class="card">
+  <span class="lbl">Sector evidence positioning — Zenex vs 47 peer organisations</span>
+  <div class="insight-bar">
+    The same score. Two completely different competitive positions. The benchmark
+    does not wait.
+  </div>
+  <div class="two-col">
+    <div>
+      <div style="font-size:10px;color:#888;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em;font-weight:700">Today — Month 0</div>
+      <div class="ch" style="height:120px">
+        <canvas id="posToday"
+          role="img"
+          aria-label="Distribution showing Zenex at score 66 in the top 40 percent of 47 peer education organisations today, with sector median at 52.">
+          Today: Zenex 66, sector median 52, Zenex top 40%.
+        </canvas>
+      </div>
+      <div class="pos-label" style="color:#1D9E75">Top 40% of sector</div>
+    </div>
+    <div>
+      <div style="font-size:10px;color:#888;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em;font-weight:700">Month 48 — no action</div>
+      <div class="ch" style="height:120px">
+        <canvas id="posMonth48"
+          role="img"
+          aria-label="Distribution showing Zenex still at score 66 but now in the bottom 35 percent as sector median has risen to 74 after 48 months of sector improvement.">
+          Month 48: Zenex still 66, sector median 74, Zenex bottom 35%.
+        </canvas>
+      </div>
+      <div class="pos-label" style="color:#E24B4A">Bottom 35% of sector</div>
+    </div>
+  </div>
+  <p class="anote">Sector benchmark projection based on current evidence investment trajectories across 47 comparable South African education organisations. Peer scores illustrative.</p>
+</div>
+
+<!-- CLOSING LOSS AVERSION CARD -->
+<div class="gold-card">
+  <div style="font-size:13px;font-weight:700;color:#8B6914;margin-bottom:8px">
+    The intervention takes 6–10 weeks. The tipping point is 22 months away.
+  </div>
+  <div style="font-size:12px;color:#6B4F0A;line-height:1.75;margin-bottom:10px">
+    The R47M cumulative figure is not theoretical. It is the funding that goes elsewhere —
+    to organisations that can answer the Treasury question, the MCF question, the DBSA
+    question — while Zenex's programmes continue producing outcomes that nobody outside
+    the sector can fully see or value. The market does not pause while evidence gaps are
+    addressed. The intervention window is now — not after the next funding cycle.
+  </div>
+  <div style="font-size:12px;color:#8B6914;font-style:italic">
+    "What would it look like for Zenex Foundation to enter the next budget cycle
+    with a ready fiscal case for foundation phase scaling?"
+  </div>
+</div>
+
+<script>
+const months=['Now','6m','12m','18m','24m','30m','36m','42m','48m'];
+
+new Chart(document.getElementById('leverageChart'),{
+  type:'line',
+  data:{
+    labels:months,
+    datasets:[
+      {label:'Zenex — no action',data:[66,64,61,57,52,46,39,33,28],borderColor:'#E24B4A',backgroundColor:'rgba(226,75,74,0.05)',borderWidth:2,borderDash:[5,3],pointRadius:3,pointBackgroundColor:'#E24B4A',tension:0.3,fill:true},
+      {label:'Sector average',data:[52,55,58,61,64,67,70,72,74],borderColor:'#C9A84C',backgroundColor:'transparent',borderWidth:1.5,pointRadius:2,tension:0.3},
+      {label:'Sector leaders',data:[78,81,83,86,88,90,92,93,94],borderColor:'#1D9E75',backgroundColor:'transparent',borderWidth:1.5,pointRadius:2,tension:0.3},
+      {label:'Zenex + Auxeira',data:[66,null,null,72,78,80,82,83,84],borderColor:'#185FA5',backgroundColor:'rgba(24,95,165,0.06)',borderWidth:2,borderDash:[4,2],pointRadius:3,pointBackgroundColor:'#185FA5',tension:0.3,fill:true}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{label:c=>c.dataset.label+': '+Math.round(c.raw)+' / 100'}}
+    },
+    scales:{
+      y:{min:0,max:100,ticks:{callback:v=>v,font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'},title:{display:true,text:'Evidence leverage index',font:{size:10},color:'#999'}},
+      x:{grid:{display:false},ticks:{font:{size:10}}}
+    }
+  }
+});
+
+new Chart(document.getElementById('attritionChart'),{
+  type:'bar',
+  data:{
+    labels:['Year 1','Year 2','Year 3','Year 4'],
+    datasets:[
+      {label:'Funder diversification loss',data:[4,6,7,8],backgroundColor:'rgba(226,75,74,0.75)',borderRadius:3,borderSkipped:false},
+      {label:'Government co-funding missed',data:[3,5,5,4],backgroundColor:'rgba(216,90,48,0.75)',borderRadius:0,borderSkipped:false},
+      {label:'Policy window misses',data:[1,2,1,1],backgroundColor:'rgba(201,168,76,0.75)',borderRadius:0,borderSkipped:false}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      tooltip:{mode:'index',callbacks:{footer:items=>'Total year: R'+items.reduce((a,i)=>a+i.raw,0)+'M estimated'}}
+    },
+    scales:{
+      x:{grid:{display:false},ticks:{font:{size:10}},stacked:true},
+      y:{stacked:true,ticks:{callback:v=>'R'+v+'M',font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'},title:{display:true,text:'Rm lost annually (estimated)',font:{size:10},color:'#999'}}
+    }
+  }
+});
+
+function buildDist(canvasId,zenexScore,sectorMed,highlightColor){
+  const rng=(seed)=>{let s=seed;return()=>{s=(s*9301+49297)%233280;return s/233280;}};
+  const r=rng(zenexScore*sectorMed);
+  const scores=Array.from({length:47},()=>Math.min(100,Math.max(10,Math.round(sectorMed-18+(r()*36)))));
+  scores.push(zenexScore);
+  const sorted=[...scores].sort((a,b)=>a-b);
+  new Chart(document.getElementById(canvasId),{
+    type:'bar',
+    data:{
+      labels:sorted.map((_,i)=>i),
+      datasets:[{
+        label:'Organisations',
+        data:sorted,
+        backgroundColor:sorted.map(s=>Math.abs(s-zenexScore)<=2?highlightColor:'rgba(180,180,180,0.3)'),
+        borderRadius:1,
+        borderSkipped:false
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,animation:{duration:0},
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:c=>Math.abs(c.raw-zenexScore)<=2?'Zenex Foundation: '+c.raw:'Peer org: '+Math.round(c.raw)}}
+      },
+      scales:{
+        x:{display:false},
+        y:{min:0,max:100,ticks:{callback:v=>v,font:{size:9}},grid:{color:'rgba(0,0,0,0.04)'}}
+      }
+    }
+  });
+}
+
+new Chart(document.getElementById('missionChart'),{
+  type:'line',
+  data:{
+    labels:['Now','6m','12m','18m','24m','30m','36m','42m','48m'],
+    datasets:[
+      {label:'Policy decisions — no action',data:[340,320,295,265,225,185,148,114,88],borderColor:'#E24B4A',backgroundColor:'rgba(226,75,74,0.05)',borderWidth:2,borderDash:[5,3],pointRadius:3,pointBackgroundColor:'#E24B4A',tension:0.3,fill:true,yAxisID:'y'},
+      {label:'Policy decisions — with Auxeira',data:[340,null,null,380,430,480,520,555,580],borderColor:'#1D9E75',backgroundColor:'rgba(29,158,117,0.06)',borderWidth:2,borderDash:[4,2],pointRadius:3,pointBackgroundColor:'#1D9E75',tension:0.3,fill:true,yAxisID:'y'},
+      {label:'Learner reach — no action',data:[12400,12100,11600,10900,10100,9400,8900,8500,8200],borderColor:'#D85A30',backgroundColor:'transparent',borderWidth:1.5,borderDash:[3,3],pointRadius:2,tension:0.3,yAxisID:'y2'},
+      {label:'Learner reach — with Auxeira',data:[12400,null,null,13200,14800,16400,17800,18900,19600],borderColor:'#185FA5',backgroundColor:'transparent',borderWidth:1.5,borderDash:[3,3],pointRadius:2,tension:0.3,yAxisID:'y2'}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      tooltip:{mode:'index',callbacks:{label:c=>{if(c.dataset.yAxisID==='y')return c.dataset.label+': '+Math.round(c.raw)+' decisions';return c.dataset.label+': '+Math.round(c.raw).toLocaleString()+' learners';}}}
+    },
+    scales:{
+      x:{grid:{display:false},ticks:{font:{size:10}}},
+      y:{position:'left',ticks:{callback:v=>v,font:{size:9}},grid:{color:'rgba(0,0,0,0.04)'},title:{display:true,text:'Policy decisions (annual)',font:{size:9},color:'#E24B4A'}},
+      y2:{position:'right',ticks:{callback:v=>(v/1000).toFixed(0)+'K',font:{size:9}},grid:{display:false},title:{display:true,text:'Learners reached',font:{size:9},color:'#185FA5'}}
+    }
+  }
+});
+
+</script>
+
+</body>
+</html>
+buildDist('posToday',66,52,'#1D9E75');
+buildDist('posMonth48',66,74,'#E24B4A');

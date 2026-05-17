@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auxeira — Value Identity Loss & Policy Influence Module</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#F5F0E8;padding:1.5rem;color:#1A1A2A;max-width:700px;margin:0 auto;font-size:14px}
+
+/*
+  ═══════════════════════════════════════════════════════
+  VALUE IDENTITY LOSS + POLICY INFLUENCE MODULE
+  Replace the current "Market context" navy section in
+  auxeira_enhanced_results_v2.html with this block.
+
+  Backend populates:
+  {{org_name}}
+  {{value1_label}}     — e.g. "Evidence influence"
+  {{value1_metric}}    — e.g. "Policy decisions informed annually"
+  {{value1_now}}       — current estimated count
+  {{value1_48m}}       — projected count at Month 48 without action
+  {{value2_label}}     — e.g. "Knowledge reach"
+  {{value2_metric}}    — e.g. "Practitioners using your findings"
+  {{value2_now}}
+  {{value2_48m}}
+  {{policy_windows}}   — total relevant windows over 24 months
+  {{policy_expected_b}} — expected influence events at ERC-B
+  {{policy_expected_a}} — expected influence events at ERC-A
+  {{policy_gap}}       — foregone events
+  {{policy_value_low}} — rand value low
+  {{policy_value_high}}— rand value high
+  {{stakeholder_count}}— number of key stakeholders
+  {{stakeholder_retention_now}}   — % currently engaged
+  {{stakeholder_retention_48m}}   — % still engaged at Month 48
+
+  VALUE IDENTITY MAPPING (Claude selects from Grok research):
+  ECD delivery:       Children served / Women worker economic contribution
+  Education NGO:      Evidence influence / Knowledge reach
+  Health NGO:         Lives improved (DALYs) / Cost-per-outcome
+  Economic dev:       Enterprises/jobs created / Household income change
+  Foundation/funder:  Portfolio economic contribution / Grantee evidence quality
+  Policy advocacy:    Policy wins / Stakeholder reach
+  Government:         Service delivery metric / Budget efficiency
+  ═══════════════════════════════════════════════════════
+*/
+
+.navy{background:#0A1628;border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1rem;color:#F5F0E8}
+.card{border:0.5px solid #DDDDDD;border-radius:12px;padding:1.25rem;margin-bottom:1rem;background:#FFF}
+.gold-card{background:#FDF8EE;border:1px solid #C9A84C;border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1rem}
+.lbl{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;margin-bottom:8px;display:block}
+.lbl-red{color:#E24B4A}
+.insight-bar{background:rgba(226,75,74,.06);border-left:2px solid #E24B4A;border-radius:0 6px 6px 0;padding:8px 12px;margin-bottom:10px;font-size:12px;color:#1A1A2A;line-height:1.65}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.val-card{border:.5px solid;border-radius:10px;padding:12px}
+.val-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.val-now{font-size:26px;font-weight:700;line-height:1;margin-bottom:3px}
+.val-sub{font-size:10px;color:#888;margin-bottom:8px;line-height:1.4}
+.val-arrow{font-size:11px;color:#E24B4A;font-weight:700;display:flex;align-items:center;gap:4px}
+.ch{position:relative;width:100%}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:8px;font-size:11px;color:#666}
+.leg{display:flex;align-items:center;gap:4px}
+.leg-sq{width:10px;height:10px;border-radius:2px;display:inline-block}
+.anote{font-size:10px;color:#999;font-style:italic;margin-top:6px;line-height:1.5}
+.window-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:.5px solid #EEE;font-size:12px}
+.window-row:last-child{border-bottom:none}
+.window-name{flex:1;color:#1A1A2A}
+.window-count{width:24px;text-align:center;color:#888;font-size:11px}
+.window-bar-wrap{width:100px;display:flex;gap:3px;align-items:center}
+.window-bar{height:8px;border-radius:4px}
+.prob-b{color:#E24B4A;font-size:11px;font-weight:700;width:28px;text-align:right}
+.prob-a{color:#1D9E75;font-size:11px;font-weight:700;width:28px;text-align:right}
+.stakeholder-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:.5px solid #EEE;font-size:11px}
+.stakeholder-row:last-child{border-bottom:none}
+.sh-name{flex:1;color:#1A1A2A;font-weight:500}
+.sh-role{font-size:10px;color:#888}
+.sh-bar-wrap{width:80px;height:6px;background:#EEE;border-radius:3px;overflow:hidden}
+.sh-bar{height:100%;border-radius:3px}
+.sh-pct{font-size:11px;font-weight:700;width:28px;text-align:right}
+.decay-note{font-size:11px;color:#888;margin-top:4px;line-height:1.5}
+.compound-box{background:rgba(226,75,74,.05);border:.5px solid rgba(226,75,74,.25);border-radius:8px;padding:10px 12px;margin-top:10px}
+.compound-title{font-size:11px;font-weight:700;color:#E24B4A;margin-bottom:4px}
+.compound-body{font-size:11px;color:#555;line-height:1.65}
+</style>
+</head>
+<body>
+
+<!-- SECTION HEADER -->
+<div class="navy">
+  <span class="lbl lbl-red">What Zenex Foundation is actually losing</span>
+  <div style="font-size:14px;font-weight:700;color:#F5F0E8;line-height:1.4;margin-bottom:6px">
+    The funding matters. The knowledge influence matters more.
+  </div>
+  <div style="font-size:12px;color:rgba(245,240,232,.6);line-height:1.65">
+    Zenex does not primarily organise around SROI. It organises around evidence influence
+    and knowledge reach — the two things that justify its existence as a foundation.
+    These projections show what inaction costs in Zenex's own currency.
+  </div>
+</div>
+
+<!-- VALUE IDENTITY LOSS — TOP 2 METRICS -->
+<div class="card">
+  <span class="lbl">Projected loss in Zenex's own value language</span>
+  <div class="insight-bar">
+    Every funder, government official, and sector leader who stops referencing Zenex's
+    evidence is not a statistic. It is a relationship, a policy window, and a
+    programme's future that no longer has a champion in the room.
+  </div>
+
+  <div class="two-col" style="margin-bottom:12px">
+
+    <!-- VALUE 1: Evidence Influence -->
+    <div class="val-card" style="border-color:rgba(24,95,165,.3);background:rgba(24,95,165,.04)">
+      <div class="val-label" style="color:#185FA5">Evidence influence</div>
+      <div style="font-size:10px;color:#888;margin-bottom:8px">Policy decisions meaningfully informed by Zenex's research annually</div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:6px">
+        <div>
+          <div style="font-size:10px;color:#888">Today</div>
+          <div class="val-now" style="color:#185FA5">14</div>
+          <div style="font-size:10px;color:#888">decisions / year</div>
+        </div>
+        <div style="font-size:22px;color:#E24B4A;font-weight:700">→</div>
+        <div style="text-align:right">
+          <div style="font-size:10px;color:#888">Month 48</div>
+          <div class="val-now" style="color:#E24B4A">5</div>
+          <div style="font-size:10px;color:#888">decisions / year</div>
+        </div>
+      </div>
+      <div style="height:5px;background:#EEE;border-radius:3px;overflow:hidden;margin-bottom:6px">
+        <div style="height:100%;width:36%;background:#E24B4A;border-radius:3px"></div>
+      </div>
+      <div class="val-arrow">
+        <span>▼</span> 64% decline in evidence influence
+      </div>
+      <div class="decay-note" style="margin-top:6px">
+        As sector evidence quality rises, decision-makers have more evidence to
+        reference. Zenex's share of their attention declines even if Zenex's
+        evaluations stay strong in absolute terms.
+      </div>
+    </div>
+
+    <!-- VALUE 2: Knowledge Reach -->
+    <div class="val-card" style="border-color:rgba(83,74,183,.3);background:rgba(83,74,183,.04)">
+      <div class="val-label" style="color:#534AB7">Knowledge reach</div>
+      <div style="font-size:10px;color:#888;margin-bottom:8px">Practitioners actively using Zenex's learning products and findings</div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:6px">
+        <div>
+          <div style="font-size:10px;color:#888">Today</div>
+          <div class="val-now" style="color:#534AB7">2,840</div>
+          <div style="font-size:10px;color:#888">practitioners</div>
+        </div>
+        <div style="font-size:22px;color:#E24B4A;font-weight:700">→</div>
+        <div style="text-align:right">
+          <div style="font-size:10px;color:#888">Month 48</div>
+          <div class="val-now" style="color:#E24B4A">1,020</div>
+          <div style="font-size:10px;color:#888">practitioners</div>
+        </div>
+      </div>
+      <div style="height:5px;background:#EEE;border-radius:3px;overflow:hidden;margin-bottom:6px">
+        <div style="height:100%;width:36%;background:#E24B4A;border-radius:3px"></div>
+      </div>
+      <div class="val-arrow">
+        <span>▼</span> 64% decline in practitioner reach
+      </div>
+      <div class="decay-note" style="margin-top:6px">
+        When evidence cannot be translated into practitioner language,
+        school leaders and programme officers default to accessible resources
+        from better-translated peers — regardless of underlying quality.
+      </div>
+    </div>
+  </div>
+
+  <!-- Value trajectory chart -->
+  <div class="legend">
+    <span class="leg"><span class="leg-sq" style="background:#185FA5"></span>Evidence influence (decisions/yr)</span>
+    <span class="leg"><span class="leg-sq" style="background:#534AB7"></span>Knowledge reach (practitioners, hundreds)</span>
+    <span class="leg"><span class="leg-sq" style="background:rgba(180,180,180,.5)"></span>With Auxeira intervention</span>
+  </div>
+  <div class="ch" style="height:155px">
+    <canvas id="valueChart"
+      role="img"
+      aria-label="Dual-axis line chart showing evidence influence declining from 14 to 5 decisions per year and knowledge reach declining from 2840 to 1020 practitioners over 48 months without action.">
+      Evidence influence: 14→5 decisions/year. Knowledge reach: 2840→1020 practitioners.
+      Both recover with Auxeira intervention.
+    </canvas>
+  </div>
+  <p class="anote">Estimated using sector influence penetration rates and evidence quality correlations for foundation phase education organisations in South Africa. Illustrative modelling.</p>
+</div>
+
+<!-- POLICY INFLUENCE OPPORTUNITY COUNTER -->
+<div class="card">
+  <span class="lbl">Policy influence opportunities — actuarial probability model</span>
+  <div class="insight-bar">
+    Policy influence arrives in discrete windows. Each window has a calculable probability
+    of impact based on evidence quality. At ERC-B, Zenex is expected to influence
+    approximately 9 of 26 relevant decisions over the next 24 months. At ERC-A,
+    that rises to 16. The 7-event gap is the policy cost of inaction.
+  </div>
+
+  <!-- Summary stats -->
+  <div class="three-col" style="margin-bottom:12px">
+    <div style="background:#F8F5F0;border-radius:8px;padding:10px;text-align:center">
+      <div style="font-size:10px;color:#888;margin-bottom:3px">Relevant windows / 24 months</div>
+      <div style="font-size:22px;font-weight:700;color:#1A1A2A">26</div>
+      <div style="font-size:10px;color:#888">DBE, MCF, Treasury,<br>provincial, parliamentary</div>
+    </div>
+    <div style="display:grid;grid-template-rows:1fr 1fr;gap:6px">
+      <div style="background:rgba(226,75,74,.08);border-radius:8px;padding:8px;text-align:center">
+        <div style="font-size:9px;color:#E24B4A;font-weight:700;margin-bottom:2px">No action (ERC-B)</div>
+        <div style="font-size:18px;font-weight:700;color:#E24B4A">~9</div>
+        <div style="font-size:9px;color:#888">expected events</div>
+      </div>
+      <div style="background:rgba(29,158,117,.08);border-radius:8px;padding:8px;text-align:center">
+        <div style="font-size:9px;color:#1D9E75;font-weight:700;margin-bottom:2px">With Auxeira (ERC-A)</div>
+        <div style="font-size:18px;font-weight:700;color:#1D9E75">~16</div>
+        <div style="font-size:9px;color:#888">expected events</div>
+      </div>
+    </div>
+    <div style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px;text-align:center">
+      <div style="font-size:10px;color:#8B6914;margin-bottom:3px;font-weight:700">Foregone influence</div>
+      <div style="font-size:22px;font-weight:700;color:#C9A84C">7</div>
+      <div style="font-size:10px;color:#888">policy events missed</div>
+      <div style="font-size:10px;color:#8B6914;margin-top:4px;font-weight:700">R10–28M estimated value</div>
+    </div>
+  </div>
+
+  <!-- Policy window breakdown -->
+  <div style="font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">
+    <span>Policy window</span>
+    <div style="display:flex;gap:24px">
+      <span style="color:#E24B4A">ERC-B</span>
+      <span style="color:#1D9E75">ERC-A</span>
+    </div>
+  </div>
+
+  <div class="window-row">
+    <div class="window-name">MTEF submission cycle<div style="font-size:10px;color:#888">National Treasury · Annual</div></div>
+    <div class="window-count">×1</div>
+    <div class="window-bar-wrap">
+      <div style="flex:1;height:8px;background:#EEE;border-radius:4px;overflow:hidden">
+        <div style="height:100%;width:28%;background:#E24B4A;border-radius:4px"></div>
+      </div>
+    </div>
+    <div class="prob-b">28%</div>
+    <div class="prob-a">62%</div>
+  </div>
+
+  <div class="window-row">
+    <div class="window-name">DBE Annual Performance Plan<div style="font-size:10px;color:#888">Department of Basic Education · 2× year</div></div>
+    <div class="window-count">×2</div>
+    <div class="window-bar-wrap">
+      <div style="flex:1;height:8px;background:#EEE;border-radius:4px;overflow:hidden">
+        <div style="height:100%;width:35%;background:#E24B4A;border-radius:4px"></div>
+      </div>
+    </div>
+    <div class="prob-b">35%</div>
+    <div class="prob-a">68%</div>
+  </div>
+
+  <div class="window-row">
+    <div class="window-name">MCF Education programme reviews<div style="font-size:10px;color:#888">Mastercard Foundation · 2× year</div></div>
+    <div class="window-count">×2</div>
+    <div class="window-bar-wrap">
+      <div style="flex:1;height:8px;background:#EEE;border-radius:4px;overflow:hidden">
+        <div style="height:100%;width:55%;background:#C9A84C;border-radius:4px"></div>
+      </div>
+    </div>
+    <div class="prob-b">55%</div>
+    <div class="prob-a">78%</div>
+  </div>
+
+  <div class="window-row">
+    <div class="window-name">Provincial DBE budget consultations<div style="font-size:10px;color:#888">KZN, Gauteng, Eastern Cape · 3× year</div></div>
+    <div class="window-count">×3</div>
+    <div class="window-bar-wrap">
+      <div style="flex:1;height:8px;background:#EEE;border-radius:4px;overflow:hidden">
+        <div style="height:100%;width:22%;background:#E24B4A;border-radius:4px"></div>
+      </div>
+    </div>
+    <div class="prob-b">22%</div>
+    <div class="prob-a">55%</div>
+  </div>
+
+  <div class="window-row">
+    <div class="window-name">Parliamentary education committee<div style="font-size:10px;color:#888">Portfolio Committee on Basic Ed · 3× year</div></div>
+    <div class="window-count">×3</div>
+    <div class="window-bar-wrap">
+      <div style="flex:1;height:8px;background:#EEE;border-radius:4px;overflow:hidden">
+        <div style="height:100%;width:18%;background:#E24B4A;border-radius:4px"></div>
+      </div>
+    </div>
+    <div class="prob-b">18%</div>
+    <div class="prob-a">44%</div>
+  </div>
+
+  <div class="window-row">
+    <div class="window-name">Education policy consultations<div style="font-size:10px;color:#888">Irregular · ~2× year</div></div>
+    <div class="window-count">×2</div>
+    <div class="window-bar-wrap">
+      <div style="flex:1;height:8px;background:#EEE;border-radius:4px;overflow:hidden">
+        <div style="height:100%;width:30%;background:#E24B4A;border-radius:4px"></div>
+      </div>
+    </div>
+    <div class="prob-b">30%</div>
+    <div class="prob-a">60%</div>
+  </div>
+
+  <div class="compound-box">
+    <div class="compound-title">The compound effect — why each missed window costs more than one</div>
+    <div class="compound-body">
+      In actuarial terms, policy influence events are not independent. Each
+      successful influence event increases the probability of the next —
+      through credibility, relationship access, and citation momentum.
+      Each missed event reduces it. At Zenex's current ERC-B, the compound
+      probability of being cited in three consecutive DBE budget consultations
+      is 3%. At ERC-A it is 31%. The gap is not linear — it is exponential.
+    </div>
+  </div>
+  <p class="anote">Probability estimates based on sector influence data and evidence quality correlations. P values are estimated ranges — not specific predictions. All figures illustrative.</p>
+</div>
+
+<!-- STAKEHOLDER ATTENTION DECAY -->
+<div class="card">
+  <span class="lbl">Key stakeholder attention — projected decay model</span>
+  <div class="insight-bar">
+    Stakeholders have limited attention and an expanding set of evidence partners.
+    As better-evidenced organisations compete for the same officials' time, Zenex's
+    probability of being in the room — or in the document — declines.
+    This is analogous to lapse rates in insurance: once attention lapses, re-engagement is costly.
+  </div>
+
+  <div class="legend" style="margin-bottom:10px">
+    <span class="leg"><span class="leg-sq" style="background:#1D9E75"></span>Currently engaged</span>
+    <span class="leg"><span class="leg-sq" style="background:#E24B4A"></span>Projected at Month 48</span>
+  </div>
+
+  <div class="stakeholder-row">
+    <div style="flex:1"><div class="sh-name">MCF Education Programme Officers</div><div class="sh-role">Mastercard Foundation · 2 contacts · Portfolio management</div></div>
+    <div style="display:flex;align-items:center;gap:6px">
+      <div class="sh-bar-wrap"><div class="sh-bar" style="width:85%;background:#1D9E75"></div></div>
+      <div class="sh-pct" style="color:#1D9E75">85%</div>
+      <span style="font-size:11px;color:#888">→</span>
+      <div class="sh-bar-wrap"><div class="sh-bar" style="width:38%;background:#E24B4A"></div></div>
+      <div class="sh-pct" style="color:#E24B4A">38%</div>
+    </div>
+  </div>
+
+  <div class="stakeholder-row">
+    <div style="flex:1"><div class="sh-name">DBE Foundation Phase Directorate</div><div class="sh-role">Department of Basic Education · 3 officials · Policy</div></div>
+    <div style="display:flex;align-items:center;gap:6px">
+      <div class="sh-bar-wrap"><div class="sh-bar" style="width:60%;background:#C9A84C"></div></div>
+      <div class="sh-pct" style="color:#C9A84C">60%</div>
+      <span style="font-size:11px;color:#888">→</span>
+      <div class="sh-bar-wrap"><div class="sh-bar" style="width:18%;background:#E24B4A"></div></div>
+      <div class="sh-pct" style="color:#E24B4A">18%</div>
+    </div>
+  </div>
+
+  <div class="stakeholder-row">
+    <div style="flex:1"><div class="sh-name">National Treasury — Education Economist</div><div class="sh-role">National Treasury · 1 contact · Budget allocation</div></div>
+    <div style="display:flex;align-items:center;gap:6px">
+      <div class="sh-bar-wrap"><div class="sh-bar" style="width:30%;background:#E24B4A"></div></div>
+      <div class="sh-pct" style="color:#E24B4A">30%</div>
+      <span style="font-size:11px;color:#888">→</span>
+      <div class="sh-bar-wrap"><div class="sh-bar" style="width:8%;background:#E24B4A"></div></div>
+      <div class="sh-pct" style="color:#E24B4A">8%</div>
+    </div>
+  </div>
+
+  <div class="stakeholder-row">
+    <div style="flex:1"><div class="sh-name">DGMT Education Portfolio</div><div class="sh-role">DG Murray Trust · 2 contacts · Co-funding</div></div>
+    <div style="display:flex;align-items:center;gap:6px">
+      <div class="sh-bar-wrap"><div class="sh-bar" style="width:78%;background:#1D9E75"></div></div>
+      <div class="sh-pct" style="color:#1D9E75">78%</div>
+      <span style="font-size:11px;color:#888">→</span>
+      <div class="sh-bar-wrap"><div class="sh-bar" style="width:45%;background:#C9A84C"></div></div>
+      <div class="sh-pct" style="color:#C9A84C">45%</div>
+    </div>
+  </div>
+
+  <div class="stakeholder-row">
+    <div style="flex:1"><div class="sh-name">Provincial DBE Officials (KZN, GP, EC)</div><div class="sh-role">Provincial departments · 9 contacts · Implementation</div></div>
+    <div style="display:flex;align-items:center;gap:6px">
+      <div class="sh-bar-wrap"><div class="sh-bar" style="width:45%;background:#C9A84C"></div></div>
+      <div class="sh-pct" style="color:#C9A84C">45%</div>
+      <span style="font-size:11px;color:#888">→</span>
+      <div class="sh-bar-wrap"><div class="sh-bar" style="width:14%;background:#E24B4A"></div></div>
+      <div class="sh-pct" style="color:#E24B4A">14%</div>
+    </div>
+  </div>
+
+  <!-- Decay chart -->
+  <div style="margin-top:12px">
+    <div class="legend" style="margin-bottom:8px">
+      <span class="leg"><span class="leg-sq" style="background:#E24B4A"></span>Aggregate stakeholder engagement — no action</span>
+      <span class="leg"><span class="leg-sq" style="background:#1D9E75"></span>With Auxeira intervention</span>
+    </div>
+    <div class="ch" style="height:130px">
+      <canvas id="decayChart"
+        role="img"
+        aria-label="Line chart showing aggregate stakeholder engagement declining from 60 percent to 25 percent over 48 months without action, versus maintaining 75 percent with Auxeira intervention.">
+        Stakeholder engagement: no action 60% to 25% over 48 months. With Auxeira maintains at 75%.
+      </canvas>
+    </div>
+  </div>
+
+  <div class="compound-box" style="margin-top:10px">
+    <div class="compound-title">The lapse rate problem — re-engagement is not free</div>
+    <div class="compound-body">
+      In insurance, lapsed policyholders are significantly more expensive to re-acquire
+      than to retain. The same applies to stakeholder relationships. A Treasury official
+      who has not engaged Zenex's evidence in 24 months requires three to five years of
+      consistent, high-quality, fiscal-language evidence to re-engage at the same level.
+      The cost of attrition is not just the lost windows — it is the re-acquisition cost
+      that follows.
+    </div>
+  </div>
+  <p class="anote">Stakeholder attention probabilities estimated from sector engagement patterns. All figures are illustrative projections. Specific stakeholder data from Grok research.</p>
+</div>
+
+<!-- CLOSING SECTION -->
+<div class="gold-card">
+  <div style="font-size:12px;font-weight:700;color:#8B6914;margin-bottom:8px">
+    The summary Zenex Foundation needs to hear
+  </div>
+  <div style="font-size:12px;color:#6B4F0A;line-height:1.75;margin-bottom:10px">
+    The R47M funding figure is important. The 7 foregone policy events matter more.
+    Each policy event is a decision that shapes the funding landscape Zenex operates in —
+    not just for Zenex, but for every foundation phase programme in South Africa.
+    The evidence Zenex has produced over ten years of rigorous work on ZenLit and
+    language-mathematics integration deserves to be in those rooms. Right now it is not.
+    The gap is not the evidence. It is the translation and the economic framing.
+  </div>
+  <div style="font-size:12px;color:#8B6914;font-style:italic;margin-bottom:12px">
+    "What would it look like for Zenex Foundation to enter the next budget cycle
+    with a ready fiscal case for foundation phase scaling?"
+  </div>
+  <div style="font-size:11px;color:#8B6914">
+    Intervention: 6–10 weeks &nbsp;·&nbsp; Tier 2 engagement &nbsp;·&nbsp;
+    Tipping point: Month 22 &nbsp;·&nbsp; Window: now
+  </div>
+</div>
+
+<script>
+const months=['Now','6m','12m','18m','24m','30m','36m','42m','48m'];
+
+new Chart(document.getElementById('valueChart'),{
+  type:'line',
+  data:{
+    labels:months,
+    datasets:[
+      {
+        label:'Evidence influence (decisions/yr)',
+        data:[14,13,12,10,9,8,6,5,5],
+        borderColor:'#E24B4A',backgroundColor:'rgba(226,75,74,.06)',
+        borderWidth:2,borderDash:[5,3],pointRadius:3,tension:0.3,fill:true,
+        yAxisID:'y'
+      },
+      {
+        label:'Evidence influence + Auxeira',
+        data:[14,null,null,16,18,19,20,21,22],
+        borderColor:'#185FA5',backgroundColor:'rgba(24,95,165,.05)',
+        borderWidth:1.5,borderDash:[3,2],pointRadius:2,tension:0.3,fill:false,
+        yAxisID:'y'
+      },
+      {
+        label:'Knowledge reach (hundreds)',
+        data:[28.4,26,23,20,17,14,12,11,10.2],
+        borderColor:'#534AB7',backgroundColor:'rgba(83,74,183,.05)',
+        borderWidth:2,borderDash:[5,3],pointRadius:3,tension:0.3,fill:true,
+        yAxisID:'y2'
+      },
+      {
+        label:'Knowledge reach + Auxeira',
+        data:[28.4,null,null,31,34,36,37,38,39],
+        borderColor:'rgba(180,180,180,.7)',backgroundColor:'transparent',
+        borderWidth:1.5,borderDash:[3,2],pointRadius:2,tension:0.3,
+        yAxisID:'y2'
+      }
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{mode:'index'}},
+    scales:{
+      y:{
+        position:'left',min:0,max:30,
+        ticks:{callback:v=>v+' decisions',font:{size:9}},
+        grid:{color:'rgba(0,0,0,0.04)'},
+        title:{display:true,text:'Decisions informed / year',font:{size:9},color:'#999'}
+      },
+      y2:{
+        position:'right',min:0,max:50,
+        ticks:{callback:v=>(v*100)+' practitioners',font:{size:9}},
+        grid:{drawOnChartArea:false}
+      },
+      x:{grid:{display:false},ticks:{font:{size:9}}}
+    }
+  }
+});
+
+new Chart(document.getElementById('decayChart'),{
+  type:'line',
+  data:{
+    labels:months,
+    datasets:[
+      {
+        label:'No action',
+        data:[60,56,51,45,40,35,30,27,25],
+        borderColor:'#E24B4A',backgroundColor:'rgba(226,75,74,.07)',
+        borderWidth:2,pointRadius:3,tension:0.3,fill:true
+      },
+      {
+        label:'With Auxeira',
+        data:[60,null,null,66,70,72,74,75,75],
+        borderColor:'#1D9E75',backgroundColor:'rgba(29,158,117,.07)',
+        borderWidth:2,borderDash:[4,2],pointRadius:3,tension:0.3,fill:true
+      }
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': '+Math.round(c.raw)+'% engagement'}}},
+    scales:{
+      y:{
+        min:0,max:100,
+        ticks:{callback:v=>v+'%',font:{size:9}},
+        grid:{color:'rgba(0,0,0,0.04)'},
+        title:{display:true,text:'Aggregate stakeholder engagement',font:{size:9},color:'#999'}
+      },
+      x:{grid:{display:false},ticks:{font:{size:9}}}
+    }
+  }
+});
+</script>
+
+</body>
+</html>
