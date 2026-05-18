@@ -1,0 +1,12 @@
+{
+  "name": "health-check-processor",
+  "version": "1.0.0",
+  "description": "Async pipeline: Grok research + Claude report generation + ZeptoMail delivery",
+  "main": "index.mjs",
+  "type": "module",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@aws-sdk/client-dynamodb": "^3.0.0",
+    "@aws-sdk/lib-dynamodb": "^3.0.0"
+  }
+}

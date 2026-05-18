@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PutCommand } from "@aws-sdk/lib-dynamodb";
+import { PublishCommand, SNSClient } from "@aws-sdk/client-sns";
 import { v4 as uuidv4 } from "uuid";
 import { readFileSync } from "fs";
 import { join } from "path";
@@ -9,6 +10,9 @@ import { normaliseUrl } from "@/lib/normaliseUrl";
 import { getEnv } from "@/lib/config";
 import { researchOrganisation, type GrokOrgResearch } from "@/lib/grok";
 import Anthropic from "@anthropic-ai/sdk";
+
+const sns = new SNSClient({ region: "us-east-1" });
+const SNS_TOPIC_ARN = "arn:aws:sns:us-east-1:615608124862:auxeira-health-check-pipeline";
 import {
   calculateScore,
   calculateRawScore,
@@ -255,19 +259,30 @@ export async function POST(req: NextRequest) {
       console.error("[health-check] DynamoDB write failed:", dbErr);
     }
 
-    // ── Return 200 immediately — async pipeline fires below ───────────────
-    const response = NextResponse.json({ success: true, score, id });
+    // ── Publish to SNS — Lambda handles Grok + Claude + email ─────────────
+    try {
+      await sns.send(new PublishCommand({
+        TopicArn: SNS_TOPIC_ARN,
+        Message: JSON.stringify({
+          id, timestamp, email,
+          firstName: first_name, lastName: last_name,
+          orgName: org_name, orgUrl,
+          answers, rawScore, score,
+        }),
+      }));
+      console.log("[health-check] SNS published for", org_name, id);
+    } catch (snsErr) {
+      console.error("[health-check] SNS publish failed — falling back to inline pipeline:", snsErr);
+      void runAsyncPipeline({
+        id, timestamp, email,
+        firstName: first_name, lastName: last_name,
+        orgName: org_name, orgUrl,
+        answers, rawScore, score, scoreBand, erc, tierRec,
+        topGaps, primaryGap, qScores, orgType,
+      });
+    }
 
-    // Fire async pipeline without awaiting
-    void runAsyncPipeline({
-      id, timestamp, email,
-      firstName: first_name, lastName: last_name,
-      orgName: org_name, orgUrl,
-      answers, rawScore, score, scoreBand, erc, tierRec,
-      topGaps, primaryGap, qScores, orgType,
-    });
-
-    return response;
+    return NextResponse.json({ success: true, score, id });
 
   } catch (err) {
     console.error("[health-check] API error:", err);
