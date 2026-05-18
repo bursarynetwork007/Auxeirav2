@@ -347,12 +347,40 @@ async function runAsyncPipeline(p: {
         text: emailText,
       });
       console.log("[health-check] Report email sent to", email);
+      // Update audit record
+      try {
+        await dynamo.send(new PutCommand({
+          TableName: process.env.DYNAMODB_HEALTH_CHECK_TABLE ?? "auxeira-health-checks",
+          Item: {
+            id: `email-audit-${p.id}`,
+            submissionId: p.id,
+            email, orgName, score,
+            reportEmailStatus: "sent",
+            reportEmailSentAt: new Date().toISOString(),
+            timestamp: new Date().toISOString(),
+          },
+        }));
+      } catch { /* non-critical */ }
     } catch (emailErr) {
       console.error("[health-check] Report email failed:", emailErr);
+      try {
+        await dynamo.send(new PutCommand({
+          TableName: process.env.DYNAMODB_HEALTH_CHECK_TABLE ?? "auxeira-health-checks",
+          Item: {
+            id: `email-audit-${p.id}`,
+            submissionId: p.id,
+            email, orgName, score,
+            reportEmailStatus: "failed",
+            reportEmailError: String(emailErr),
+            timestamp: new Date().toISOString(),
+          },
+        }));
+      } catch { /* non-critical */ }
     }
   }
 
   // ── Step 5b: Lead notification to info@auxeira.com ───────────────────────
+  let notifyStatus = "pending";
   try {
     const notifyEmail = process.env.LEAD_NOTIFICATION_EMAIL ?? "info@auxeira.com";
     await sendEmail({
@@ -361,8 +389,31 @@ async function runAsyncPipeline(p: {
       html: buildLeadNotificationEmail({ email, firstName, lastName, orgName,
         score, rawScore, answers, qScores, scoreBand, tierRec, topGaps, primaryGap, research }),
     });
+    notifyStatus = "sent";
+    console.log("[health-check] Lead notification sent for", orgName);
   } catch (notifyErr) {
+    notifyStatus = "failed";
     console.error("[health-check] Lead notification failed:", notifyErr);
+  }
+
+  // Write email audit record to DynamoDB
+  try {
+    await dynamo.send(new PutCommand({
+      TableName: process.env.DYNAMODB_HEALTH_CHECK_TABLE ?? "auxeira-health-checks",
+      Item: {
+        id: `email-audit-${p.id}`,
+        submissionId: p.id,
+        email,
+        orgName,
+        score,
+        notifyEmailStatus: notifyStatus,
+        notifyEmailSentAt: new Date().toISOString(),
+        reportEmailStatus: "pending",
+        timestamp: new Date().toISOString(),
+      },
+    }));
+  } catch (auditErr) {
+    console.error("[health-check] Email audit write failed:", auditErr);
   }
 
   // ── Step 6: Zoho CRM upsert ──────────────────────────────────────────────

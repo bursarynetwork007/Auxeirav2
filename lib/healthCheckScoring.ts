@@ -442,7 +442,7 @@ const Q_GAP_DESCRIPTIONS: Record<keyof HealthCheckAnswers, string> = {
   q2: "Your evidence isn't reaching the right decision-makers in the language they respond to.",
   q3: "Your evidence base is still developing. A structured evidence strategy will compound value quickly.",
   q4: "Your evidence is not landing with decision-makers in a form they can act on.",
-  q5: "You have no economic or SROI analysis — the language funders and Treasury require.",
+  q5: "You have no economic or SROI analysis - the language funders and Treasury require.",
   q6: "Your core evidence challenge is unresolved and is directly limiting funding and policy traction.",
   q7: "Decision-makers are consistently asking you to simplify. Your evidence architecture needs redesigning.",
   q8: "",
