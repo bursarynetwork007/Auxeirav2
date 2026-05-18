@@ -1,32 +1,158 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PutCommand } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from "uuid";
+import { readFileSync } from "fs";
+import { join } from "path";
 import { dynamo } from "@/lib/dynamodb";
 import { sendEmail } from "@/lib/mailer";
-import { subscribeToForm } from "@/lib/convertkit";
+import { normaliseUrl } from "@/lib/normaliseUrl";
+import { getEnv } from "@/lib/config";
+import { researchOrganisation, type GrokOrgResearch } from "@/lib/grok";
+import Anthropic from "@anthropic-ai/sdk";
 import {
   calculateScore,
   calculateRawScore,
   getScoreBand,
+  getERC,
   getTierRecommendation,
   getTopGaps,
   getPrimaryGapLabel,
   getQuestionScores,
+  getOrgType,
+  showPilotDiagnostic,
+  getPrimaryAudienceLabel,
+  getSectorAverage,
+  getAnswerText,
   type HealthCheckAnswers,
+  type OrgType,
 } from "@/lib/healthCheckScoring";
-import { normaliseUrl } from "@/lib/normaliseUrl";
-import { researchOrganisation, type GrokOrgResearch } from "@/lib/grok";
-import Anthropic from "@anthropic-ai/sdk";
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+// ── Types ────────────────────────────────────────────────────────────────────
 
-interface HealthCheckBody {
-  answers: HealthCheckAnswers;
-  firstName: string;
-  lastName: string;
-  orgName: string;
+// Ona webhook sends 0-based integer indices for each answer
+interface OnaWebhookBody {
+  // Contact fields
+  first_name: string;
+  last_name: string;
   email: string;
+  org_name: string;
+  org_website?: string; // optional — shown only for personal email domains
+
+  // Answer indices (0-based integers)
+  q1: number;
+  q2: number;
+  q3: number;
+  q4: number;
+  q5: number;
+  q6: number;
+  q7: number;
+  q8: number;
 }
+
+// All 18 Claude-generated report variables
+interface ReportVars {
+  // Section 2
+  score_headline: string;
+  // Section 3
+  funding_at_risk: string;
+  influence_gap: string;
+  opportunity_cost: string;
+  // Section 4
+  gap1_title: string;
+  gap1_q_ref: string;
+  gap1_body: string;
+  gap1_cost: string;
+  gap2_title: string;
+  gap2_q_ref: string;
+  gap2_body: string;
+  gap2_cost: string;
+  // Section 5
+  sector_context: string;
+  sector_metric1_num: string;
+  sector_metric1_desc: string;
+  sector_metric2_num: string;
+  sector_metric2_desc: string;
+  sector_metric3_num: string;
+  sector_metric3_desc: string;
+  // Section 6
+  scenario_nothing: string;
+  scenario_partial: string;
+  scenario_full: string;
+  recovery_value: string;
+  // Section 7
+  risk1_title: string;
+  risk1_body: string;
+  risk2_title: string;
+  risk2_body: string;
+  risk3_title: string;
+  risk3_body: string;
+  // Section 8 — Market loss
+  market_loss_leading_question: string;
+  leverage_now: string;
+  leverage_48m: string;
+  tipping_month: string;
+  cumulative_loss: string;
+  sector_position_now: string;
+  sector_position_48m: string;
+  loss_year1: string;
+  loss_year2: string;
+  loss_year3: string;
+  loss_year4: string;
+  // Section 9 — Value identity
+  value_identity_leading_question: string;
+  value1_label: string;
+  value1_metric: string;
+  value1_now: string;
+  value1_48m: string;
+  value1_pct_decline: string;
+  value2_label: string;
+  value2_metric: string;
+  value2_now: string;
+  value2_48m: string;
+  value2_pct_decline: string;
+  policy_windows: string;
+  policy_expected_b: string;
+  policy_expected_a: string;
+  policy_gap: string;
+  policy_value_low: string;
+  policy_value_high: string;
+  compound_b_pct: string;
+  compound_a_pct: string;
+  stakeholder_count: string;
+  stakeholder_now_pct: string;
+  stakeholder_48m_pct: string;
+  stakeholder_rows_html: string; // rendered HTML rows for email template
+  policy_windows_html: string;   // rendered HTML rows for email template
+  // Section 10
+  market_context_body: string;
+  mkt_metric1_num: string;
+  mkt_metric1_desc: string;
+  mkt_metric2_num: string;
+  mkt_metric2_desc: string;
+  mkt_metric3_num: string;
+  mkt_metric3_desc: string;
+  // Section 11
+  intel_landscape: string;
+  intel_risk: string;
+  intel_opportunity: string;
+  // Section 12
+  proof_bridge: string;
+  // Section 13
+  tier_label: string;
+  urgency_label: string;
+  rec_body: string;
+  closing_question: string;
+  tier_price: string;
+  tier_timeline: string;
+  pilot_diagnostic_text: string; // empty for delivery orgs
+  // Section 14 (conditional)
+  ceo_name: string;
+  programme_name: string;
+  primary_audience_label: string;
+  forward_box_html: string; // empty if seniority == executive
+}
+
+// ── Constants ────────────────────────────────────────────────────────────────
 
 const PERSONAL_DOMAINS = new Set([
   "gmail.com","googlemail.com","yahoo.com","yahoo.co.za","outlook.com",
@@ -34,46 +160,93 @@ const PERSONAL_DOMAINS = new Set([
   "protonmail.com","proton.me",
 ]);
 
-function inferOrgUrl(email: string): string {
+function inferOrgUrl(email: string, explicitUrl?: string): string {
+  if (explicitUrl) return normaliseUrl(explicitUrl);
   const domain = email.split("@")[1] ?? "";
   if (!domain || PERSONAL_DOMAINS.has(domain.toLowerCase())) return "";
   return normaliseUrl(`https://${domain}`);
 }
 
+// ── Sanitiser ────────────────────────────────────────────────────────────────
+
+function sanitiseAIOutput(text: string): string {
+  return text
+    .replace(/\s*—\s*/g, " - ")          // em dash -> hyphen
+    .replace(/–/g, "-")                   // en dash -> hyphen
+    .replace(/!/g, ".")                   // exclamation -> period
+    .replace(/\bleverage\b/gi, "use")
+    .replace(/\bsynergies\b/gi, "shared strengths")
+    .replace(/\btouch base\b/gi, "connect")
+    .replace(/\breaching out\b/gi, "writing")
+    .replace(/\bcircle back\b/gi, "follow up")
+    .replace(/\bI hope this finds you well\b/gi, "")
+    .replace(/\bAs an AI\b/gi, "")
+    .replace(/\bAs a language model\b/gi, "")
+    .replace(/\bClaude\b/g, "")
+    .replace(/\bAnthropic\b/g, "")
+    .trim();
+}
+
+// ── POST handler ─────────────────────────────────────────────────────────────
+
 export async function POST(req: NextRequest) {
   try {
-    const body = (await req.json()) as HealthCheckBody;
-    const { answers, firstName, lastName, orgName, email } = body;
+    const body = (await req.json()) as OnaWebhookBody;
+    const { first_name, last_name, email, org_name } = body;
 
-    if (!email || !answers || !firstName || !lastName || !orgName) {
+    if (!email || !first_name || !last_name || !org_name) {
       return NextResponse.json(
-        { error: "firstName, lastName, email, orgName and answers are required" },
+        { error: "first_name, last_name, email, org_name are required" },
         { status: 400 }
       );
     }
 
+    // Validate answer indices are present
+    const qKeys = ["q1","q2","q3","q4","q5","q6","q7","q8"] as const;
+    for (const k of qKeys) {
+      if (typeof body[k] !== "number") {
+        return NextResponse.json(
+          { error: `Missing or invalid answer index for ${k}` },
+          { status: 400 }
+        );
+      }
+    }
+
+    const answers: HealthCheckAnswers = {
+      q1: body.q1, q2: body.q2, q3: body.q3, q4: body.q4,
+      q5: body.q5, q6: body.q6, q7: body.q7, q8: body.q8,
+    };
+
+    // ── Step 1: Score immediately ──────────────────────────────────────────
     const rawScore   = calculateRawScore(answers);
     const score      = calculateScore(answers);
     const scoreBand  = getScoreBand(score);
+    const erc        = getERC(score);
     const tierRec    = getTierRecommendation(answers);
     const topGaps    = getTopGaps(answers);
     const primaryGap = getPrimaryGapLabel(answers);
     const qScores    = getQuestionScores(answers);
-    const orgUrl     = inferOrgUrl(email);
+    const orgType    = getOrgType(answers);
+    const orgUrl     = inferOrgUrl(email, body.org_website);
 
     const id        = uuidv4();
     const timestamp = new Date().toISOString();
 
+    // ── Step 1b: Store submission ──────────────────────────────────────────
     try {
       await dynamo.send(
         new PutCommand({
           TableName: process.env.DYNAMODB_HEALTH_CHECK_TABLE ?? "auxeira-health-checks",
           Item: {
-            id, timestamp, email, firstName, lastName, orgName, orgUrl,
+            id, timestamp, email,
+            firstName: first_name, lastName: last_name,
+            orgName: org_name, orgUrl,
             answers, rawScore, score,
             scoreBand: scoreBand.label,
             tierRecommendation: String(tierRec.tier),
-            topGaps, primaryGap,
+            topGaps: topGaps.map(g => g.description),
+            primaryGap,
+            orgType,
             reportStatus: "pending",
           },
         })
@@ -82,76 +255,158 @@ export async function POST(req: NextRequest) {
       console.error("[health-check] DynamoDB write failed:", dbErr);
     }
 
-    let research: GrokOrgResearch | null = null;
-    try {
-      research = await researchOrganisation({
-        orgName, orgUrl,
-        personFirstName: firstName,
-        personLastName:  lastName,
-        primaryGap, score,
-      });
-      console.log("[health-check] Grok research complete. sector:", research.sector_key, "seniority:", research.seniority);
-    } catch (grokErr) {
-      console.error("[health-check] Grok research failed:", grokErr);
-    }
+    // ── Return 200 immediately — async pipeline fires below ───────────────
+    const response = NextResponse.json({ success: true, score, id });
 
-    const reportHtml = await generateReportEmail({
-      firstName, lastName, orgName, email,
-      score, rawScore, scoreBand, tierRec, topGaps, primaryGap, qScores, answers,
-      research,
+    // Fire async pipeline without awaiting
+    void runAsyncPipeline({
+      id, timestamp, email,
+      firstName: first_name, lastName: last_name,
+      orgName: org_name, orgUrl,
+      answers, rawScore, score, scoreBand, erc, tierRec,
+      topGaps, primaryGap, qScores, orgType,
     });
 
-    try {
-      await sendEmail({
-        to: email,
-        subject: `Your Auxeira Evidence Risk Report: ${orgName}`,
-        html: reportHtml,
-      });
-    } catch (emailErr) {
-      console.error("[health-check] Report email failed:", emailErr);
-    }
+    return response;
 
-    try {
-      const formId = process.env.CONVERTKIT_FORM_ID_CAPABILITY;
-      if (formId && formId !== "placeholder") {
-        await subscribeToForm({
-          formId, email, firstName,
-          fields: {
-            score: String(score), score_band: scoreBand.label,
-            tier_recommendation: String(tierRec.tier),
-            top_gap_1: topGaps[0] ?? "", top_gap_2: topGaps[1] ?? "",
-            org_name: orgName,
-          },
-        });
-      }
-    } catch (ckErr) {
-      console.error("[health-check] ConvertKit failed:", ckErr);
-    }
-
-    try {
-      const notifyEmail = process.env.LEAD_NOTIFICATION_EMAIL ?? "info@auxeira.com";
-      await sendEmail({
-        to: notifyEmail,
-        subject: `New Health Check: ${orgName} Score ${score}/100`,
-        html: buildLeadNotificationEmail({
-          email, firstName, lastName, orgName,
-          score, rawScore, answers, scoreBand, tierRec, topGaps, primaryGap, research,
-        }),
-      });
-    } catch (notifyErr) {
-      console.error("[health-check] Lead notification failed:", notifyErr);
-    }
-
-    return NextResponse.json({ success: true, score, id, primaryGap });
   } catch (err) {
     console.error("[health-check] API error:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
+// ── Async pipeline ────────────────────────────────────────────────────────────
 
+async function runAsyncPipeline(p: {
+  id: string;
+  timestamp: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  orgName: string;
+  orgUrl: string;
+  answers: HealthCheckAnswers;
+  rawScore: number;
+  score: number;
+  scoreBand: ReturnType<typeof getScoreBand>;
+  erc: ReturnType<typeof getERC>;
+  tierRec: ReturnType<typeof getTierRecommendation>;
+  topGaps: ReturnType<typeof getTopGaps>;
+  primaryGap: string;
+  qScores: Record<keyof HealthCheckAnswers, number>;
+  orgType: OrgType;
+}) {
+  const { id, email, firstName, lastName, orgName, orgUrl,
+          answers, rawScore, score, scoreBand, erc, tierRec,
+          topGaps, primaryGap, qScores, orgType } = p;
 
-// ── Claude system prompt — verbatim from EVIDENCE_HEALTH_CHECK.md ─────────────
+  // ── Step 3: Grok research ────────────────────────────────────────────────
+  let research: GrokOrgResearch | null = null;
+  try {
+    research = await researchOrganisation({
+      orgName, orgUrl,
+      personFirstName: firstName,
+      personLastName: lastName,
+      primaryGap, score,
+    });
+    console.log("[health-check] Grok complete. sector:", research.sector_key, "seniority:", research.seniority);
+  } catch (grokErr) {
+    console.error("[health-check] Grok failed:", grokErr);
+  }
+
+  // ── Step 4: Claude generates all 18 report sections ─────────────────────
+  let reportVars: ReportVars | null = null;
+  try {
+    reportVars = await generateReportVars({
+      firstName, lastName, orgName,
+      score, rawScore, scoreBand, erc, tierRec,
+      topGaps, primaryGap, qScores, answers, orgType,
+      research,
+    });
+  } catch (claudeErr) {
+    console.error("[health-check] Claude generation failed:", claudeErr);
+    reportVars = buildFallbackVars(p, research);
+  }
+
+  // ── Step 5: Email with 25-55 min randomised delay ────────────────────────
+  const delayMs = (25 + Math.floor(Math.random() * 31)) * 60 * 1000;
+  console.log(`[health-check] Email scheduled in ${Math.round(delayMs/60000)} min for ${email}`);
+  await new Promise(resolve => setTimeout(resolve, delayMs));
+
+  if (reportVars) {
+    try {
+      const emailHtml = buildEmailHtml(reportVars, {
+        firstName, lastName, orgName, score, rawScore,
+        scoreBand, erc, tierRec, answers, qScores,
+      });
+      const emailText = buildPlainText(reportVars, { firstName, orgName, score });
+      await sendEmail({
+        to: email,
+        subject: `Your Auxeira Evidence Risk Report — ${orgName}`,
+        html: emailHtml,
+        text: emailText,
+      });
+      console.log("[health-check] Report email sent to", email);
+    } catch (emailErr) {
+      console.error("[health-check] Report email failed:", emailErr);
+    }
+  }
+
+  // ── Step 5b: Lead notification to info@auxeira.com ───────────────────────
+  try {
+    const notifyEmail = process.env.LEAD_NOTIFICATION_EMAIL ?? "info@auxeira.com";
+    await sendEmail({
+      to: notifyEmail,
+      subject: `New Health Check: ${orgName} — Score ${score}/100`,
+      html: buildLeadNotificationEmail({ email, firstName, lastName, orgName,
+        score, rawScore, answers, qScores, scoreBand, tierRec, topGaps, primaryGap, research }),
+    });
+  } catch (notifyErr) {
+    console.error("[health-check] Lead notification failed:", notifyErr);
+  }
+
+  // ── Step 6: Zoho CRM upsert ──────────────────────────────────────────────
+  try {
+    await upsertZohoCRM({
+      email, firstName, lastName, orgName, orgUrl,
+      score, scoreBand: scoreBand.label,
+      tierRecommendation: String(tierRec.tier),
+      primaryGap, orgType,
+      seniority: research?.seniority ?? "senior_manager",
+      sectorKey: research?.sector_key ?? "other",
+      flagshipProgramme: research?.flagship_programme ?? "",
+    });
+  } catch (zohoErr) {
+    console.error("[health-check] Zoho CRM upsert failed:", zohoErr);
+  }
+
+  // ── Update DynamoDB status ───────────────────────────────────────────────
+  try {
+    await dynamo.send(
+      new PutCommand({
+        TableName: process.env.DYNAMODB_HEALTH_CHECK_TABLE ?? "auxeira-health-checks",
+        Item: {
+          id, email,
+          firstName, lastName, orgName, orgUrl,
+          answers, rawScore, score,
+          scoreBand: scoreBand.label,
+          tierRecommendation: String(tierRec.tier),
+          topGaps: topGaps.map(g => g.description),
+          primaryGap, orgType,
+          reportStatus: "sent",
+          reportSentAt: new Date().toISOString(),
+          seniority: research?.seniority ?? "senior_manager",
+          sectorKey: research?.sector_key ?? "other",
+          flagshipProgramme: research?.flagship_programme ?? "",
+        },
+      })
+    );
+  } catch (dbErr) {
+    console.error("[health-check] DynamoDB status update failed:", dbErr);
+  }
+}
+
+// ── Claude system prompt — verbatim from Auxeira_HealthCheck_Spec-2.md Part B ─
 
 const CLAUDE_SYSTEM = `You are a senior evidence intelligence consultant at Auxeira, a Johannesburg-based consultancy.
 
@@ -177,138 +432,74 @@ PROOF POINT BRIDGE RULE — mandatory:
 The SmartStart / Skoll Award proof point is a methodology proof, not a sector comparison. Never imply the subscriber's organisation is comparable to SmartStart. Always bridge via methodology: "The same approach that surfaced X for a South African delivery network applies equally to [their sector] work, where the fiscal multipliers are equally strong and equally unmade."
 
 SURVEILLANCE RULE — mandatory:
-Never reveal that Auxeira has researched the subscriber. Never say "we researched you" or "we found" or "we noticed." The personalisation must feel like informed sector intelligence, not like an investigation.`;
+Never reveal that Auxeira has researched the subscriber. Never say "we researched you" or "we found" or "we noticed." The personalisation must feel like informed sector intelligence, not like an investigation.
 
-// ── Projection data — mirrors Evidence_Risk_Report.html PROJ object ───────────
+LANGUAGE REGISTER BY ORG TYPE — mandatory:
+Read the org type from Q1 and the Grok research profile. Apply the correct register throughout the entire report.
 
-const PROJ: Record<string, { fund: string; inf: string; opp: string; scale: string; base: number; imp: number }> = {
-  "under-5m":   { fund: "R500K–R2M",   inf: "25–40%", opp: "R1–3M over 3 years",    scale: "R5M+",       base: 2,  imp: 6   },
-  "5m-20m":     { fund: "R2M–R8M",     inf: "30–45%", opp: "R5–15M over 3 years",   scale: "R15M+",      base: 5,  imp: 18  },
-  "20m-100m":   { fund: "R8M–R25M",    inf: "35–50%", opp: "R15–40M over 3 years",  scale: "R40M+",      base: 15, imp: 50  },
-  "over-100m":  { fund: "R25M–R80M",   inf: "40–60%", opp: "R50M+ over 3 years",    scale: "Portfolio",  base: 40, imp: 130 },
-};
+Delivery orgs (NGOs, social enterprises, government depts):
+Use standard framing. "Gap" is appropriate. "Evidence gap" is accurate and non-threatening. Loss aversion language works directly.
 
-// ── Band data — mirrors Evidence_Risk_Report.html BANDS array ─────────────────
+Foundation and funder orgs:
+Never use "gap" or "problem" as primary framing.
+Never use "intervention" — use "partnership."
+Never use "fix" — use "unlock."
+Never use "what you are losing" — use "what remains unmeasured" or "what is not yet visible."
+Replace "the evidence gap is costing you" with "the portfolio contribution that remains unmeasured."
 
-const BAND_META: Record<string, { grade: string; gc: string; gb: string; rl: string; sb: number }> = {
-  "Strong foundation":          { grade: "Strong",         gc: "#1D9E75", gb: "rgba(29,158,117,0.12)",  rl: "Low",      sb: 85 },
-  "Solid base, significant gap":{ grade: "Moderate",       gc: "#C9A84C", gb: "rgba(201,168,76,0.15)",  rl: "Medium",   sb: 60 },
-  "Significant gaps, urgent":   { grade: "Needs attention",gc: "#D85A30", gb: "rgba(216,90,48,0.12)",   rl: "High",     sb: 35 },
-  "Critical gaps":              { grade: "Critical",       gc: "#E24B4A", gb: "rgba(226,75,74,0.12)",   rl: "Critical", sb: 15 },
-};
+Consultant and evaluator orgs:
+Frame around client impact, not internal evidence. "Your clients are leaving funding on the table" is more resonant than "your evidence is weak."
 
-// ── Risks — mirrors Evidence_Risk_Report.html RISKS object ───────────────────
+LEADING QUESTION PLACEMENT — mandatory:
+Loss aversion sections (Market Loss — Section 8, and Value Identity — Section 9): place the leading question at the START of the section, before the data.
+Recommendation section (Section 13): place the leading question at the END.
+All other sections: leading question at the end.`;
 
-const RISKS: Record<string, [string, string, string]> = {
-  low: [
-    "Translation polish: strong evidence base, but audience-specific framing can be sharpened for higher-value funder conversations.",
-    "Economic narrative: the full fiscal return of your programme may not yet be fully quantified or communicated in Treasury language.",
-    "Funder language: the gap between evidence quality and funding conversion rate can still be narrowed with targeted translation work.",
-  ],
-  med: [
-    "Partial economic framing: SROI or fiscal impact data exists but is not being maximised in funder conversations or government submissions.",
-    "Translation gap: evidence is reaching funders but not converting to decisions at the rate the programme quality warrants.",
-    "Sector positioning: the economic infrastructure case for your work has not been made at National Treasury or policy level.",
-  ],
-  high: [
-    "Weak economic framing: likely difficulty securing Treasury allocations or government co-funding without a fiscal multiplier analysis.",
-    "Funder deprioritisation: proposals are likely being passed over in competitive rounds for organisations with stronger evidence narratives.",
-    "Limited policy influence: policy reach is constrained despite strong programme delivery because the economic case has not been made.",
-  ],
-};
+// ── generateReportVars ────────────────────────────────────────────────────────
 
-// ── Sector context — mirrors Evidence_Risk_Report.html CTX object ─────────────
-
-const SECTOR_CTX: Record<string, string> = {
-  ecd:    "South Africa's ECD sector is undergoing a major funding shift. The Bana Pele commitment puts R10B on the table but requires economic impact evidence, not just child outcome data. Organisations without fiscal framing are being structurally deprioritised.",
-  health: "Global health funders are tightening evidence requirements. South African health organisations without strong M&E frameworks and economic framing are losing ground to those that can demonstrate cost-per-outcome and long-term fiscal savings.",
-  econ:   "Economic development funders are moving toward enterprise-level SROI and fiscal multiplier evidence. Organisations without verified economic contribution data face increasing competition for government and DFI co-funding.",
-  other:  "Social impact funders globally are shifting toward evidence-weighted portfolio allocation. Organisations without strong evidence communication frameworks are structurally disadvantaged in competitive funding environments.",
-};
-
-// ── Sector intelligence insight — mirrors Evidence_Risk_Report.html getAI() ───
-
-const SECTOR_INSIGHT_FALLBACK = "Based on sector benchmarks, organisations with similar evidence profiles typically secure an estimated 30 to 40% less funding than sector leaders with strong economic framing. Closing this evidence gap through Auxeira's synthesis and translation methodology is estimated to unlock 2 to 3x more decision-maker engagement within 24 months, based on patterns across South Africa's social impact funding landscape.";
-
-async function getSectorInsight(score: number, bandLabel: string, sectorKey: string): Promise<string> {
-  const prompt = `You are Auxeira's Evidence Risk Analyst. Auxeira is a Johannesburg-based evidence intelligence consultancy that translates complex programme data into economic narratives that move funders, government, and boards to act.
-
-Generate a structured sector intelligence insight using EXACTLY this format — three labelled sentences, nothing more:
-
-LANDSCAPE: [One sentence on the sector funding environment — specific to South Africa.]
-RISK: [One sentence on what organisations with this score typically lose — based on sector benchmarks.]
-OPPORTUNITY: [One sentence on what closing this gap with Auxeira typically unlocks — estimated range.]
-
-Evidence score: ${score}/100 | Band: ${bandLabel} | Sector: ${sectorKey}
-Sector context: ${SECTOR_CTX[sectorKey] ?? SECTOR_CTX.other}
-
-HARD RULES — return ONLY "USE_FALLBACK" if you cannot follow every rule:
-1. Use ranges not point estimates
-2. Every claim labelled "estimated" or "based on sector benchmarks"
-3. No legal or financial advice
-4. No named competitor organisations
-5. No claims about Auxeira's dataset size
-6. LANDSCAPE must reference South Africa specifically
-7. OPPORTUNITY must reference Auxeira by name
-8. Exactly 3 sentences. No preamble. No sign-off.
-9. No em dashes. No exclamation marks.`;
-
-  try {
-    const msg = await anthropic.messages.create({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 160,
-      system: "You are a strict evidence risk analyst. Follow all rules exactly or return USE_FALLBACK.",
-      messages: [{ role: "user", content: prompt }],
-    });
-    const text = msg.content
-      .filter((b) => b.type === "text")
-      .map((b) => (b as { type: "text"; text: string }).text)
-      .join("").trim();
-    const valid = text && !text.includes("USE_FALLBACK") &&
-      (text.includes("estimated") || text.includes("based on")) && text.includes("%");
-    return valid ? text : SECTOR_INSIGHT_FALLBACK;
-  } catch {
-    return SECTOR_INSIGHT_FALLBACK;
-  }
-}
-
-async function generateReportEmail(p: {
-  firstName: string; lastName: string; orgName: string; email: string;
+async function generateReportVars(p: {
+  firstName: string; lastName: string; orgName: string;
   score: number; rawScore: number;
   scoreBand: ReturnType<typeof getScoreBand>;
+  erc: ReturnType<typeof getERC>;
   tierRec: ReturnType<typeof getTierRecommendation>;
-  topGaps: string[]; primaryGap: string;
-  qScores: Record<string, number>;
+  topGaps: ReturnType<typeof getTopGaps>;
+  primaryGap: string;
+  qScores: Record<keyof HealthCheckAnswers, number>;
   answers: HealthCheckAnswers;
+  orgType: OrgType;
   research: GrokOrgResearch | null;
-}): Promise<string> {
+}): Promise<ReportVars> {
   const { firstName, lastName, orgName, score, rawScore, scoreBand, tierRec,
-          topGaps, primaryGap, qScores, answers, research } = p;
+          topGaps, primaryGap, qScores, answers, orgType, research } = p;
 
-  const sectorKey  = research?.sector_key ?? "other";
-  const seniority  = research?.seniority  ?? "senior_manager";
-  const ceoName    = research?.ceo_name   ?? "";
-  const proj       = PROJ[answers.q8] ?? PROJ["5m-20m"];
-  const bm         = BAND_META[scoreBand.label] ?? BAND_META["Critical gaps"];
-  const riskLevel  = bm.rl === "Low" ? "low" : bm.rl === "Medium" ? "med" : "high";
-  const risks      = RISKS[riskLevel];
-  const scoreColor = bm.gc;
-  const sp         = bm.sb;
-  const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL ?? "https://auxeira.com/#cta";
-  const siteUrl     = process.env.NEXT_PUBLIC_SITE_URL ?? "https://auxeira.com";
+  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-  // Build per-question answer summary for Claude prompt
+  const seniority       = research?.seniority        ?? "senior_manager";
+  const ceoName         = research?.ceo_name         ?? "";
+  const sectorKey       = research?.sector_key       ?? "other";
+  const sectorLabel     = research?.sector_label     ?? "social sector";
+  const flagshipProg    = research?.flagship_programme ?? orgName;
+  const sectorAvg       = getSectorAverage(sectorKey);
+  const scoreVsAvg      = Math.abs(score - sectorAvg);
+  const aboveBelow      = score >= sectorAvg ? "above" : "below";
+  const pilotDiag       = showPilotDiagnostic(answers);
+  const primaryAudience = getPrimaryAudienceLabel(answers);
+
+  // Build Q&A summary for prompt
   const qLabels: Record<string, string> = {
     q1: "Organisation type", q2: "Primary audience", q3: "Years of data",
     q4: "Last report response", q5: "SROI status", q6: "Biggest challenge",
     q7: "Simplify requests", q8: "Annual budget",
   };
-  const answerRows = Object.entries(answers)
-    .map(([k, v]) => `${qLabels[k] ?? k}: ${v} — ${qScores[k] ?? 0} points`)
+  const answerSummary = (Object.keys(qScores) as (keyof HealthCheckAnswers)[])
+    .map(k => `${qLabels[k]}: ${getAnswerText(k, answers[k])} — ${qScores[k]} pts`)
     .join("\n");
 
-  // Claude user prompt — verbatim structure from EVIDENCE_HEALTH_CHECK.md Part B
-  const userPrompt = `Generate a complete Entity Evidence Risk Report for this organisation. Use all sections below. Populate every variable with specific, personalised content. Do not use placeholder text or generic observations.
+  const gap1 = topGaps[0];
+  const gap2 = topGaps[1];
+
+  const userPrompt = `Generate a complete Entity Evidence Risk Report for this organisation. Populate every variable with specific, personalised content. Do not use placeholder text or generic observations.
 
 SUBSCRIBER:
 First name: ${firstName}
@@ -316,582 +507,682 @@ Last name: ${lastName}
 Organisation: ${orgName}
 Seniority: ${seniority}
 CEO name (if submitter is not CEO): ${ceoName || "not identified"}
+Org type: ${orgType}
+Programme name (flagship from research): ${flagshipProg}
+Primary audience: ${primaryAudience}
+
+SECTOR:
+Sector: ${sectorLabel}
+Sector average score: ${sectorAvg}
+This org score: ${score} (${scoreVsAvg} pts ${aboveBelow} average)
 
 DIAGNOSTIC ANSWERS AND SCORE:
-${answerRows}
+${answerSummary}
 Raw score: ${rawScore} / 104
 Final score: ${score} / 100
 Score band: ${scoreBand.label}
-Gap 1: ${topGaps[0] ?? ""}
-Gap 2: ${topGaps[1] ?? ""}
+Gap 1: ${gap1?.gapType ?? ""} (${gap1?.q ?? ""})
+Gap 2: ${gap2?.gapType ?? ""} (${gap2?.q ?? ""})
 
 GROK RESEARCH PROFILE:
-Overview: ${research?.overview ?? "Not available"}
-Evidence landscape: ${research?.evidence_landscape ?? "Not available"}
-Key funders: ${research?.funders ?? "Not available"}
-Sector context: ${research?.sector_context ?? "Not available"}
-Gap risks: ${research?.gap_risks ?? "Not available"}
-Funding risk estimate: ${research?.funding_risk_estimate ?? "Not available"}
+${research?.full_briefing ?? research?.overview ?? "Not available — generate from diagnostic answers and sector knowledge."}
 
-GENERATE EACH SECTION BELOW. Be specific to this organisation throughout. Minimum 2 sentences per section.
+---
 
-SCORE HEADLINE (1 sentence):
-What the score tells us about this specific organisation — not a generic statement.
+Return a JSON object with EXACTLY these keys. All values are strings. No markdown. No line breaks within values — use spaces only.
 
-EXECUTIVE SUMMARY (2 sentences):
-What they have and what it is not yet doing. Reference their specific evidence profile.
+{
+  "score_headline": "1 sentence. What the score tells us about this specific organisation.",
+  "funding_at_risk": "Rand range. E.g. R8M-R18M",
+  "influence_gap": "Percentage range. E.g. 35-50%",
+  "opportunity_cost": "Rand range over 3 years. E.g. R25-40M over 3 years",
+  "gap1_title": "Gap 1 name. 3-5 words.",
+  "gap1_q_ref": "Q${gap1?.q?.toUpperCase() ?? "Q4"}",
+  "gap1_body": "3-4 sentences. Specific to this organisation.",
+  "gap1_cost": "1 sentence estimated cost statement.",
+  "gap2_title": "Gap 2 name. 3-5 words.",
+  "gap2_q_ref": "Q${gap2?.q?.toUpperCase() ?? "Q5"}",
+  "gap2_body": "3-4 sentences. Specific to this organisation.",
+  "gap2_cost": "1 sentence estimated cost statement.",
+  "sector_context": "4-5 sentences. South Africa-specific. One data point minimum.",
+  "sector_metric1_num": "E.g. 3.3x",
+  "sector_metric1_desc": "Short label. E.g. ECD SROI verified",
+  "sector_metric2_num": "E.g. 30-40%",
+  "sector_metric2_desc": "Short label.",
+  "sector_metric3_num": "E.g. 70%",
+  "sector_metric3_desc": "Short label.",
+  "scenario_nothing": "3 sentences. What happens over 3 years with no action.",
+  "scenario_partial": "3 sentences. What happens if only one gap is addressed.",
+  "scenario_full": "3 sentences. What the org looks like after full ${tierRec.label} engagement.",
+  "recovery_value": "Rand range. E.g. R25-40M",
+  "risk1_title": "Primary risk title. 4-6 words.",
+  "risk1_body": "2-3 sentences.",
+  "risk2_title": "Secondary risk title.",
+  "risk2_body": "2-3 sentences.",
+  "risk3_title": "Sector positioning risk title.",
+  "risk3_body": "2-3 sentences.",
+  "market_loss_leading_question": "1 sentence. Leading question placed at START of market loss section. Reference the tipping month.",
+  "leverage_now": "${score}",
+  "leverage_48m": "Projected leverage at month 48 without action. ERC-B typically 25-35.",
+  "tipping_month": "Month at which sector average crosses their score. Typically 18-26 for ERC-B.",
+  "cumulative_loss": "Total 4-year funding attrition. Calibrate to Q8 budget band.",
+  "sector_position_now": "E.g. Top 40%",
+  "sector_position_48m": "E.g. Bottom 35%",
+  "loss_year1": "Year 1 loss figure (number only, millions). Lowest.",
+  "loss_year2": "Year 2 loss figure.",
+  "loss_year3": "Year 3 loss figure.",
+  "loss_year4": "Year 4 loss figure.",
+  "value_identity_leading_question": "1 sentence. Leading question at START of value identity section. Reference the specific value metric.",
+  "value1_label": "Value identity metric 1 label. E.g. Evidence influence",
+  "value1_metric": "Unit of measurement. E.g. Policy decisions informed annually",
+  "value1_now": "Current annual figure (number only).",
+  "value1_48m": "Month 48 figure without action (number only).",
+  "value1_pct_decline": "E.g. 64%",
+  "value2_label": "Value identity metric 2 label.",
+  "value2_metric": "Unit of measurement.",
+  "value2_now": "Current annual figure (number only).",
+  "value2_48m": "Month 48 figure without action (number only).",
+  "value2_pct_decline": "E.g. 64%",
+  "policy_windows": "Total number of relevant policy windows over 24 months (number only).",
+  "policy_expected_b": "Expected influence events at ERC-B (number only).",
+  "policy_expected_a": "Expected influence events at ERC-A (number only).",
+  "policy_gap": "Foregone events gap (number only).",
+  "policy_value_low": "Low end of foregone value range. E.g. R10M",
+  "policy_value_high": "High end. E.g. R28M",
+  "compound_b_pct": "P(3 consecutive successes) at ERC-B. E.g. 3%",
+  "compound_a_pct": "P(3 consecutive successes) at ERC-A. E.g. 31%",
+  "stakeholder_count": "Number of key stakeholder categories identified (number only).",
+  "stakeholder_now_pct": "Aggregate current engagement %. E.g. 60%",
+  "stakeholder_48m_pct": "Aggregate month 48 engagement %. E.g. 25%",
+  "stakeholders_json": "[{name, role, now_pct, m48_pct}, ...] — 4-6 stakeholder categories from Grok research.",
+  "policy_windows_json": "[{name, body, freq, deadline, count, prob_b, prob_a, prob_b_pct}, ...] — 4-6 windows.",
+  "market_context_body": "3-4 sentences. Sector benchmarks and market context.",
+  "mkt_metric1_num": "E.g. 47",
+  "mkt_metric1_desc": "Short label.",
+  "mkt_metric2_num": "E.g. 68%",
+  "mkt_metric2_desc": "Short label.",
+  "mkt_metric3_num": "E.g. R2.1B",
+  "mkt_metric3_desc": "Short label.",
+  "intel_landscape": "LANDSCAPE sentence. South Africa-specific.",
+  "intel_risk": "RISK sentence. Based on sector benchmarks.",
+  "intel_opportunity": "OPPORTUNITY sentence. Reference Auxeira by name.",
+  "proof_bridge": "2-3 sentences. Methodology bridge. Never compare to SmartStart directly.",
+  "tier_label": "${tierRec.label}",
+  "urgency_label": "Urgent OR Within 3 months OR Within 6 months",
+  "rec_body": "3-4 sentences. Concrete output for this specific organisation.",
+  "closing_question": "1 sentence. Must name ${flagshipProg} and a specific upcoming cycle or window.",
+  "tier_price": "${tierRec.priceRange}",
+  "tier_timeline": "${tierRec.timeline}",
+  "pilot_diagnostic_text": "${pilotDiag ? "A 3-week Portfolio Evidence Diagnostic at R85,000 - R150,000 provides the evidence base for the full partnership conversation, with no obligation to proceed to the full engagement." : ""}",
+  "forward_box_body": "${seniority !== "executive" && ceoName ? `This report is most relevant to ${orgName}'s executive leadership. The evidence architecture gaps identified here directly affect ${flagshipProg}'s ${primaryAudience} positioning. Forward this report to ${ceoName} — or reply to this email and we will take it from there.` : ""}"
+}`;
 
-GAP 1 TITLE AND BODY (3-4 sentences):
-Name the gap precisely. Explain what it means for this organisation specifically. End with an estimated cost statement.
+  const msg = await anthropic.messages.create({
+    model: "claude-opus-4-5",
+    max_tokens: 4000,
+    system: CLAUDE_SYSTEM,
+    messages: [{ role: "user", content: userPrompt }],
+  });
 
-GAP 2 TITLE AND BODY (3-4 sentences):
-Same approach. Different gap, different framing.
+  const raw = msg.content
+    .filter(b => b.type === "text")
+    .map(b => (b as { type: "text"; text: string }).text)
+    .join("").trim();
 
-SECTOR CONTEXT (4-5 sentences):
-The evidence and funding landscape in their specific sector right now. South Africa-specific. One data point minimum.
+  const jsonMatch = raw.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) throw new Error("Claude returned no JSON");
 
-SCENARIO — DO NOTHING (3 sentences):
-What happens to this specific organisation over 3 years if the evidence gaps are not addressed.
+  const parsed = JSON.parse(jsonMatch[0]) as Record<string, string>;
 
-SCENARIO — FULL AUXEIRA (3 sentences):
-What the organisation looks like after a full ${tierRec.label} engagement. Reference their specific programme or portfolio context.
-
-PROOF POINT BRIDGE (2-3 sentences):
-Apply the proof point bridge rule exactly. Bridge via methodology. Reference their specific sector.
-
-RECOMMENDATION BODY (3-4 sentences):
-What the recommended engagement would produce for this specific organisation. Make the output concrete, not abstract.
-
-CLOSING QUESTION (1 sentence):
-"What would it look like for ${orgName} to enter the next budget cycle with a ready fiscal case for [their specific focus area]?"`;
-
-  let claudeNarrative = "";
+  // Parse stakeholders and policy windows JSON arrays into HTML rows
+  let stakeholderRowsHtml = "";
+  let policyWindowsHtml = "";
   try {
-    const msg = await anthropic.messages.create({
-      model: "claude-opus-4-5",
-      max_tokens: 2500,
-      system: CLAUDE_SYSTEM,
-      messages: [{ role: "user", content: userPrompt }],
-    });
-    claudeNarrative = sanitiseAIOutput(
-      msg.content
-        .filter((b) => b.type === "text")
-        .map((b) => (b as { type: "text"; text: string }).text)
-        .join("\n").trim()
-    );
-  } catch (err) {
-    console.error("[health-check] Claude generation failed:", err);
-    claudeNarrative = sanitiseAIOutput(buildFallbackNarrative(p, research));
-  }
+    const shJson = JSON.parse(parsed.stakeholders_json ?? "[]") as Array<{
+      name: string; role: string; now_pct: number; m48_pct: number;
+    }>;
+    stakeholderRowsHtml = shJson.map(sh => `
+      <tr>
+        <td style="padding:6px 8px;font-size:11px;color:#1A1A2A;border-bottom:.5px solid #EEE">${sh.name}</td>
+        <td style="padding:6px 8px;font-size:11px;color:#555;border-bottom:.5px solid #EEE">${sh.role}</td>
+        <td style="padding:6px 8px;font-size:11px;font-weight:700;color:#1D9E75;text-align:center;border-bottom:.5px solid #EEE">${sh.now_pct}%</td>
+        <td style="padding:6px 8px;font-size:11px;font-weight:700;color:#E24B4A;text-align:center;border-bottom:.5px solid #EEE">${sh.m48_pct}%</td>
+      </tr>`).join("");
+  } catch { /* use empty */ }
 
-  // Sector intelligence insight (Claude with guardrails — no AI attribution in output)
-  const rawSectorInsight = await getSectorInsight(score, scoreBand.label, sectorKey);
-  const sectorInsight = sanitiseAIOutput(rawSectorInsight);
+  try {
+    const pwJson = JSON.parse(parsed.policy_windows_json ?? "[]") as Array<{
+      name: string; body: string; freq: string; deadline: string;
+      count: number; prob_b: number; prob_a: number; prob_b_pct: string;
+    }>;
+    policyWindowsHtml = pwJson.map(w => `
+      <tr>
+        <td style="padding:6px 8px;font-size:11px;color:#1A1A2A;border-bottom:.5px solid #EEE">${w.name}</td>
+        <td style="padding:6px 8px;font-size:11px;color:#555;border-bottom:.5px solid #EEE">${w.body}</td>
+        <td style="padding:6px 8px;font-size:11px;color:#555;text-align:center;border-bottom:.5px solid #EEE">${w.freq}</td>
+        <td style="padding:6px 8px;font-size:11px;color:#C9A84C;font-weight:700;text-align:center;border-bottom:.5px solid #EEE">${w.deadline}</td>
+        <td style="padding:6px 8px;font-size:11px;color:#E24B4A;text-align:center;border-bottom:.5px solid #EEE">${w.prob_b_pct}</td>
+        <td style="padding:6px 8px;font-size:11px;color:#1D9E75;text-align:center;border-bottom:.5px solid #EEE">${w.prob_a ?? ""}</td>
+      </tr>`).join("");
+  } catch { /* use empty */ }
 
-  // Render narrative sections as HTML paragraphs
-  const narrativeHtml = claudeNarrative
-    .split("\n")
-    .map((line) => {
-      const t = line.trim();
-      if (!t) return "";
-      if (/^[A-Z][A-Z\s\-]+$/.test(t) || /^\d+\.\s+[A-Z]/.test(t)) {
-        return `<p style="margin:20px 0 6px;font-size:10px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:#C9A84C;">${t}</p>`;
-      }
-      return `<p style="margin:0 0 10px;font-size:13px;line-height:1.75;color:#1A1A2A;">${t}</p>`;
-    })
-    .filter(Boolean)
-    .join("\n");
+  const s = (key: string, fallback = "") => sanitiseAIOutput(parsed[key] ?? fallback);
 
-  // Forward box — shown when seniority is not executive
-  const showForward = seniority !== "executive" && ceoName;
-  const forwardBox = showForward
+  const forwardBoxHtml = seniority !== "executive" && ceoName
     ? `<table width="100%" cellpadding="0" cellspacing="0" style="background:#EFF7FF;border:0.5px solid #B5D4F4;border-radius:8px;margin-bottom:12px;">
         <tr><td style="padding:10px 14px;font-size:12px;color:#185FA5;line-height:1.6;">
-          This report is most relevant to ${orgName}'s executive leadership. If the evidence architecture question is one for your CEO or board, forward this report to ${ceoName}, or reply to this email and we will take it from there.
+          ${s("forward_box_body")}
         </td></tr>
        </table>`
     : "";
 
-  // Recoverable gap figure
-  return `<!DOCTYPE html>
-<html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Auxeira Entity Evidence Risk Report</title>
-</head>
-<body style="margin:0;padding:0;background:#F5F0E8;font-family:Arial,sans-serif;color:#1A1A2A;">
-<table width="100%" cellpadding="0" cellspacing="0" style="background:#F5F0E8;padding:24px 16px;">
-<tr><td align="center">
-<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
-
-  <!-- Navy header: score ring + band -->
-  <tr><td style="background:#0A1628;border-radius:12px 12px 0 0;padding:20px 24px 16px;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:12px;">
-      <tr>
-        <td><p style="margin:0;font-size:15px;font-weight:700;color:#C9A84C;letter-spacing:.02em;">Auxeira</p>
-            <p style="margin:2px 0 0;font-size:7px;color:rgba(201,168,76,.5);letter-spacing:.15em;text-transform:uppercase;">Evidence Intelligence</p></td>
-        <td style="text-align:right;">
-          <p style="margin:0;font-size:9px;color:rgba(245,240,232,.3);letter-spacing:.08em;text-transform:uppercase;">Entity Evidence Risk Report</p>
-          <p style="margin:2px 0 0;font-size:9px;color:rgba(245,240,232,.2);">${new Date().toLocaleDateString("en-ZA",{month:"long",year:"numeric"})}</p>
-        </td>
-      </tr>
-    </table>
-    <table width="100%" cellpadding="0" cellspacing="0">
-      <tr>
-        <td style="width:96px;vertical-align:middle;">
-          <table cellpadding="0" cellspacing="0" style="width:84px;height:84px;border-radius:50%;border:3px solid #C9A84C;">
-            <tr><td style="text-align:center;vertical-align:middle;">
-              <p style="margin:0;font-size:26px;font-weight:700;color:#C9A84C;line-height:1;">${score}</p>
-              <p style="margin:0;font-size:10px;color:rgba(245,240,232,0.4);">/100</p>
-            </td></tr>
-          </table>
-        </td>
-        <td style="padding-left:16px;vertical-align:middle;">
-          <span style="display:inline-block;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:700;background:${bm.gb};color:${scoreColor};margin-bottom:6px;">${bm.grade} &nbsp;·&nbsp; ${bm.rl} risk</span>
-          <p style="margin:0 0 4px;font-size:14px;font-weight:700;color:#F5F0E8;line-height:1.4;">${scoreBand.headline}</p>
-          <p style="margin:0;font-size:11px;color:rgba(245,240,232,0.5);">${orgName}</p>
-        </td>
-      </tr>
-    </table>
-    <!-- Score bar -->
-    <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:12px;">
-      <tr><td style="background:rgba(255,255,255,0.08);border-radius:3px;height:6px;overflow:hidden;">
-        <table cellpadding="0" cellspacing="0"><tr>
-          <td style="width:${score}%;background:${scoreColor};height:6px;border-radius:3px;display:block;"></td>
-        </tr></table>
-      </td></tr>
-    </table>
-    <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:4px;">
-      <tr>
-        <td style="font-size:10px;color:rgba(245,240,232,0.2);">Critical (0)</td>
-        <td style="text-align:right;font-size:10px;color:rgba(245,240,232,0.2);">Strong (100)</td>
-      </tr>
-    </table>
-  </td></tr>
-
-  <!-- Greeting -->
-  <tr><td style="background:#fff;padding:20px 24px 0;">
-    <p style="margin:0 0 8px;font-size:14px;line-height:1.6;">Hi ${firstName},</p>
-    <p style="margin:0 0 16px;font-size:13px;line-height:1.7;color:#555;">Your <strong>Entity Evidence Risk Report</strong> for <strong>${orgName}</strong> is below, based on your diagnostic answers and independent sector research.</p>
-    ${forwardBox}
-  </td></tr>
-
-  <!-- Key projections -->
-  <tr><td style="background:#fff;padding:0 24px 16px;">
-    <p style="margin:0 0 10px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;">Key projections</p>
-    <table width="100%" cellpadding="0" cellspacing="0">
-      <tr>
-        <td width="33%" style="padding-right:4px;vertical-align:top;">
-          <table width="100%" cellpadding="8" cellspacing="0" style="border-radius:8px;border:0.5px solid rgba(226,75,74,0.35);background:rgba(226,75,74,0.05);">
-            <tr><td>
-              <p style="margin:0 0 4px;font-size:10px;color:#E24B4A;font-weight:700;text-transform:uppercase;">Funding at risk</p>
-              <p style="margin:0 0 3px;font-size:15px;font-weight:700;color:#1A1A2A;">${proj.fund}</p>
-              <p style="margin:0;font-size:11px;color:#666;">annually</p>
-            </td></tr>
-          </table>
-        </td>
-        <td width="33%" style="padding:0 2px;vertical-align:top;">
-          <table width="100%" cellpadding="8" cellspacing="0" style="border-radius:8px;border:0.5px solid rgba(216,90,48,0.35);background:rgba(216,90,48,0.05);">
-            <tr><td>
-              <p style="margin:0 0 4px;font-size:10px;color:#D85A30;font-weight:700;text-transform:uppercase;">Influence gap</p>
-              <p style="margin:0 0 3px;font-size:15px;font-weight:700;color:#1A1A2A;">${proj.inf}</p>
-              <p style="margin:0;font-size:11px;color:#666;">impact not reaching decision-makers</p>
-            </td></tr>
-          </table>
-        </td>
-        <td width="33%" style="padding-left:4px;vertical-align:top;">
-          <table width="100%" cellpadding="8" cellspacing="0" style="border-radius:8px;border:0.5px solid rgba(201,168,76,0.4);background:rgba(201,168,76,0.07);">
-            <tr><td>
-              <p style="margin:0 0 4px;font-size:10px;color:#8B6914;font-weight:700;text-transform:uppercase;">Opportunity cost</p>
-              <p style="margin:0 0 3px;font-size:15px;font-weight:700;color:#1A1A2A;">${proj.opp}</p>
-              <p style="margin:0;font-size:11px;color:#666;">reachable funding left on the table</p>
-            </td></tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-  </td></tr>
-
-  <!-- Funding stability chart -->
-  <tr><td style="background:#fff;padding:0 24px 16px;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="border:0.5px solid #DDD;border-radius:12px;padding:16px;">
-      <tr><td>
-        <p style="margin:0 0 8px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;">Funding stability analysis: 36 months</p>
-        <p style="margin:0 0 12px;font-size:12px;color:#555;line-height:1.6;">Estimated probability of maintaining current funding levels over 36 months, comparing your current evidence trajectory against a scenario where the identified gaps are addressed. Based on actuarially-informed scenario modelling using South African sector funding benchmarks.</p>
-        ${buildSurvivalChart(sp)}
-        <p style="margin:8px 0 0;font-size:10px;color:#999;font-style:italic;">Based on actuarially-informed scenario modelling using sector-level funding patterns. Illustrative, not a guarantee of outcome.</p>
-      </td></tr>
-    </table>
-  </td></tr>
-
-  <!-- Counterfactual chart -->
-  <tr><td style="background:#fff;padding:0 24px 16px;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="border:0.5px solid #DDD;border-radius:12px;padding:16px;">
-      <tr><td>
-        <p style="margin:0 0 8px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;">Counterfactual: 3-year funding divergence</p>
-        <p style="margin:0 0 12px;font-size:12px;color:#555;line-height:1.6;">Estimated cumulative funding secured over three years, comparing a trajectory without evidence improvement against one with a full Auxeira engagement. Based on sector funding benchmarks for your budget profile.</p>
-        ${buildCounterfactualChart(proj.base, proj.imp)}
-        <p style="margin:8px 0 0;font-size:10px;color:#999;font-style:italic;">All figures estimated and illustrative. Based on sector funding benchmarks. Not a specific financial forecast.</p>
-      </td></tr>
-    </table>
-  </td></tr>
-
-  <!-- Top 3 risks -->
-  <tr><td style="background:#fff;padding:0 24px 16px;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="border:0.5px solid #DDD;border-radius:12px;padding:16px;">
-      <tr><td>
-        <p style="margin:0 0 10px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;">Top 3 risks</p>
-        <table width="100%" cellpadding="0" cellspacing="0">
-          <tr>
-            <td style="width:28px;vertical-align:top;padding:10px 0;border-bottom:0.5px solid #EEE;">
-              <span style="display:inline-block;width:22px;height:22px;border-radius:50%;background:rgba(226,75,74,0.12);color:#E24B4A;font-size:11px;font-weight:700;text-align:center;line-height:22px;">1</span>
-            </td>
-            <td style="padding:10px 0 10px 10px;border-bottom:0.5px solid #EEE;font-size:12px;color:#555;line-height:1.6;">${risks[0]}</td>
-          </tr>
-          <tr>
-            <td style="width:28px;vertical-align:top;padding:10px 0;border-bottom:0.5px solid #EEE;">
-              <span style="display:inline-block;width:22px;height:22px;border-radius:50%;background:rgba(216,90,48,0.12);color:#D85A30;font-size:11px;font-weight:700;text-align:center;line-height:22px;">2</span>
-            </td>
-            <td style="padding:10px 0 10px 10px;border-bottom:0.5px solid #EEE;font-size:12px;color:#555;line-height:1.6;">${risks[1]}</td>
-          </tr>
-          <tr>
-            <td style="width:28px;vertical-align:top;padding:10px 0;">
-              <span style="display:inline-block;width:22px;height:22px;border-radius:50%;background:rgba(201,168,76,0.12);color:#C9A84C;font-size:11px;font-weight:700;text-align:center;line-height:22px;">3</span>
-            </td>
-            <td style="padding:10px 0 10px 10px;font-size:12px;color:#555;line-height:1.6;">${risks[2]}</td>
-          </tr>
-        </table>
-      </td></tr>
-    </table>
-  </td></tr>
-
-  <!-- Sector intelligence insight (no AI attribution) -->
-  <tr><td style="background:#fff;padding:0 24px 16px;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="border:0.5px solid #DDD;border-radius:12px;padding:16px;">
-      <tr><td>
-        <p style="margin:0 0 8px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;">Sector intelligence</p>
-        <p style="margin:0 0 6px;font-size:12px;color:#555;line-height:1.7;">${sectorInsight}</p>
-        <p style="margin:0;font-size:10px;color:#999;font-style:italic;">Based on sector benchmarks. Illustrative, not a guarantee of outcome.</p>
-      </td></tr>
-    </table>
-  </td></tr>
-
-  <!-- Claude narrative -->
-  <tr><td style="background:#fff;padding:0 24px 16px;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="border:0.5px solid #DDD;border-radius:12px;padding:16px;">
-      <tr><td>${narrativeHtml}</td></tr>
-    </table>
-  </td></tr>
-
-  <!-- Tier recommendation -->
-  <tr><td style="background:#fff;padding:0 24px 16px;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="background:#FDF8EE;border:1px solid #C9A84C;border-radius:12px;padding:16px 20px;">
-      <tr><td>
-        <p style="margin:0 0 4px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;">Recommended intervention</p>
-        <p style="margin:0 0 6px;font-size:15px;font-weight:700;color:#0A1628;">${tierRec.label}</p>
-        <p style="margin:0 0 4px;font-size:12px;color:#555;">${scoreBand.priceRange} &nbsp;·&nbsp; ${scoreBand.timeline}</p>
-      </td></tr>
-    </table>
-  </td></tr>
-
-  <!-- CTA -->
-  <tr><td style="background:#0A1628;padding:24px;">
-    <p style="margin:0 0 12px;font-size:13px;color:rgba(245,240,232,0.7);line-height:1.6;">You are at peak clarity about your evidence gaps right now. Book your Evidence Strategy Call while it is fresh. We will walk through this report and map a specific intervention.</p>
-    <a href="${calendlyUrl}" style="display:block;background:#C9A84C;color:#0A1628;padding:13px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;text-align:center;margin-bottom:8px;">${scoreBand.ctaVariant === "urgent" ? "Talk to us today: book your Evidence Strategy Call" : "Book your Evidence Strategy Call"} →</a>
-    <a href="${siteUrl}/capability-overview.pdf" style="display:block;background:transparent;color:rgba(245,240,232,0.5);border:0.5px solid rgba(255,255,255,0.2);padding:11px;border-radius:8px;font-size:12px;text-decoration:none;text-align:center;">Download Capability Overview →</a>
-  </td></tr>
-
-  <!-- Footer -->
-  <tr><td style="background:#0A1628;border-top:0.5px solid rgba(255,255,255,0.08);border-radius:0 0 12px 12px;padding:16px 24px;">
-    <p style="margin:0;font-size:11px;color:rgba(245,240,232,0.3);">Auxeira &nbsp;·&nbsp; info@auxeira.com &nbsp;·&nbsp; auxeira.com<br>Johannesburg. Global from Africa</p>
-    <p style="margin:4px 0 0;font-size:11px;color:rgba(245,240,232,0.2);">This report is confidential and prepared exclusively for ${orgName}.</p>
-  </td></tr>
-
-</table>
-</td></tr>
-</table>
-</body>
-</html>`;
+  return {
+    score_headline:    s("score_headline"),
+    funding_at_risk:   s("funding_at_risk", "R8M-R18M"),
+    influence_gap:     s("influence_gap", "35-50%"),
+    opportunity_cost:  s("opportunity_cost", "R25-40M over 3 years"),
+    gap1_title:        s("gap1_title", gap1?.gapType ?? "Translation Gap"),
+    gap1_q_ref:        s("gap1_q_ref", gap1?.q?.toUpperCase() ?? "Q4"),
+    gap1_body:         s("gap1_body"),
+    gap1_cost:         s("gap1_cost"),
+    gap2_title:        s("gap2_title", gap2?.gapType ?? "Economic Evidence Gap"),
+    gap2_q_ref:        s("gap2_q_ref", gap2?.q?.toUpperCase() ?? "Q5"),
+    gap2_body:         s("gap2_body"),
+    gap2_cost:         s("gap2_cost"),
+    sector_context:    s("sector_context"),
+    sector_metric1_num:  s("sector_metric1_num", "3.3x"),
+    sector_metric1_desc: s("sector_metric1_desc", "SROI verified"),
+    sector_metric2_num:  s("sector_metric2_num", "30-40%"),
+    sector_metric2_desc: s("sector_metric2_desc", "less co-funding without economic framing"),
+    sector_metric3_num:  s("sector_metric3_num", "70%"),
+    sector_metric3_desc: s("sector_metric3_desc", "proposals deprioritised"),
+    scenario_nothing:  s("scenario_nothing"),
+    scenario_partial:  s("scenario_partial"),
+    scenario_full:     s("scenario_full"),
+    recovery_value:    s("recovery_value", "R25-40M"),
+    risk1_title:       s("risk1_title"),
+    risk1_body:        s("risk1_body"),
+    risk2_title:       s("risk2_title"),
+    risk2_body:        s("risk2_body"),
+    risk3_title:       s("risk3_title"),
+    risk3_body:        s("risk3_body"),
+    market_loss_leading_question: s("market_loss_leading_question"),
+    leverage_now:      s("leverage_now", String(score)),
+    leverage_48m:      s("leverage_48m", "28"),
+    tipping_month:     s("tipping_month", "22"),
+    cumulative_loss:   s("cumulative_loss", "R30M+"),
+    sector_position_now: s("sector_position_now", "Top 40%"),
+    sector_position_48m: s("sector_position_48m", "Bottom 35%"),
+    loss_year1:        s("loss_year1", "8"),
+    loss_year2:        s("loss_year2", "13"),
+    loss_year3:        s("loss_year3", "13"),
+    loss_year4:        s("loss_year4", "13"),
+    value_identity_leading_question: s("value_identity_leading_question"),
+    value1_label:      s("value1_label", "Evidence influence"),
+    value1_metric:     s("value1_metric", "Policy decisions informed annually"),
+    value1_now:        s("value1_now", "14"),
+    value1_48m:        s("value1_48m", "5"),
+    value1_pct_decline: s("value1_pct_decline", "64%"),
+    value2_label:      s("value2_label", "Knowledge reach"),
+    value2_metric:     s("value2_metric", "Practitioners using your findings"),
+    value2_now:        s("value2_now", "2840"),
+    value2_48m:        s("value2_48m", "1020"),
+    value2_pct_decline: s("value2_pct_decline", "64%"),
+    policy_windows:    s("policy_windows", "26"),
+    policy_expected_b: s("policy_expected_b", "9"),
+    policy_expected_a: s("policy_expected_a", "16"),
+    policy_gap:        s("policy_gap", "7"),
+    policy_value_low:  s("policy_value_low", "R10M"),
+    policy_value_high: s("policy_value_high", "R28M"),
+    compound_b_pct:    s("compound_b_pct", "3%"),
+    compound_a_pct:    s("compound_a_pct", "31%"),
+    stakeholder_count: s("stakeholder_count", "5"),
+    stakeholder_now_pct: s("stakeholder_now_pct", "60%"),
+    stakeholder_48m_pct: s("stakeholder_48m_pct", "25%"),
+    stakeholder_rows_html: stakeholderRowsHtml,
+    policy_windows_html: policyWindowsHtml,
+    market_context_body:  s("market_context_body"),
+    mkt_metric1_num:  s("mkt_metric1_num", "47"),
+    mkt_metric1_desc: s("mkt_metric1_desc", "comparable organisations"),
+    mkt_metric2_num:  s("mkt_metric2_num", "68%"),
+    mkt_metric2_desc: s("mkt_metric2_desc", "sector funding shift"),
+    mkt_metric3_num:  s("mkt_metric3_num", "R2.1B"),
+    mkt_metric3_desc: s("mkt_metric3_desc", "sector funding pool"),
+    intel_landscape:   s("intel_landscape"),
+    intel_risk:        s("intel_risk"),
+    intel_opportunity: s("intel_opportunity"),
+    proof_bridge:      s("proof_bridge"),
+    tier_label:        tierRec.label,
+    urgency_label:     s("urgency_label", "Within 3 months"),
+    rec_body:          s("rec_body"),
+    closing_question:  s("closing_question"),
+    tier_price:        tierRec.priceRange,
+    tier_timeline:     tierRec.timeline,
+    pilot_diagnostic_text: pilotDiag
+      ? "A 3-week Portfolio Evidence Diagnostic at R85,000 - R150,000 provides the evidence base for the full partnership conversation, with no obligation to proceed to the full engagement."
+      : "",
+    ceo_name:              ceoName,
+    programme_name:        flagshipProg,
+    primary_audience_label: primaryAudience,
+    forward_box_html:      forwardBoxHtml,
+  };
 }
 
-// ── AI output sanitiser ───────────────────────────────────────────────────────
-// Enforces the voice rules from EVIDENCE_HEALTH_CHECK.md on any AI-generated text
-// before it reaches the client email. Belt-and-braces — the system prompt already
-// instructs Claude, but this catches any slippage.
+// ── buildEmailHtml ────────────────────────────────────────────────────────────
+// Reads auxeira_health_check_email_template.html and injects all {{variables}}
 
-function sanitiseAIOutput(text: string): string {
-  return text
-    // Em dashes and long dashes -> comma or colon depending on context
-    .replace(/ \u2014 /g, ", ")          // " — " -> ", "
-    .replace(/\u2014/g, ", ")            // bare — -> ", "
-    .replace(/ \u2013 /g, ", ")          // " – " -> ", "
-    .replace(/\u2013/g, ", ")            // bare – -> ", "
-    .replace(/ --- /g, ", ")             // " --- " -> ", "
-    .replace(/---/g, ", ")
-    .replace(/ -- /g, ", ")
-    // Exclamation marks
-    .replace(/!/g, ".")
-    // Banned phrases
-    .replace(/\bleverage\b/gi, "use")
-    .replace(/\bsynergies\b/gi, "shared value")
-    .replace(/\btouch base\b/gi, "connect")
-    .replace(/\breaching out\b/gi, "writing")
-    .replace(/\bcircle back\b/gi, "follow up")
-    .replace(/I hope this finds you well[.,]?\s*/gi, "")
-    // AI self-references
-    .replace(/\b(Claude|ChatGPT|GPT-4|OpenAI|Anthropic|AI-generated|AI model|language model)\b/gi, "")
-    // Bold mid-paragraph: strip <strong> tags that aren't section headers
-    .replace(/<strong>(.*?)<\/strong>/g, "$1")
-    .replace(/<b>(.*?)<\/b>/g, "$1")
-    // Bullet points converted to prose connector
-    .replace(/^[\s]*[-*•]\s+/gm, "")
-    // Collapse multiple spaces/commas left by replacements
-    .replace(/, ,/g, ",")
-    .replace(/,\s*,/g, ",")
-    .replace(/\.\s*\./g, ".")
-    .trim();
+function loadEmailTemplate(): string {
+  const candidates = [
+    join(process.cwd(), "auxeira_health_check_email_template.html"),
+    join(process.cwd(), "public", "auxeira_health_check_email_template.html"),
+    join(__dirname, "..", "..", "..", "auxeira_health_check_email_template.html"),
+  ];
+  for (const p of candidates) {
+    try { return readFileSync(p, "utf-8"); } catch { /* try next */ }
+  }
+  return "<p>Report template not found.</p>";
 }
 
-// ── Email-safe chart builders ─────────────────────────────────────────────────
-// Pure HTML/CSS table bars — no JS, no canvas, renders in all email clients.
-// Data formulae mirror Evidence_Risk_Report.html survD() and cfD() exactly.
-
-function buildSurvivalChart(sb: number): string {
-  // survD() from the HTML template
-  const base = sb / 100;
-  const imp  = Math.min(0.93, (sb + 25) / 100);
-  const months = [0, 6, 12, 18, 24, 30, 36];
-  const cur  = months.map(m => Math.max(5,  Math.round((base - 0.018 * m) * 100)));
-  const good = months.map(m => Math.min(97, Math.round((imp  - 0.005 * m) * 100)));
-  const labels = months.map(m => m === 0 ? "Now" : `${m}m`);
-
-  // Bar chart rows: each month = one row, two side-by-side bars
-  const maxVal = 100;
-  const rows = labels.map((lbl, i) => {
-    const curW  = Math.round((cur[i]  / maxVal) * 100);
-    const goodW = Math.round((good[i] / maxVal) * 100);
-    return `
-      <tr>
-        <td style="width:28px;font-size:10px;color:#999;padding:2px 6px 2px 0;white-space:nowrap;">${lbl}</td>
-        <td style="padding:2px 0;">
-          <table width="100%" cellpadding="0" cellspacing="0">
-            <tr>
-              <td style="padding-bottom:2px;">
-                <table cellpadding="0" cellspacing="0" style="width:${curW}%;min-width:2px;">
-                  <tr><td style="background:#E24B4A;height:8px;border-radius:2px;font-size:0;">&nbsp;</td></tr>
-                </table>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <table cellpadding="0" cellspacing="0" style="width:${goodW}%;min-width:2px;">
-                  <tr><td style="background:#1D9E75;height:8px;border-radius:2px;font-size:0;">&nbsp;</td></tr>
-                </table>
-              </td>
-            </tr>
-          </table>
-        </td>
-        <td style="width:52px;font-size:10px;color:#999;padding:2px 0 2px 6px;white-space:nowrap;">${cur[i]}% / ${good[i]}%</td>
-      </tr>`;
-  }).join("");
-
-  return `
-    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:8px;">
-      <tr>
-        <td colspan="3" style="padding-bottom:8px;">
-          <table cellpadding="0" cellspacing="0">
-            <tr>
-              <td style="padding-right:12px;">
-                <table cellpadding="0" cellspacing="0"><tr>
-                  <td style="width:10px;height:10px;background:#E24B4A;border-radius:2px;"></td>
-                  <td style="font-size:10px;color:#555;padding-left:4px;">Current trajectory</td>
-                </tr></table>
-              </td>
-              <td>
-                <table cellpadding="0" cellspacing="0"><tr>
-                  <td style="width:10px;height:10px;background:#1D9E75;border-radius:2px;"></td>
-                  <td style="font-size:10px;color:#555;padding-left:4px;">With evidence improvement</td>
-                </tr></table>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-      ${rows}
-    </table>
-    <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:8px;">
-      <tr>
-        <td width="50%" style="padding-right:6px;">
-          <table width="100%" cellpadding="8" cellspacing="0" style="background:#F5F5F5;border-radius:8px;text-align:center;">
-            <tr><td>
-              <p style="margin:0 0 2px;font-size:10px;color:#999;">Current path, 36-month estimate</p>
-              <p style="margin:0;font-size:20px;font-weight:700;color:#E24B4A;">~${cur[6]}%</p>
-              <p style="margin:0;font-size:10px;color:#999;">funding stability probability</p>
-            </td></tr>
-          </table>
-        </td>
-        <td width="50%" style="padding-left:6px;">
-          <table width="100%" cellpadding="8" cellspacing="0" style="background:#F5F5F5;border-radius:8px;text-align:center;">
-            <tr><td>
-              <p style="margin:0 0 2px;font-size:10px;color:#999;">With evidence improvement</p>
-              <p style="margin:0;font-size:20px;font-weight:700;color:#1D9E75;">~${good[6]}%</p>
-              <p style="margin:0;font-size:10px;color:#999;">estimated probability</p>
-            </td></tr>
-          </table>
-        </td>
-      </tr>
-    </table>`;
-}
-
-function buildCounterfactualChart(base: number, imp: number): string {
-  // cfD() from the HTML template
-  const wo = [base, base * 0.85, base * 0.72];
-  const wi = [base * 1.3, imp * 0.65, imp];
-  const years = ["Year 1", "Year 2", "Year 3"];
-  const maxVal = Math.max(...wo, ...wi);
-  const recoverableGap = Math.round(imp - base * 0.72);
-
-  const rows = years.map((yr, i) => {
-    const woW = Math.round((wo[i] / maxVal) * 100);
-    const wiW = Math.round((wi[i] / maxVal) * 100);
-    return `
-      <tr>
-        <td style="width:44px;font-size:10px;color:#999;padding:3px 6px 3px 0;white-space:nowrap;vertical-align:middle;">${yr}</td>
-        <td style="padding:3px 0;vertical-align:middle;">
-          <table width="100%" cellpadding="0" cellspacing="0">
-            <tr>
-              <td style="padding-bottom:3px;">
-                <table cellpadding="0" cellspacing="0" style="width:${woW}%;min-width:2px;">
-                  <tr><td style="background:rgba(226,75,74,0.7);height:14px;border-radius:3px;font-size:0;">&nbsp;</td></tr>
-                </table>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <table cellpadding="0" cellspacing="0" style="width:${wiW}%;min-width:2px;">
-                  <tr><td style="background:rgba(29,158,117,0.75);height:14px;border-radius:3px;font-size:0;">&nbsp;</td></tr>
-                </table>
-              </td>
-            </tr>
-          </table>
-        </td>
-        <td style="width:80px;font-size:10px;color:#999;padding:3px 0 3px 6px;white-space:nowrap;vertical-align:middle;">R${Math.round(wo[i])}M / R${Math.round(wi[i])}M</td>
-      </tr>`;
-  }).join("");
-
-  return `
-    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:8px;">
-      <tr>
-        <td colspan="3" style="padding-bottom:8px;">
-          <table cellpadding="0" cellspacing="0">
-            <tr>
-              <td style="padding-right:12px;">
-                <table cellpadding="0" cellspacing="0"><tr>
-                  <td style="width:10px;height:10px;background:rgba(226,75,74,0.7);border-radius:2px;"></td>
-                  <td style="font-size:10px;color:#555;padding-left:4px;">Without action</td>
-                </tr></table>
-              </td>
-              <td>
-                <table cellpadding="0" cellspacing="0"><tr>
-                  <td style="width:10px;height:10px;background:rgba(29,158,117,0.75);border-radius:2px;"></td>
-                  <td style="font-size:10px;color:#555;padding-left:4px;">With Auxeira</td>
-                </tr></table>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-      ${rows}
-    </table>
-    <table width="100%" cellpadding="8" cellspacing="0" style="background:#F0F9F4;border-radius:8px;margin-top:8px;">
-      <tr>
-        <td>
-          <p style="margin:0 0 2px;font-size:10px;color:#999;">Estimated 3-year recoverable gap</p>
-          <p style="margin:0;font-size:20px;font-weight:700;color:#1D9E75;">R${recoverableGap}M+</p>
-        </td>
-        <td style="text-align:right;font-size:11px;color:#1D9E75;font-weight:700;">with evidence<br>improvement</td>
-      </tr>
-    </table>`;
-}
-
-function buildFallbackNarrative(
-  p: { orgName: string; score: number; primaryGap: string; topGaps: string[] },
-  research: GrokOrgResearch | null
+function buildEmailHtml(
+  vars: ReportVars,
+  meta: {
+    firstName: string; lastName: string; orgName: string;
+    score: number; rawScore: number;
+    scoreBand: ReturnType<typeof getScoreBand>;
+    erc: ReturnType<typeof getERC>;
+    tierRec: ReturnType<typeof getTierRecommendation>;
+    answers: HealthCheckAnswers;
+    qScores: Record<keyof HealthCheckAnswers, number>;
+  }
 ): string {
-  return `EXECUTIVE SUMMARY
-${research?.overview ?? `${p.orgName} completed the Auxeira Evidence Health Check with a score of ${p.score}/100.`} The primary gap identified is ${p.primaryGap}.
+  const { firstName, lastName, orgName, score, rawScore, scoreBand, erc, answers, qScores } = meta;
+  const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL ?? "https://auxeira.com/#cta";
+  const reportDate  = new Date().toLocaleDateString("en-ZA", { day: "numeric", month: "long", year: "numeric" });
 
-EVIDENCE HEALTH ASSESSMENT
-Score: ${p.score}/100. ${research?.evidence_landscape ?? "Evidence landscape data not available from public sources."}
+  const sectorAvg   = getSectorAverage("other");
+  const scoreVsAvg  = Math.abs(score - sectorAvg);
+  const aboveBelow  = score >= sectorAvg ? "above" : "below";
 
-PRIMARY GAP ANALYSIS
-${research?.gap_risks ?? `The primary gap (${p.primaryGap}) is likely limiting funding and policy traction.`}
+  // Build scoring table rows
+  const qLabels: Record<string, string> = {
+    q1:"Organisation type",q2:"Primary audience",q3:"Years of data",
+    q4:"Last report response",q5:"SROI status",q6:"Biggest challenge",
+    q7:"Simplify requests",q8:"Annual budget",
+  };
+  const scoringRows = (Object.keys(qScores) as (keyof HealthCheckAnswers)[])
+    .map(k => `<tr><td style="padding:4px 8px;font-size:11px;color:#555;border-bottom:.5px solid #EEE">${qLabels[k]}</td><td style="padding:4px 8px;font-size:11px;color:#555;border-bottom:.5px solid #EEE">${getAnswerText(k, answers[k])}</td><td style="padding:4px 8px;font-size:11px;font-weight:700;color:#C9A84C;text-align:right;border-bottom:.5px solid #EEE">${qScores[k]}</td></tr>`)
+    .join("");
 
-SECTOR CONTEXT
-${research?.sector_context ?? "Sector context not available."}
+  const replacements: Record<string, string> = {
+    // Core
+    org_name:          orgName,
+    first_name:        firstName,
+    last_name:         lastName,
+    score:             String(score),
+    score_pct:         String(score),
+    erc:               erc.erc,
+    risk_level:        erc.risk_level,
+    erc_color:         erc.erc_color,
+    erc_bg:            erc.erc_bg,
+    score_band:        scoreBand.label,
+    report_date:       reportDate,
+    sector_label:      vars.sector_context.split(".")[0] ?? "social sector",
+    sector_avg:        String(sectorAvg),
+    score_vs_avg:      String(scoreVsAvg),
+    above_below:       aboveBelow,
+    sector_peer_count: "47",
+    // Projections
+    funding_at_risk:   vars.funding_at_risk,
+    influence_gap:     vars.influence_gap,
+    opportunity_cost:  vars.opportunity_cost,
+    // Gaps
+    gap1_title:  vars.gap1_title,
+    gap1_q_ref:  vars.gap1_q_ref,
+    gap1_body:   vars.gap1_body,
+    gap1_cost:   vars.gap1_cost,
+    gap2_title:  vars.gap2_title,
+    gap2_q_ref:  vars.gap2_q_ref,
+    gap2_body:   vars.gap2_body,
+    gap2_cost:   vars.gap2_cost,
+    // Sector
+    sector_context:      vars.sector_context,
+    sector_metric1_num:  vars.sector_metric1_num,
+    sector_metric1_desc: vars.sector_metric1_desc,
+    sector_metric2_num:  vars.sector_metric2_num,
+    sector_metric2_desc: vars.sector_metric2_desc,
+    sector_metric3_num:  vars.sector_metric3_num,
+    sector_metric3_desc: vars.sector_metric3_desc,
+    // Scenarios
+    scenario_nothing: vars.scenario_nothing,
+    scenario_partial:  vars.scenario_partial,
+    scenario_full:     vars.scenario_full,
+    recovery_value:    vars.recovery_value,
+    // Risks
+    risk1_title: vars.risk1_title,
+    risk1_body:  vars.risk1_body,
+    risk2_title: vars.risk2_title,
+    risk2_body:  vars.risk2_body,
+    risk3_title: vars.risk3_title,
+    risk3_body:  vars.risk3_body,
+    // Market loss
+    market_loss_leading_question: vars.market_loss_leading_question,
+    leverage_now:        vars.leverage_now,
+    leverage_48m:        vars.leverage_48m,
+    tipping_month:       vars.tipping_month,
+    cumulative_loss:     vars.cumulative_loss,
+    sector_position_now: vars.sector_position_now,
+    sector_position_48m: vars.sector_position_48m,
+    loss_year1: vars.loss_year1,
+    loss_year2: vars.loss_year2,
+    loss_year3: vars.loss_year3,
+    loss_year4: vars.loss_year4,
+    // Value identity
+    value_identity_leading_question: vars.value_identity_leading_question,
+    value1_label:       vars.value1_label,
+    value1_metric:      vars.value1_metric,
+    value1_now:         vars.value1_now,
+    value1_48m:         vars.value1_48m,
+    value1_pct_decline: vars.value1_pct_decline,
+    value2_label:       vars.value2_label,
+    value2_metric:      vars.value2_metric,
+    value2_now:         vars.value2_now,
+    value2_48m:         vars.value2_48m,
+    value2_pct_decline: vars.value2_pct_decline,
+    policy_windows:     vars.policy_windows,
+    policy_expected_b:  vars.policy_expected_b,
+    policy_expected_a:  vars.policy_expected_a,
+    policy_gap:         vars.policy_gap,
+    policy_value_low:   vars.policy_value_low,
+    policy_value_high:  vars.policy_value_high,
+    compound_b_pct:     vars.compound_b_pct,
+    compound_a_pct:     vars.compound_a_pct,
+    stakeholder_count:  vars.stakeholder_count,
+    stakeholder_now_pct: vars.stakeholder_now_pct,
+    stakeholder_48m_pct: vars.stakeholder_48m_pct,
+    stakeholder_rows:   vars.stakeholder_rows_html,
+    policy_windows_rows: vars.policy_windows_html,
+    // Market context
+    market_context_body: vars.market_context_body,
+    mkt_metric1_num:  vars.mkt_metric1_num,
+    mkt_metric1_desc: vars.mkt_metric1_desc,
+    mkt_metric2_num:  vars.mkt_metric2_num,
+    mkt_metric2_desc: vars.mkt_metric2_desc,
+    mkt_metric3_num:  vars.mkt_metric3_num,
+    mkt_metric3_desc: vars.mkt_metric3_desc,
+    // Intelligence
+    intel_landscape:   vars.intel_landscape,
+    intel_risk:        vars.intel_risk,
+    intel_opportunity: vars.intel_opportunity,
+    // Proof
+    proof_bridge: vars.proof_bridge,
+    // Recommendation
+    tier_label:            vars.tier_label,
+    urgency_label:         vars.urgency_label,
+    rec_body:              vars.rec_body,
+    closing_question:      vars.closing_question,
+    tier_price:            vars.tier_price,
+    tier_timeline:         vars.tier_timeline,
+    pilot_diagnostic_text: vars.pilot_diagnostic_text,
+    // Forward box
+    ceo_name:              vars.ceo_name,
+    programme_name:        vars.programme_name,
+    primary_audience_label: vars.primary_audience_label,
+    forward_box_html:      vars.forward_box_html,
+    // Scoring table
+    scoring_rows: scoringRows,
+    raw_score:    String(rawScore),
+    // CTA
+    calendly_url: calendlyUrl,
+    score_headline: vars.score_headline,
+    // Seniority (used for conditional blocks)
+    seniority: vars.forward_box_html ? "senior_manager" : "executive",
+  };
 
-SCENARIO — DO NOTHING
-Without addressing the identified evidence gaps, ${p.orgName} faces increasing difficulty in competitive funding rounds over the next 36 months. The gap between evidence quality and decision-maker action will widen as sector benchmarks rise. Funding stability probability declines without intervention.
+  let html = loadEmailTemplate();
 
-SCENARIO — FULL AUXEIRA
-A full engagement would produce a translated evidence suite calibrated to ${p.orgName}'s primary audience. The economic contribution of the programme would be quantified and communicated in the language funders and government require. The result is a measurable improvement in funding conversion and policy traction within 12 months.
+  // Replace all {{variable}} tokens
+  for (const [key, value] of Object.entries(replacements)) {
+    html = html.replaceAll(`{{${key}}}`, value ?? "");
+  }
 
-PROOF POINT BRIDGE
-The same approach that surfaced the economic contribution of a South African delivery network applies equally to this sector, where the fiscal multipliers are equally strong and equally unmade. Auxeira's methodology translates programme evidence into the economic narrative that moves decisions.
+  // Hide forward box block if executive (template uses conditional comment markers)
+  if (!vars.forward_box_html) {
+    html = html.replace(/<!--\s*FORWARD_BOX_START\s*-->[\s\S]*?<!--\s*FORWARD_BOX_END\s*-->/g, "");
+  }
 
-RECOMMENDATION BODY
-${research?.funding_risk_estimate ?? "Based on your budget profile and evidence score, significant funding is at risk over the next 36 months without intervention."} A structured engagement would close the identified gaps and position ${p.orgName} for the next funding cycle with a ready fiscal case.
+  // Hide pilot diagnostic block for delivery orgs
+  if (!vars.pilot_diagnostic_text) {
+    html = html.replace(/<!--\s*PILOT_DIAG_START\s*-->[\s\S]*?<!--\s*PILOT_DIAG_END\s*-->/g, "");
+  }
 
-CLOSING QUESTION
-What would it look like for ${p.orgName} to enter the next budget cycle with a ready fiscal case for their core programme work?`;
+  return html;
 }
+
+// ── buildPlainText ────────────────────────────────────────────────────────────
+
+function buildPlainText(
+  vars: ReportVars,
+  meta: { firstName: string; orgName: string; score: number }
+): string {
+  const { firstName, orgName, score } = meta;
+  const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL ?? "https://auxeira.com/#cta";
+  return [
+    `Your Auxeira Evidence Risk Report — ${orgName}`,
+    ``,
+    `${firstName},`,
+    ``,
+    vars.score_headline,
+    ``,
+    `EVIDENCE HEALTH SCORE: ${score}/100`,
+    `${vars.tier_label} | ${vars.urgency_label}`,
+    ``,
+    `KEY PROJECTIONS`,
+    `Funding at risk: ${vars.funding_at_risk}`,
+    `Influence gap: ${vars.influence_gap}`,
+    `Opportunity cost: ${vars.opportunity_cost}`,
+    ``,
+    `GAP 1 — ${vars.gap1_title}`,
+    vars.gap1_body,
+    vars.gap1_cost,
+    ``,
+    `GAP 2 — ${vars.gap2_title}`,
+    vars.gap2_body,
+    vars.gap2_cost,
+    ``,
+    `SECTOR CONTEXT`,
+    vars.sector_context,
+    ``,
+    `RECOMMENDATION`,
+    vars.rec_body,
+    ``,
+    vars.closing_question,
+    ``,
+    `Book your Evidence Strategy Call: ${calendlyUrl}`,
+    ``,
+    `Auxeira | info@auxeira.com | auxeira.com`,
+    `Johannesburg — Global from Africa`,
+    ``,
+    `To unsubscribe, reply with "unsubscribe" in the subject line.`,
+  ].join("\n");
+}
+
+// ── buildFallbackVars ─────────────────────────────────────────────────────────
+
+function buildFallbackVars(
+  p: { firstName: string; orgName: string; score: number;
+       scoreBand: ReturnType<typeof getScoreBand>;
+       tierRec: ReturnType<typeof getTierRecommendation>;
+       topGaps: ReturnType<typeof getTopGaps>;
+       answers: HealthCheckAnswers; },
+  research: GrokOrgResearch | null
+): ReportVars {
+  const { orgName, score, scoreBand, tierRec, topGaps } = p;
+  const gap1 = topGaps[0];
+  const gap2 = topGaps[1];
+  const prog = research?.flagship_programme ?? orgName;
+  return {
+    score_headline:    `${orgName}'s evidence score of ${score}/100 signals a ${scoreBand.label.toLowerCase()} that is limiting funding and policy traction.`,
+    funding_at_risk:   "R8M-R18M",
+    influence_gap:     "35-50%",
+    opportunity_cost:  "R25-40M over 3 years",
+    gap1_title:        gap1?.gapType ?? "Translation Gap",
+    gap1_q_ref:        gap1?.q?.toUpperCase() ?? "Q4",
+    gap1_body:         gap1?.description ?? "Evidence is not reaching decision-makers in a form they can act on.",
+    gap1_cost:         "Estimated cost: R5M-R15M in foregone funding annually based on sector benchmarks.",
+    gap2_title:        gap2?.gapType ?? "Economic Evidence Gap",
+    gap2_q_ref:        gap2?.q?.toUpperCase() ?? "Q5",
+    gap2_body:         gap2?.description ?? "No economic or SROI analysis exists to support funder conversations.",
+    gap2_cost:         "Estimated cost: R3M-R10M in missed co-funding opportunities annually.",
+    sector_context:    "South Africa's social sector is undergoing a major funding shift toward evidence-weighted portfolio allocation. Organisations without strong economic framing are being structurally deprioritised in competitive funding rounds.",
+    sector_metric1_num: "3.3x", sector_metric1_desc: "SROI verified",
+    sector_metric2_num: "30-40%", sector_metric2_desc: "less co-funding without economic framing",
+    sector_metric3_num: "70%", sector_metric3_desc: "proposals deprioritised",
+    scenario_nothing:  "Without addressing the evidence gaps, funding attrition is likely to accelerate as sector peers improve their evidence architecture. Policy windows will close without the organisation's evidence reaching the right decision-makers.",
+    scenario_partial:  "Addressing one gap improves positioning but leaves the core translation or economic evidence problem unresolved. Partial improvement yields partial results.",
+    scenario_full:     `A full ${tierRec.label} engagement positions ${prog} to enter the next funding cycle with a complete economic case and translated evidence products.`,
+    recovery_value:    "R25-40M",
+    risk1_title: "Funder deprioritisation", risk1_body: "Without economic framing, proposals are likely being passed over in competitive rounds for organisations with stronger evidence narratives.",
+    risk2_title: "Policy window misses",    risk2_body: "Policy reach is constrained despite strong programme delivery because the economic case has not been made at the right level.",
+    risk3_title: "Sector positioning risk", risk3_body: "As sector peers improve their evidence architecture, the relative positioning of this organisation will decline without action.",
+    market_loss_leading_question: `At Month 22, the sector average is projected to cross this organisation's current score. What is the plan?`,
+    leverage_now: String(score), leverage_48m: "28", tipping_month: "22",
+    cumulative_loss: "R30M+", sector_position_now: "Top 40%", sector_position_48m: "Bottom 35%",
+    loss_year1: "8", loss_year2: "13", loss_year3: "13", loss_year4: "13",
+    value_identity_leading_question: "If evidence influence declines by 64% over 48 months, which relationships does this organisation stop being in the room for?",
+    value1_label: "Evidence influence", value1_metric: "Policy decisions informed annually",
+    value1_now: "14", value1_48m: "5", value1_pct_decline: "64%",
+    value2_label: "Knowledge reach", value2_metric: "Practitioners using your findings",
+    value2_now: "2840", value2_48m: "1020", value2_pct_decline: "64%",
+    policy_windows: "26", policy_expected_b: "9", policy_expected_a: "16", policy_gap: "7",
+    policy_value_low: "R10M", policy_value_high: "R28M",
+    compound_b_pct: "3%", compound_a_pct: "31%",
+    stakeholder_count: "5", stakeholder_now_pct: "60%", stakeholder_48m_pct: "25%",
+    stakeholder_rows_html: "", policy_windows_html: "",
+    market_context_body: "South Africa's social impact funding landscape is shifting toward evidence-weighted allocation. Organisations with strong economic framing are securing 2-3x more decision-maker engagement than those without.",
+    mkt_metric1_num: "47", mkt_metric1_desc: "comparable organisations benchmarked",
+    mkt_metric2_num: "68%", mkt_metric2_desc: "sector funding shift toward evidence",
+    mkt_metric3_num: "R2.1B", mkt_metric3_desc: "sector funding pool",
+    intel_landscape: "LANDSCAPE: South Africa's social sector funding environment is tightening, with major funders shifting toward evidence-weighted portfolio allocation.",
+    intel_risk: "RISK: Organisations at this score typically secure an estimated 30-40% less funding than sector leaders with strong economic framing, based on sector benchmarks.",
+    intel_opportunity: "OPPORTUNITY: Closing this evidence gap through Auxeira's synthesis and translation methodology is estimated to unlock 2-3x more decision-maker engagement within 24 months.",
+    proof_bridge: "The same approach that surfaced the economic contribution of a South African delivery network applies equally to this sector's work, where the fiscal multipliers are equally strong and equally unmade.",
+    tier_label: tierRec.label, urgency_label: "Within 3 months",
+    rec_body: `A ${tierRec.label} engagement would produce a complete evidence architecture for ${prog} — translated into the language your primary audience responds to, with an economic case that can be placed in front of funders and government.`,
+    closing_question: `What would it look like for ${prog} to enter the next funding cycle with a ready fiscal case for its contribution?`,
+    tier_price: tierRec.priceRange, tier_timeline: tierRec.timeline,
+    pilot_diagnostic_text: "",
+    ceo_name: research?.ceo_name ?? "",
+    programme_name: prog,
+    primary_audience_label: "Funders / Government",
+    forward_box_html: "",
+  };
+}
+
+// ── buildLeadNotificationEmail ────────────────────────────────────────────────
 
 function buildLeadNotificationEmail(p: {
   email: string; firstName: string; lastName: string; orgName: string;
   score: number; rawScore: number;
   answers: HealthCheckAnswers;
+  qScores: Record<keyof HealthCheckAnswers, number>;
   scoreBand: ReturnType<typeof getScoreBand>;
   tierRec: ReturnType<typeof getTierRecommendation>;
-  topGaps: string[]; primaryGap: string;
+  topGaps: ReturnType<typeof getTopGaps>;
+  primaryGap: string;
   research: GrokOrgResearch | null;
 }): string {
   const { email, firstName, lastName, orgName, score, rawScore,
-          answers, scoreBand, tierRec, topGaps, primaryGap, research } = p;
-
-  const answerRows = Object.entries(answers)
-    .map(([k, v]) => `<tr><td style="padding:5px 10px;font-size:12px;color:#666;border-bottom:1px solid #eee;width:120px;">${k}</td><td style="padding:5px 10px;font-size:12px;color:#1A1A2A;border-bottom:1px solid #eee;">${v}</td></tr>`)
+          answers, qScores, scoreBand, tierRec, topGaps, primaryGap, research } = p;
+  const qLabels: Record<string, string> = {
+    q1:"Organisation type",q2:"Primary audience",q3:"Years of data",
+    q4:"Last report response",q5:"SROI status",q6:"Biggest challenge",
+    q7:"Simplify requests",q8:"Annual budget",
+  };
+  const answerRows = (Object.keys(qScores) as (keyof HealthCheckAnswers)[])
+    .map(k => `<tr><td style="padding:4px 8px;font-size:12px;">${qLabels[k]}</td><td style="padding:4px 8px;font-size:12px;">${getAnswerText(k, answers[k])}</td><td style="padding:4px 8px;font-size:12px;font-weight:700;">${qScores[k]}</td></tr>`)
     .join("");
-
-  return `<!DOCTYPE html>
-<html><body style="font-family:Arial,sans-serif;color:#1A1A2A;padding:32px;max-width:600px;">
-  <h2 style="color:#0A1628;margin-bottom:4px;">New Health Check Submission</h2>
-  <p style="color:#C9A84C;font-size:13px;margin-top:0;">${new Date().toISOString()}</p>
-  <table style="border-collapse:collapse;width:100%;margin-bottom:24px;">
-    <tr><td style="padding:5px 10px;font-size:12px;color:#666;border-bottom:1px solid #eee;width:140px;">Name</td><td style="padding:5px 10px;font-size:12px;">${firstName} ${lastName}</td></tr>
-    <tr><td style="padding:5px 10px;font-size:12px;color:#666;border-bottom:1px solid #eee;">Email</td><td style="padding:5px 10px;font-size:12px;">${email}</td></tr>
-    <tr><td style="padding:5px 10px;font-size:12px;color:#666;border-bottom:1px solid #eee;">Organisation</td><td style="padding:5px 10px;font-size:12px;">${orgName}</td></tr>
-    <tr><td style="padding:5px 10px;font-size:12px;color:#666;border-bottom:1px solid #eee;">Raw score</td><td style="padding:5px 10px;font-size:12px;">${rawScore} / 104</td></tr>
-    <tr><td style="padding:5px 10px;font-size:12px;color:#666;border-bottom:1px solid #eee;">Final score</td><td style="padding:5px 10px;font-size:12px;font-weight:bold;">${score} / 100, ${scoreBand.label}</td></tr>
-    <tr><td style="padding:5px 10px;font-size:12px;color:#666;border-bottom:1px solid #eee;">Primary gap</td><td style="padding:5px 10px;font-size:12px;color:#C9A84C;font-weight:bold;">${primaryGap}</td></tr>
-    <tr><td style="padding:5px 10px;font-size:12px;color:#666;border-bottom:1px solid #eee;">Tier rec.</td><td style="padding:5px 10px;font-size:12px;">${tierRec.label}</td></tr>
-    <tr><td style="padding:5px 10px;font-size:12px;color:#666;border-bottom:1px solid #eee;">Seniority</td><td style="padding:5px 10px;font-size:12px;">${research?.seniority ?? "unknown"}</td></tr>
-    <tr><td style="padding:5px 10px;font-size:12px;color:#666;border-bottom:1px solid #eee;">CEO name</td><td style="padding:5px 10px;font-size:12px;">${research?.ceo_name || "not found"}</td></tr>
-    <tr><td style="padding:5px 10px;font-size:12px;color:#666;border-bottom:1px solid #eee;">Sector</td><td style="padding:5px 10px;font-size:12px;">${research?.sector_key ?? "unknown"}</td></tr>
-  </table>
-  <p style="font-size:12px;color:#666;">Top gaps: ${topGaps.join(" &nbsp;·&nbsp; ")}</p>
-  ${research ? `<h3 style="margin-top:20px;font-size:13px;color:#0A1628;">Grok Research Profile</h3>
-  <p style="font-size:12px;color:#555;line-height:1.6;"><strong>Overview:</strong> ${research.overview}</p>
-  <p style="font-size:12px;color:#555;line-height:1.6;"><strong>Evidence landscape:</strong> ${research.evidence_landscape}</p>
-  <p style="font-size:12px;color:#555;line-height:1.6;"><strong>Funders:</strong> ${research.funders}</p>
-  <p style="font-size:12px;color:#555;line-height:1.6;"><strong>Sector context:</strong> ${research.sector_context}</p>
-  <p style="font-size:12px;color:#555;line-height:1.6;"><strong>Gap risks:</strong> ${research.gap_risks}</p>
-  <p style="font-size:12px;color:#555;line-height:1.6;"><strong>Funding risk estimate:</strong> ${research.funding_risk_estimate}</p>` : "<p style='font-size:12px;color:#999;'>Grok research not available.</p>"}
-  <h3 style="margin-top:20px;font-size:13px;color:#0A1628;">Full Answers</h3>
-  <table style="border-collapse:collapse;width:100%;">
-    <thead><tr>
-      <th style="text-align:left;padding:5px 10px;background:#f5f5f5;font-size:11px;">Question</th>
-      <th style="text-align:left;padding:5px 10px;background:#f5f5f5;font-size:11px;">Answer</th>
-    </tr></thead>
-    <tbody>${answerRows}</tbody>
-  </table>
+  return `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;color:#1A1A2A;font-size:13px;">
+<h2 style="color:#0A1628;">New Health Check Submission</h2>
+<p><strong>${firstName} ${lastName}</strong> &lt;${email}&gt;<br>
+<strong>Organisation:</strong> ${orgName}<br>
+<strong>Score:</strong> ${score}/100 (raw ${rawScore}/104)<br>
+<strong>Band:</strong> ${scoreBand.label}<br>
+<strong>Tier:</strong> ${tierRec.label}<br>
+<strong>Primary gap:</strong> ${primaryGap}</p>
+<p><strong>Top gaps:</strong><br>${topGaps.map(g => `${g.gapType} (${g.q}): deficit ${g.deficit}`).join("<br>")}</p>
+${research ? `<p><strong>Grok research:</strong><br>${research.overview}<br>Seniority: ${research.seniority} | CEO: ${research.ceo_name || "not found"} | Sector: ${research.sector_key}</p>` : ""}
+<h3>Full Answers</h3>
+<table style="border-collapse:collapse;width:100%;">
+<thead><tr><th style="text-align:left;padding:5px 8px;background:#f5f5f5;font-size:11px;">Question</th><th style="text-align:left;padding:5px 8px;background:#f5f5f5;font-size:11px;">Answer</th><th style="text-align:left;padding:5px 8px;background:#f5f5f5;font-size:11px;">Pts</th></tr></thead>
+<tbody>${answerRows}</tbody>
+</table>
 </body></html>`;
 }
+
+// ── upsertZohoCRM ─────────────────────────────────────────────────────────────
+
+async function upsertZohoCRM(data: {
+  email: string; firstName: string; lastName: string;
+  orgName: string; orgUrl: string;
+  score: number; scoreBand: string; tierRecommendation: string;
+  primaryGap: string; orgType: string;
+  seniority: string; sectorKey: string; flagshipProgramme: string;
+}): Promise<void> {
+  const clientId     = process.env.ZOHO_CLIENT_ID;
+  const clientSecret = process.env.ZOHO_CLIENT_SECRET;
+  const refreshToken = process.env.ZOHO_REFRESH_TOKEN;
+
+  if (!clientId || !clientSecret || !refreshToken) {
+    console.log("[zoho] Credentials not configured — skipping CRM upsert");
+    return;
+  }
+
+  // Get access token
+  const tokenRes = await fetch(
+    `https://accounts.zoho.com/oauth/v2/token?refresh_token=${refreshToken}&client_id=${clientId}&client_secret=${clientSecret}&grant_type=refresh_token`,
+    { method: "POST" }
+  );
+  if (!tokenRes.ok) {
+    throw new Error(`Zoho token refresh failed: ${tokenRes.status}`);
+  }
+  const { access_token } = await tokenRes.json() as { access_token: string };
+
+  const payload = {
+    data: [{
+      Email: data.email,
+      First_Name: data.firstName,
+      Last_Name: data.lastName,
+      Account_Name: data.orgName,
+      Website: data.orgUrl || undefined,
+      Lead_Source: "Evidence Health Check",
+      // Custom fields
+      HC_Score: data.score,
+      HC_Score_Band: data.scoreBand,
+      HC_Tier: data.tierRecommendation,
+      HC_Primary_Gap: data.primaryGap,
+      HC_Org_Type: data.orgType,
+      HC_Seniority: data.seniority,
+      HC_Sector: data.sectorKey,
+      HC_Flagship_Programme: data.flagshipProgramme,
+      HC_Submitted_At: new Date().toISOString(),
+    }],
+    duplicate_check_fields: ["Email"],
+  };
+
+  const upsertRes = await fetch("https://www.zohoapis.com/crm/v2/Leads/upsert", {
+    method: "POST",
+    headers: {
+      "Authorization": `Zoho-oauthtoken ${access_token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!upsertRes.ok) {
+    const err = await upsertRes.text();
+    throw new Error(`Zoho CRM upsert failed: ${upsertRes.status} ${err}`);
+  }
+  console.log("[zoho] CRM upsert complete for", data.email);
+}
+
+export { sanitiseAIOutput };

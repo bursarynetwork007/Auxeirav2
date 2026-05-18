@@ -42,12 +42,18 @@ const PROJECTION_MAP: Record<string, Projections> = {
   },
 };
 
-export function getProjections(budget: string): Projections {
-  return PROJECTION_MAP[budget] ?? PROJECTION_MAP["5m-20m"];
+// Map numeric Q8 index (0-3) to slug
+const Q8_INDEX_TO_SLUG: Record<number, string> = {
+  0: "under-5m", 1: "5m-20m", 2: "20m-100m", 3: "over-100m",
+};
+
+export function getProjections(budget: string | number): Projections {
+  const key = typeof budget === "number" ? (Q8_INDEX_TO_SLUG[budget] ?? "5m-20m") : budget;
+  return PROJECTION_MAP[key] ?? PROJECTION_MAP["5m-20m"];
 }
 
 // Funding survival curve data — 36 months, two lines: with/without Auxeira
-export function getSurvivalCurveData(budget: string) {
+export function getSurvivalCurveData(budget: string | number) {
   const p = getProjections(budget);
   const months = Array.from({ length: 13 }, (_, i) => `M${i * 3}`);
 
@@ -61,7 +67,7 @@ export function getSurvivalCurveData(budget: string) {
 }
 
 // Counterfactual divergence — 3-year bar comparison
-export function getCounterfactualData(budget: string) {
+export function getCounterfactualData(budget: string | number) {
   const p = getProjections(budget);
   return {
     labels: ["Year 1", "Year 2", "Year 3"],

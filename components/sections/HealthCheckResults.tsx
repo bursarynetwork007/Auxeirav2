@@ -19,7 +19,8 @@ import {
   getScoreBand,
   getTierRecommendation,
   getTopGaps,
-  type HealthCheckAnswers,
+  slugsToIndices,
+  type FrontendAnswers,
 } from "@/lib/healthCheckScoring";
 import { getProjections, getSurvivalCurveData, getCounterfactualData } from "@/lib/projections";
 
@@ -30,7 +31,7 @@ ChartJS.register(
 
 interface Props {
   score: number;
-  answers: HealthCheckAnswers;
+  answers: FrontendAnswers;
   onReset: () => void;
 }
 
@@ -114,12 +115,13 @@ const barOptions = {
 
 // ── Main component ────────────────────────────────────────────────────────────
 export default function HealthCheckResults({ score, answers, onReset }: Props) {
+  const idxAnswers = slugsToIndices(answers);
   const band = getScoreBand(score);
-  const tierRec = getTierRecommendation(answers);
-  const topGaps = getTopGaps(answers);
-  const projections = getProjections(answers.q8);
-  const survivalData = getSurvivalCurveData(answers.q8);
-  const counterfactual = getCounterfactualData(answers.q8);
+  const tierRec = getTierRecommendation(idxAnswers);
+  const topGaps = getTopGaps(idxAnswers);
+  const projections = getProjections(idxAnswers.q8);
+  const survivalData = getSurvivalCurveData(idxAnswers.q8);
+  const counterfactual = getCounterfactualData(idxAnswers.q8);
   const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL ?? "#cta";
 
   const [aiInsight, setAiInsight] = useState<AIInsight | null>(null);
@@ -138,6 +140,10 @@ export default function HealthCheckResults({ score, answers, onReset }: Props) {
         audience: answers.q2,
         score,
         challenge: answers.q6,
+        // pass indices for server-side scoring
+        q1: idxAnswers.q1,
+        q2: idxAnswers.q2,
+        q6: idxAnswers.q6,
       }),
     })
       .then((r) => r.json())
@@ -247,7 +253,7 @@ export default function HealthCheckResults({ score, answers, onReset }: Props) {
           <div className="space-y-3">
             {topGaps.map((gap, i) => (
               <div key={i} className="border border-[#C9A84C]/30 p-4 text-sm text-[#1A1A2A]/80 leading-relaxed">
-                {gap}
+                {gap.description}
               </div>
             ))}
           </div>

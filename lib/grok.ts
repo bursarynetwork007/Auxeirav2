@@ -227,56 +227,107 @@ Select the strongest single theme for this month's newsletter. Return JSON:
 // Returns a structured research profile used by Claude to generate the report.
 
 export interface GrokOrgResearch {
+  // Core identity
   overview: string;              // mission, programmes, scale, geography
   evidence_landscape: string;    // current evaluation and evidence activity
   funders: string;               // key funders and decision-maker audience
   sector_context: string;        // competitive landscape and sector benchmarks
   gap_risks: string;             // risks tied to the primary evidence gap
   funding_risk_estimate: string; // 3-year funding risk estimate with rand range
+
+  // Leadership
   seniority: "executive" | "senior_manager" | "programme_level";
   ceo_name: string;              // CEO/Director name (empty string if not found)
-  sector_key: "ecd" | "health" | "econ" | "other"; // for projections and risks
+  person_title: string;          // exact job title of the submitter
+
+  // Sector classification
+  sector_key: "ecd" | "education" | "health" | "econ" | "foundation" | "policy" | "government" | "other";
+  sector_label: string;          // human-readable sector label for report (e.g. "foundation phase education")
+
+  // Programme identity (for forward box, closing question, value identity)
+  flagship_programme: string;    // most prominent named programme or focus area noun phrase
+
+  // Leadership team (for forward box and sector intelligence)
+  leadership_team: string;       // comma-separated names and titles
+
+  // Evidence maturity
+  evidence_maturity: "outcome" | "output" | "activity"; // most advanced level cited in their comms
+  has_sroi: boolean;             // whether any SROI/economic analysis exists publicly
+
+  // Funder relationships (structured)
+  named_funders: string[];       // array of named funders from public sources
+
+  // Recent activity
+  recent_news: string;           // notable events, awards, publications in last 36 months
+
+  // Raw full briefing text (for Claude user prompt)
+  full_briefing: string;
 }
 
-// Prompt verbatim from EVIDENCE_HEALTH_CHECK.md Part A
+// Verbatim from Auxeira_HealthCheck_Spec-2.md Part A
 const GROK_ORG_RESEARCH_PROMPT = (
   orgName: string,
   orgUrl: string,
-  personName: string,
-  primaryGap: string,
-  score: number
-) => `Research the organisation "${orgName}" thoroughly using real-time web search.
+  personFirstName: string,
+  personLastName: string,
+) => `You are conducting a comprehensive intelligence briefing on an organisation for a senior evidence intelligence consultant. This briefing will be used to write a personalised report that must read as if someone spent two days researching the organisation before picking up a pen.
 
-Person who completed the diagnostic: ${personName}
-Organisation website: ${orgUrl || "not provided — search by organisation name"}
-Primary evidence gap identified: ${primaryGap}
-Evidence Health Score: ${score}/100
+ORGANISATION: ${orgName}
+WEBSITE: ${orgUrl || "not provided — search by organisation name only"}
+PERSON WHO COMPLETED THE DIAGNOSTIC: ${personFirstName} ${personLastName}
 
-Search for: website content, annual reports, publications, LinkedIn profiles,
-news coverage, funder relationships, recent activity, awards, and any publicly
-available programme data.
+Research this organisation exhaustively using every available public source. Read the website in full — every page including About, Team, Board, Programmes, Impact, Reports, News, and any downloadable documents. Download and read any annual reports, evaluations, strategy documents, or publications available on the site. Search LinkedIn for both the organisation and the named person. Search for news coverage in the last 36 months. Search for any academic papers, government references, or sector mentions. Look for any awards, recognition, or notable events.
+
+BUILD A COMPLETE INTELLIGENCE PROFILE covering:
+
+WHO THEY ARE
+What does this organisation do and who does it serve? What is their founding story and mission? What sector do they operate in — be precise and specific. Note important distinctions (foundation phase education is not ECD; community health is not hospital care). What is their scale — number of beneficiaries, geographic reach, staff size, years of operation?
+
+LEADERSHIP AND DECISION-MAKERS
+Who is the CEO or Executive Director? Full name and title. Who else is on the leadership team? List names and roles. Who is on the board? Any notable board members? What is ${personFirstName} ${personLastName}'s exact job title and role? What is their seniority level — are they executive, senior management, or programme level? Have they published anything, spoken at events, or appeared in news coverage? Note what you find.
+
+PROGRAMMES AND INITIATIVES
+List every named programme or initiative you can find. For each one: what does it do, who does it serve, what is the geographic scope, and what evidence exists of its outcomes? Are there flagship programmes that define the organisation's identity publicly?
+
+EVIDENCE AND EVALUATION PORTFOLIO
+Has the organisation published evaluations, impact reports, or research? List titles, dates, and authors if found. Have they commissioned independent evaluations? Is there any SROI, economic multiplier, or fiscal impact analysis in any of their documents? How do they currently communicate their impact — what language do they use, what metrics do they cite? How mature is their evidence — are they citing outcome data, output data, or primarily activity data?
+
+FUNDER AND GOVERNMENT RELATIONSHIPS
+Which funders are named on their website, in reports, or in news coverage? List every foundation, government body, corporate funder, or development finance institution mentioned anywhere. Any evidence of government partnerships, co-funding relationships, or policy influence? Are they mentioned in any government documents, parliamentary submissions, or policy papers?
+
+SECTOR POSITIONING
+How does this organisation position itself relative to peers? Are they a sector leader, a mid-tier organisation, or an emerging player? What is their public reputation — are they cited by others, referenced in sector reports, or invited to sector convenings? What is their competitive advantage as stated or implied in their communications?
+
+RECENT ACTIVITY
+What has happened in the last 36 months? New programmes, new funders, leadership changes, publications, awards, controversies, strategic pivots? What is the most recent significant thing you can find about this organisation?
+
+FLAGSHIP PROGRAMME
+Identify the single most prominent named programme, initiative, or flagship product from all sources. This name is used in the forward box, the closing question, and wherever a specific reference to their work appears. If no single programme dominates, state the primary focus area as a descriptive noun phrase. Examples: "ZenLit", "ReadRight", "foundation phase literacy programme".
 
 Return a JSON object with exactly these keys:
 
 {
-  "overview": "Organisation mission, programmes, scale, and geography. 2-3 sentences. Specific — named programmes, beneficiary numbers, geographic reach.",
-  "evidence_landscape": "Current evaluation and evidence activity. What evaluations exist. What is published. What is missing. 2-3 sentences.",
-  "funders": "Key funders and decision-maker audience. Named funders where publicly available. 1-2 sentences.",
-  "sector_context": "Competitive landscape and sector benchmarks relevant to this organisation. South Africa-specific where possible. 2-3 sentences.",
-  "gap_risks": "Specific risks tied to the primary gap '${primaryGap}' for this organisation. What they are likely losing. 2-3 sentences.",
-  "funding_risk_estimate": "3-year funding risk estimate with a rand range calibrated to their scale. Label as estimated based on sector benchmarks. 1-2 sentences.",
-  "seniority": "executive OR senior_manager OR programme_level — inferred from ${personName}'s likely role at ${orgName}",
-  "ceo_name": "Full name of the CEO, Executive Director, or equivalent. Empty string if not found.",
-  "sector_key": "ecd OR health OR econ OR other — primary sector of this organisation"
+  "overview": "2-3 sentences. Mission, programmes, scale, geography. Specific — named programmes, beneficiary numbers, geographic reach.",
+  "evidence_landscape": "2-3 sentences. Current evaluation and evidence activity. What evaluations exist. What is published. What is missing.",
+  "funders": "1-2 sentences. Key funders and decision-maker audience. Named funders where publicly available.",
+  "sector_context": "2-3 sentences. Competitive landscape and sector benchmarks. South Africa-specific where possible.",
+  "gap_risks": "2-3 sentences. Specific risks for this organisation. What they are likely losing.",
+  "funding_risk_estimate": "1-2 sentences. 3-year funding risk estimate with rand range. Label as estimated.",
+  "seniority": "executive OR senior_manager OR programme_level",
+  "ceo_name": "Full name of CEO/Executive Director. Empty string if not found.",
+  "person_title": "Exact job title of ${personFirstName} ${personLastName}. Empty string if not found.",
+  "sector_key": "ecd OR education OR health OR econ OR foundation OR policy OR government OR other",
+  "sector_label": "Human-readable sector label. E.g. 'foundation phase education', 'early childhood development', 'community health'.",
+  "flagship_programme": "Most prominent named programme or focus area noun phrase.",
+  "leadership_team": "Comma-separated names and titles of leadership team members.",
+  "evidence_maturity": "outcome OR output OR activity — most advanced level cited in their public communications.",
+  "has_sroi": true or false,
+  "named_funders": ["Funder 1", "Funder 2"],
+  "recent_news": "1-2 sentences on notable events, awards, publications in last 36 months.",
+  "full_briefing": "Complete intelligence briefing in prose. All sections above. No length limit. More detail produces a better report. Flag clearly anything you could not find or verify."
 }
 
-Be specific to this organisation. Use publicly available information only.
-These must be real and verifiable — named programmes, specific publications,
-recent events, notable quotes from leadership, awards received.
-Not generic observations. Specifics only.
-
-Return everything you find in a structured intelligence briefing.
-Flag clearly anything you could not find or verify.`;
+Return everything you find in a structured intelligence briefing. There is no field limit. More detail produces a better report. Flag clearly anything you could not find or verify.`;
 
 export async function researchOrganisation(params: {
   orgName: string;
@@ -290,8 +341,6 @@ export async function researchOrganisation(params: {
     throw new Error("XAI_API_KEY not set");
   }
 
-  const personName = `${params.personFirstName} ${params.personLastName}`.trim();
-
   const raw = await grokChat(
     [
       {
@@ -299,13 +348,12 @@ export async function researchOrganisation(params: {
         content: GROK_ORG_RESEARCH_PROMPT(
           params.orgName,
           params.orgUrl,
-          personName,
-          params.primaryGap,
-          params.score
+          params.personFirstName,
+          params.personLastName,
         ),
       },
     ],
-    { search: true, temperature: 0.2, max_tokens: 2000 }
+    { search: true, temperature: 0.2, max_tokens: 3000 }
   );
 
   const jsonMatch = raw.match(/\{[\s\S]*\}/);
@@ -315,20 +363,33 @@ export async function researchOrganisation(params: {
 
   const parsed = JSON.parse(jsonMatch[0]) as Partial<GrokOrgResearch>;
 
-  // Normalise and provide safe defaults
+  const validSeniority = ["executive", "senior_manager", "programme_level"];
+  const validSectorKey = ["ecd", "education", "health", "econ", "foundation", "policy", "government", "other"];
+
   return {
     overview:               parsed.overview               ?? `${params.orgName} is a South African social sector organisation.`,
     evidence_landscape:     parsed.evidence_landscape     ?? "Evidence landscape data not available from public sources.",
     funders:                parsed.funders                ?? "Funder information not available from public sources.",
     sector_context:         parsed.sector_context         ?? "Sector context not available.",
     gap_risks:              parsed.gap_risks              ?? `The primary gap (${params.primaryGap}) is likely limiting funding and policy traction.`,
-    funding_risk_estimate:  parsed.funding_risk_estimate  ?? "Funding risk estimate not available — calibrate to budget profile.",
-    seniority:              (["executive","senior_manager","programme_level"].includes(parsed.seniority ?? ""))
+    funding_risk_estimate:  parsed.funding_risk_estimate  ?? "Funding risk estimate not available.",
+    seniority:              validSeniority.includes(parsed.seniority ?? "")
                               ? (parsed.seniority as GrokOrgResearch["seniority"])
                               : "senior_manager",
     ceo_name:               parsed.ceo_name               ?? "",
-    sector_key:             (["ecd","health","econ","other"].includes(parsed.sector_key ?? ""))
+    person_title:           parsed.person_title           ?? "",
+    sector_key:             validSectorKey.includes(parsed.sector_key ?? "")
                               ? (parsed.sector_key as GrokOrgResearch["sector_key"])
                               : "other",
+    sector_label:           parsed.sector_label           ?? "social sector",
+    flagship_programme:     parsed.flagship_programme     ?? "",
+    leadership_team:        parsed.leadership_team        ?? "",
+    evidence_maturity:      (["outcome","output","activity"].includes(parsed.evidence_maturity ?? ""))
+                              ? (parsed.evidence_maturity as GrokOrgResearch["evidence_maturity"])
+                              : "output",
+    has_sroi:               parsed.has_sroi               ?? false,
+    named_funders:          Array.isArray(parsed.named_funders) ? parsed.named_funders : [],
+    recent_news:            parsed.recent_news            ?? "",
+    full_briefing:          parsed.full_briefing          ?? raw,
   };
 }

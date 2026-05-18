@@ -3,7 +3,12 @@
 import { useState } from "react";
 import Button from "@/components/ui/Button";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
-import { calculateScore, getPrimaryGapLabel, type HealthCheckAnswers } from "@/lib/healthCheckScoring";
+import {
+  calculateScoreFromSlugs,
+  getPrimaryGapLabelFromSlugs,
+  slugsToIndices,
+  type FrontendAnswers,
+} from "@/lib/healthCheckScoring";
 
 const QUESTIONS = [
   {
@@ -198,7 +203,7 @@ export default function EvidenceHealthCheck() {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<Step>("quiz");
   const [currentQ, setCurrentQ] = useState(0);
-  const [answers, setAnswers] = useState<Partial<HealthCheckAnswers>>({});
+  const [answers, setAnswers] = useState<Partial<FrontendAnswers>>({});
   const [selected, setSelected] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -236,7 +241,7 @@ export default function EvidenceHealthCheck() {
     if (currentQ > 0) {
       setCurrentQ((c) => c - 1);
       const prevQ = QUESTIONS[currentQ - 1];
-      setSelected(answers[prevQ.id as keyof HealthCheckAnswers] ?? null);
+      setSelected(answers[prevQ.id as keyof FrontendAnswers] ?? null);
     }
   }
 
@@ -249,18 +254,23 @@ export default function EvidenceHealthCheck() {
     setSubmitting(true);
     setSubmitError("");
 
-    const finalAnswers = answers as HealthCheckAnswers;
-    const score = calculateScore(finalAnswers);
-    const gap = getPrimaryGapLabel(finalAnswers);
+    const score = calculateScoreFromSlugs(answers);
+    const gap = getPrimaryGapLabelFromSlugs(answers);
     setPrimaryGap(gap);
+
+    // Convert string slugs to 0-based integer indices for the API
+    const indexAnswers = slugsToIndices(answers);
 
     try {
       await fetch("/api/health-check", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          answers: finalAnswers,
-          ...orgInfo,
+          first_name: orgInfo.firstName,
+          last_name: orgInfo.lastName,
+          email: orgInfo.email,
+          org_name: orgInfo.orgName,
+          ...indexAnswers,
         }),
       });
     } catch {
