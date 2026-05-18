@@ -191,11 +191,111 @@ function sanitiseAIOutput(text: string): string {
     .trim();
 }
 
+// ── Ona field name normaliser ─────────────────────────────────────────────────
+// Ona auto-generates XLSForm names from question label text when the name
+// column is not set explicitly. This shim maps every known auto-generated
+// variant to the canonical field names the route expects.
+// Add new variants here if Ona produces different slugs.
+
+const ONA_FIELD_MAP: Record<string, string> = {
+  // Contact fields — common Ona auto-generated variants
+  "first_name":                                    "first_name",
+  "firstname":                                     "first_name",
+  "your_first_name":                               "first_name",
+  "whats_your_first_name":                         "first_name",
+  "last_name":                                     "last_name",
+  "lastname":                                      "last_name",
+  "your_last_name":                                "last_name",
+  "whats_your_last_name":                          "last_name",
+  "email":                                         "email",
+  "email_address":                                 "email",
+  "your_email":                                    "email",
+  "your_email_address":                            "email",
+  "work_email":                                    "email",
+  "work_email_address":                            "email",
+  "org_name":                                      "org_name",
+  "organisation_name":                             "org_name",
+  "organization_name":                             "org_name",
+  "your_organisation":                             "org_name",
+  "your_organization":                             "org_name",
+  "name_of_your_organisation":                     "org_name",
+  "name_of_your_organization":                     "org_name",
+  "org_website":                                   "org_website",
+  "organisation_website":                          "org_website",
+  "website":                                       "org_website",
+  "your_website":                                  "org_website",
+
+  // Q1 — organisation type
+  "q1":                                            "q1",
+  "which_best_describes_your_organisation":        "q1",
+  "which_best_describes_your_organization":        "q1",
+  "organisation_type":                             "q1",
+  "organization_type":                             "q1",
+  "type_of_organisation":                          "q1",
+
+  // Q2 — primary audience
+  "q2":                                            "q2",
+  "who_are_your_primary_decision_making_audience": "q2",
+  "primary_decision_making_audience":              "q2",
+  "primary_audience":                              "q2",
+  "who_do_you_primarily_report_to":                "q2",
+
+  // Q3 — years of data
+  "q3":                                            "q3",
+  "how_many_years_of_evaluation_data":             "q3",
+  "years_of_evaluation_data":                      "q3",
+  "years_of_programme_data":                       "q3",
+  "how_many_years_of_programme_data":              "q3",
+
+  // Q4 — last report response
+  "q4":                                            "q4",
+  "what_happened_when_you_last_shared_a_report":   "q4",
+  "last_report_response":                          "q4",
+  "when_you_last_shared_a_report":                 "q4",
+
+  // Q5 — SROI status
+  "q5":                                            "q5",
+  "do_you_have_an_sroi_or_economic_analysis":      "q5",
+  "sroi_status":                                   "q5",
+  "economic_analysis_status":                      "q5",
+  "sroi_or_economic_analysis":                     "q5",
+
+  // Q6 — biggest challenge
+  "q6":                                            "q6",
+  "what_is_your_biggest_evidence_challenge":       "q6",
+  "biggest_evidence_challenge":                    "q6",
+  "biggest_challenge":                             "q6",
+
+  // Q7 — simplify requests
+  "q7":                                            "q7",
+  "how_often_are_you_asked_to_simplify_reports":   "q7",
+  "simplify_reports":                              "q7",
+  "asked_to_simplify":                             "q7",
+
+  // Q8 — annual budget
+  "q8":                                            "q8",
+  "what_is_your_approximate_annual_budget":        "q8",
+  "annual_budget":                                 "q8",
+  "approximate_annual_budget":                     "q8",
+  "organisation_budget":                           "q8",
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function normaliseOnaBody(raw: Record<string, any>): Record<string, any> {
+  const out: Record<string, any> = {};
+  for (const [key, value] of Object.entries(raw)) {
+    const canonical = ONA_FIELD_MAP[key.toLowerCase()] ?? key;
+    out[canonical] = value;
+  }
+  return out;
+}
+
 // ── POST handler ─────────────────────────────────────────────────────────────
 
 export async function POST(req: NextRequest) {
   try {
-    const body = (await req.json()) as OnaWebhookBody;
+    const rawBody = await req.json();
+    const body = normaliseOnaBody(rawBody as Record<string, unknown>) as OnaWebhookBody;
     const { first_name, last_name, email, org_name } = body;
 
     if (!email || !first_name || !last_name || !org_name) {
@@ -205,10 +305,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Validate answer indices are present
+    // Coerce answer indices — Ona may send integers or numeric strings
     const qKeys = ["q1","q2","q3","q4","q5","q6","q7","q8"] as const;
     for (const k of qKeys) {
-      if (typeof body[k] !== "number") {
+      const v = body[k];
+      if (typeof v === "string" && /^\d+$/.test(v)) {
+        (body as unknown as Record<string, unknown>)[k] = parseInt(v, 10);
+      }
+    }
+
+    // Validate all answer indices are now numbers
+    for (const k of qKeys) {
+      if (typeof body[k] !== "number" || isNaN(body[k])) {
         return NextResponse.json(
           { error: `Missing or invalid answer index for ${k}` },
           { status: 400 }
