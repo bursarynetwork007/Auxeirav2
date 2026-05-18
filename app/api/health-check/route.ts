@@ -879,11 +879,13 @@ function buildEmailHtml(
     // Value identity
     value_identity_leading_question: vars.value_identity_leading_question,
     value1_label:       vars.value1_label,
+    value1_label_lower: vars.value1_label.toLowerCase(),
     value1_metric:      vars.value1_metric,
     value1_now:         vars.value1_now,
     value1_48m:         vars.value1_48m,
     value1_pct_decline: vars.value1_pct_decline,
     value2_label:       vars.value2_label,
+    value2_label_lower: vars.value2_label.toLowerCase(),
     value2_metric:      vars.value2_metric,
     value2_now:         vars.value2_now,
     value2_48m:         vars.value2_48m,
