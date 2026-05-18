@@ -192,7 +192,6 @@ function sanitiseAIOutput(text: string): string {
 export async function POST(req: NextRequest) {
   try {
     const body = (await req.json()) as OnaWebhookBody;
-    console.log("[health-check] RAW PAYLOAD:", JSON.stringify(body));
     const { first_name, last_name, email, org_name } = body;
 
     if (!email || !first_name || !last_name || !org_name) {
