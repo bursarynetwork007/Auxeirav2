@@ -5,6 +5,13 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
 import Anthropic from "@anthropic-ai/sdk";
+import { readFileSync } from "fs";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+
+// Embed template at deploy time — removes runtime HTTP dependency on auxeira.com.
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const EMBEDDED_TEMPLATE = readFileSync(join(__dirname, "email_template.html"), "utf8");
 
 const dynamo = DynamoDBDocumentClient.from(new DynamoDBClient({ region: "us-east-1" }));
 const TABLE = process.env.DYNAMODB_HEALTH_CHECK_TABLE ?? "auxeira-health-checks";
@@ -261,30 +268,8 @@ async function processSubmission(sub) {
   let reportError = "";
   if (vars) {
     try {
-      const templateUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/auxeira_health_check_email_template.html`;
-      let template = "";
-      try {
-        const tr = await fetch(templateUrl);
-        if (tr.ok) template = await tr.text();
-      } catch {}
-
-      if (!template) {
-        // Minimal fallback if template not fetchable
-        template = `<html><body style="font-family:Arial,sans-serif;color:#1A1A2A;max-width:600px;margin:0 auto;padding:20px">
-<h2>Your Auxeira Evidence Risk Report</h2>
-<p>{{first_name}},</p><p>{{score_headline}}</p>
-<p><strong>Score: {{score}}/100</strong> | {{erc}} | {{risk_level}}</p>
-<p><strong>Funding at risk:</strong> {{funding_at_risk}}<br>
-<strong>Influence gap:</strong> {{influence_gap}}<br>
-<strong>Opportunity cost:</strong> {{opportunity_cost}}</p>
-<h3>{{gap1_title}}</h3><p>{{gap1_body}}</p><p>{{gap1_cost}}</p>
-<h3>{{gap2_title}}</h3><p>{{gap2_body}}</p><p>{{gap2_cost}}</p>
-<h3>Recommendation</h3><p>{{rec_body}}</p><p>{{closing_question}}</p>
-<p><a href="{{calendly_url}}">Book your Evidence Strategy Call</a></p>
-<p style="font-size:11px;color:#888">Auxeira | info@auxeira.com | auxeira.com<br>
-To unsubscribe reply with "unsubscribe" in the subject line.</p>
-</body></html>`;
-      }
+      // Template is bundled with the Lambda at deploy time — no HTTP fetch needed.
+      const template = EMBEDDED_TEMPLATE;
 
       const html = injectTemplate(template, vars);
       const text = buildPlainText(vars, firstName, orgName, s);

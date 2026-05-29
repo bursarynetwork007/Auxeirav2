@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Auxeira Evidence Risk Report — {{org_name}}</title>
+</head>
+<body style="margin:0;padding:0;background:#F5F0E8;font-family:Arial,sans-serif;color:#1A1A2A;font-size:14px;line-height:1.6">
+
+<!--
+  ═══════════════════════════════════════════════════════════
+  AUXEIRA — ENTITY EVIDENCE RISK REPORT
+  FULL EMAIL TEMPLATE — ALL SECTIONS
+  Updated: May 2026
+
+  SECTION ORDER:
+  1.  Header
+  2.  Score + ERC
+  3.  Key projections
+  4.  Top 2 gaps
+  5.  Sector context
+  6.  Three scenarios
+  7.  Top 3 risks
+  8.  [NEW] Market loss projection
+  9.  [NEW] Value identity + policy influence
+  10. Market context benchmarks
+  11. Sector intelligence insight
+  12. Proof point
+  13. Recommendation
+  14. Forward box (conditional — seniority != executive)
+  15. Honest truth
+  16. CTAs
+  17. Scoring breakdown
+  18. Footer
+
+  TEMPLATE VARIABLES:
+  All variables use {{double_brace}} format.
+  Populated by Claude after Grok research.
+
+  CORE:
+  {{org_name}}              Zenex Foundation
+  {{first_name}}            Thabisile
+  {{score}}                 66
+  {{score_pct}}             66  (for bar width as %)
+  {{erc}}                   ERC-B
+  {{risk_level}}            Medium risk
+  {{score_band}}            Solid base, significant gap
+  {{score_headline}}        1-sentence headline
+  {{erc_color}}             #C9A84C
+  {{erc_bg}}                rgba(201,168,76,.15)
+
+  PROJECTIONS:
+  {{funding_at_risk}}       R8M-R18M
+  {{influence_gap}}         35-50%
+  {{opportunity_cost}}      R25-40M over 3 years
+
+  GAPS:
+  {{gap1_title}}            Decision gap
+  {{gap1_q_ref}}            Q4
+  {{gap1_body}}             3-4 sentences
+  {{gap1_cost}}             Estimated cost sentence
+  {{gap2_title}}            Economic analysis gap
+  {{gap2_q_ref}}            Q5
+  {{gap2_body}}             3-4 sentences
+  {{gap2_cost}}             Estimated cost sentence
+
+  SECTOR:
+  {{sector_label}}          foundation phase education
+  {{sector_context}}        4-5 sentences
+  {{sector_metric1_num}}    3.3x
+  {{sector_metric1_desc}}   ECD SROI — verified
+  {{sector_metric2_num}}    30-40%
+  {{sector_metric2_desc}}   less co-funding without economic framing
+  {{sector_metric3_num}}    70%
+  {{sector_metric3_desc}}   Treasury proposals deprioritised
+
+  SCENARIOS:
+  {{scenario_nothing}}      3 sentences
+  {{scenario_partial}}      3 sentences
+  {{scenario_full}}         3 sentences
+  {{recovery_value}}        R25-40M
+
+  RISKS:
+  {{risk1_title}}           Primary risk title
+  {{risk1_body}}            2-3 sentences
+  {{risk2_title}}           Secondary risk title
+  {{risk2_body}}            2-3 sentences
+  {{risk3_title}}           Sector positioning risk title
+  {{risk3_body}}            2-3 sentences
+
+  MARKET LOSS (NEW):
+  {{leverage_now}}          66
+  {{leverage_48m}}          28
+  {{tipping_month}}         22
+  {{cumulative_loss}}       R47M+
+  {{sector_position_now}}   Top 40%
+  {{sector_position_48m}}   Bottom 35%
+  {{sector_peer_count}}     47
+  {{loss_year1}}            8
+  {{loss_year2}}            13
+  {{loss_year3}}            13
+  {{loss_year4}}            13
+
+  VALUE IDENTITY (NEW):
+  {{value1_label}}          Evidence influence
+  {{value1_metric}}         Policy decisions informed annually
+  {{value1_now}}            14
+  {{value1_48m}}            5
+  {{value1_pct_decline}}    64%
+  {{value2_label}}          Knowledge reach
+  {{value2_metric}}         Practitioners using your findings
+  {{value2_now}}            2,840
+  {{value2_48m}}            1,020
+  {{value2_pct_decline}}    64%
+  {{policy_windows}}        26
+  {{policy_expected_b}}     9
+  {{policy_expected_a}}     16
+  {{policy_gap}}            7
+  {{policy_value_low}}      R10M
+  {{policy_value_high}}     R28M
+  {{compound_b_pct}}        3%
+  {{compound_a_pct}}        31%
+  {{stakeholder_count}}     17
+  {{stakeholder_now_pct}}   60%
+  {{stakeholder_48m_pct}}   25%
+
+  (Stakeholder rows — repeat for each key stakeholder):
+  {{sh1_name}}              MCF Education Programme Officers
+  {{sh1_role}}              Mastercard Foundation - 2 contacts
+  {{sh1_now}}               85
+  {{sh1_48m}}               38
+  {{sh2_name}}  etc.
+
+  VALUE IDENTITY MAPPING — Claude selects from:
+  ECD delivery:       Children served / Women worker contribution
+  Education NGO:      Evidence influence / Knowledge reach
+  Health NGO:         Lives improved (DALYs) / Cost-per-outcome
+  Economic dev:       Enterprises created / Household income change
+  Foundation/funder:  Portfolio economic contribution / Grantee quality
+  Policy advocacy:    Policy wins / Stakeholder reach
+  Government:         Service delivery metric / Budget efficiency
+
+  MARKET CONTEXT:
+  {{market_context_body}}   3-4 sentences
+  {{mkt_metric1_num}} {{mkt_metric1_desc}}
+  {{mkt_metric2_num}} {{mkt_metric2_desc}}
+  {{mkt_metric3_num}} {{mkt_metric3_desc}}
+
+  INTELLIGENCE INSIGHT:
+  {{intel_landscape}}       LANDSCAPE sentence
+  {{intel_risk}}            RISK sentence
+  {{intel_opportunity}}     OPPORTUNITY sentence
+
+  PROOF:
+  {{proof_bridge}}          2-3 sentences — methodology bridge
+
+  RECOMMENDATION:
+  {{tier_label}}            Tier 2 - Evidence Synthesis and Strategy
+  {{urgency_label}}         Urgent
+  {{rec_body}}              3-4 sentences
+  {{closing_question}}      What would it look like...
+  {{tier_price}}            R180,000-R350,000
+  {{tier_timeline}}         6-10 weeks
+
+  FORWARD BOX (show if seniority != executive):
+  {{ceo_name}}              CEO full name from Grok
+
+  SCORING TABLE:
+  {{q1_answer}} {{q1_pts}}  ...through q8
+  {{raw_score}} {{score}}
+
+  SENIORITY: {{seniority}}  executive | senior_manager | programme_level
+
+  NEW VARIABLES — ALL SEVEN EDITS APPLIED:
+
+  EDIT 1 — Sector average marker:
+  {{sector_avg}}              52  (estimated sector average score)
+  {{score_vs_avg}}            14  (points above or below sector avg)
+  {{above_below}}             above | below
+  {{sector_peer_count}}       47  (number of comparable orgs)
+
+  EDIT 2 — Forward box programme name:
+  {{programme_name}}          ZenLit  (from Grok — flagship programme)
+  {{primary_audience_label}}  Treasury / DBE / MCF / portfolio
+
+  EDIT 3 — Leading question at START of section 8:
+  {{market_loss_leading_question}}
+    Example: "At Month 22, Zenex drops below the sector average
+    for the first time. What is the plan — and who owns it?"
+
+  EDIT 4 — Leading question at START of section 9:
+  {{value_identity_leading_question}}
+    Example: "If evidence influence declines from 14 to 5
+    decisions a year, which 9 relationships does Zenex stop
+    being in the room for — and which one matters most?"
+
+  EDIT 5 — Policy windows with deadlines (6 windows):
+  {{w1_name}} {{w1_body}} {{w1_freq}} {{w1_deadline}}
+  {{w1_count}} {{w1_prob_b}} {{w1_prob_a}} {{w1_prob_b_pct}}
+  Repeat for w2 through w6.
+
+  EDIT 6 — Pilot diagnostic (foundation orgs only):
+  {{pilot_diagnostic_text}}
+    Example: "A 3-week Portfolio Evidence Diagnostic at
+    R85,000 – R150,000 provides the evidence base for the
+    full partnership conversation, with no obligation to
+    proceed to the full engagement."
+    Leave blank for delivery orgs — block is hidden.
+
+  EDIT 7 — Closing question with programme name (END of rec):
+  {{closing_question}}  — must name {{programme_name}}
+    Example: "What would it look like for ZenLit to enter
+    the next MTEF submission cycle with a ready fiscal case
+    for its contribution to long-term earning potential
+    in South African schools?"
+
+  LANGUAGE REGISTER (applied by Claude throughout):
+  {{org_type}}   delivery | foundation_funder | consultant
+  Foundation orgs: "unmeasured asset" not "gap",
+  "partnership" not "intervention", "unlock" not "fix"
+  ═══════════════════════════════════════════════════════════
+-->
+
+<div style="max-width:680px;margin:0 auto;padding:20px 16px">
+
+  <!-- ─── 1. HEADER ──────────────────────────────────────── -->
+  <div style="background:#0A1628;border-radius:12px;overflow:hidden;margin-bottom:12px">
+    <div style="height:3px;background:#C9A84C"></div>
+    <div style="padding:16px 20px">
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:14px"><tr>
+        <td valign="top">
+          <div style="font-size:16px;font-weight:700;color:#C9A84C;letter-spacing:.02em">Auxeira</div>
+          <div style="font-size:8px;color:rgba(201,168,76,.45);letter-spacing:.15em;text-transform:uppercase">Evidence Intelligence</div>
+        </td>
+        <td valign="top" align="right">
+          <div style="font-size:9px;color:rgba(245,240,232,.3);letter-spacing:.1em;text-transform:uppercase">Entity Evidence Risk Report</div>
+          <div style="font-size:9px;color:rgba(245,240,232,.2);margin-top:2px">{{report_date}}</div>
+        </td>
+      </tr></table>
+      <div style="font-size:10px;color:rgba(245,240,232,.4);margin-bottom:2px">Prepared for</div>
+      <div style="font-size:15px;font-weight:700;color:#F5F0E8;margin-bottom:1px">{{first_name}} {{last_name}}</div>
+      <div style="font-size:12px;color:rgba(245,240,232,.55)">{{org_name}}</div>
+    </div>
+  </div>
+
+  <!-- ─── 2. SCORE + ERC ─────────────────────────────────── -->
+  <div style="background:#0A1628;border-radius:12px;padding:16px 20px;margin-bottom:12px">
+    <table style="width:100%;border-collapse:collapse">
+      <tr>
+        <td style="width:88px;vertical-align:middle;padding-right:14px">
+          <table width="80" height="80" cellpadding="0" cellspacing="0" style="border-radius:50%;border:3px solid #C9A84C;width:80px;height:80px"><tr><td align="center" valign="middle" style="text-align:center;padding:8px">
+            <div style="font-size:26px;font-weight:700;color:#C9A84C;line-height:1">{{score}}</div>
+            <div style="font-size:10px;color:rgba(201,168,76,.4)">/100</div>
+          </td></tr></table>
+        </td>
+        <td style="vertical-align:middle">
+          <div style="display:inline-block;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:700;background:{{erc_bg}};color:{{erc_color}};margin-bottom:6px">{{erc}} &nbsp;·&nbsp; {{risk_level}}</div>
+          <div style="font-size:14px;font-weight:700;color:#F5F0E8;line-height:1.4;margin-bottom:4px">{{score_headline}}</div>
+          <div style="font-size:11px;color:rgba(245,240,232,.5)">{{score_band}}</div>
+        </td>
+      </tr>
+    </table>
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(255,255,255,.08);border-radius:3px;height:6px;margin-top:14px"><tr><td width="{{score_pct}}%" style="background:{{erc_color}};border-radius:3px;height:6px;font-size:0;line-height:0">&nbsp;</td><td style="height:6px;font-size:0;line-height:0"></td></tr></table>
+    <table style="width:100%;border-collapse:collapse;margin-top:4px">
+      <tr>
+        <td style="font-size:9px;color:rgba(245,240,232,.2)">Critical (0)</td>
+        <td style="font-size:9px;color:rgba(245,240,232,.2);text-align:right">Strong (100)</td>
+      </tr>
+    </table>
+    <div style="margin-top:10px;padding:8px 12px;background:rgba(255,255,255,.05);border-radius:6px">
+      <table style="width:100%;border-collapse:collapse">
+        <tr>
+          <td style="font-size:10px;color:rgba(245,240,232,.45)">Sector average ({{sector_label}})</td>
+          <td style="font-size:10px;color:rgba(245,240,232,.45);text-align:center">{{sector_avg}} / 100</td>
+          <td style="font-size:10px;font-weight:700;text-align:right;color:{{erc_color}}">You are {{score_vs_avg}} pts {{above_below}} average</td>
+        </tr>
+      </table>
+      <div style="height:4px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;margin-top:5px;position:relative">
+        <table width="100%" cellpadding="0" cellspacing="0" style="height:4px;margin-bottom:2px"><tr><td width="{{score_pct}}%" style="background:{{erc_color}};border-radius:2px;height:4px;font-size:0;line-height:0">&nbsp;</td><td style="height:4px;font-size:0;line-height:0"></td></tr></table>
+        <table width="100%" cellpadding="0" cellspacing="0" style="height:4px"><tr><td width="{{sector_avg}}%" style="background:rgba(255,255,255,.3);border-radius:2px;height:4px;font-size:0;line-height:0">&nbsp;</td><td style="height:4px;font-size:0;line-height:0"></td></tr></table>
+      </div>
+      <div style="font-size:9px;color:rgba(245,240,232,.2);margin-top:3px;font-style:italic">Sector benchmark estimated from {{sector_peer_count}} comparable organisations.</div>
+    </div>
+  </div>
+
+  <!-- ─── 3. KEY PROJECTIONS ─────────────────────────────── -->
+  <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;margin-bottom:8px">Key projections</div>
+  <table style="width:100%;border-collapse:collapse;margin-bottom:12px">
+    <tr>
+      <td style="width:33%;padding-right:6px;vertical-align:top">
+        <div style="border-radius:8px;padding:10px 12px;border:.5px solid rgba(226,75,74,.4);background:rgba(226,75,74,.05)">
+          <div style="font-size:10px;color:#E24B4A;font-weight:700;text-transform:uppercase;margin-bottom:4px">Funding at risk</div>
+          <div style="font-size:16px;font-weight:700;color:#1A1A2A;margin-bottom:3px">{{funding_at_risk}}</div>
+          <div style="font-size:11px;color:#666">annually at current evidence maturity</div>
+        </div>
+      </td>
+      <td style="width:33%;padding:0 3px;vertical-align:top">
+        <div style="border-radius:8px;padding:10px 12px;border:.5px solid rgba(216,90,48,.4);background:rgba(216,90,48,.05)">
+          <div style="font-size:10px;color:#D85A30;font-weight:700;text-transform:uppercase;margin-bottom:4px">Influence gap</div>
+          <div style="font-size:16px;font-weight:700;color:#1A1A2A;margin-bottom:3px">{{influence_gap}}</div>
+          <div style="font-size:11px;color:#666">potential impact not reaching decision-makers</div>
+        </div>
+      </td>
+      <td style="width:33%;padding-left:6px;vertical-align:top">
+        <div style="border-radius:8px;padding:10px 12px;border:.5px solid rgba(201,168,76,.4);background:rgba(201,168,76,.07)">
+          <div style="font-size:10px;color:#8B6914;font-weight:700;text-transform:uppercase;margin-bottom:4px">Opportunity cost</div>
+          <div style="font-size:16px;font-weight:700;color:#1A1A2A;margin-bottom:3px">{{opportunity_cost}}</div>
+          <div style="font-size:11px;color:#666">in reachable funding over 3 years</div>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- ─── 4. TOP 2 GAPS ──────────────────────────────────── -->
+  <div style="border:.5px solid #DDD;border-radius:12px;padding:14px 16px;margin-bottom:12px;background:#FFF">
+    <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;margin-bottom:10px">Top 2 evidence gaps</div>
+    <div style="background:#FDF8EE;border:.5px solid #C9A84C;border-radius:8px;padding:12px 14px;margin-bottom:8px">
+      <div style="font-size:11px;font-weight:700;color:#8B6914;margin-bottom:4px">Gap 1 — {{gap1_title}} <span style="font-weight:400">({{gap1_q_ref}})</span></div>
+      <div style="font-size:12px;color:#1A1A2A;line-height:1.65;margin-bottom:4px">{{gap1_body}}</div>
+      <div style="font-size:11px;color:#8B6914;font-weight:700">{{gap1_cost}}</div>
+    </div>
+    <div style="background:#FDF8EE;border:.5px solid #C9A84C;border-radius:8px;padding:12px 14px">
+      <div style="font-size:11px;font-weight:700;color:#8B6914;margin-bottom:4px">Gap 2 — {{gap2_title}} <span style="font-weight:400">({{gap2_q_ref}})</span></div>
+      <div style="font-size:12px;color:#1A1A2A;line-height:1.65;margin-bottom:4px">{{gap2_body}}</div>
+      <div style="font-size:11px;color:#8B6914;font-weight:700">{{gap2_cost}}</div>
+    </div>
+  </div>
+
+  <!-- ─── 5. SECTOR CONTEXT ──────────────────────────────── -->
+  <div style="background:#0A1628;border-radius:12px;padding:16px 20px;margin-bottom:12px">
+    <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;margin-bottom:8px">Sector context — {{sector_label}}</div>
+    <div style="font-size:12px;color:rgba(245,240,232,.7);line-height:1.7;margin-bottom:12px">{{sector_context}}</div>
+    <table style="width:100%;border-collapse:collapse">
+      <tr>
+        <td style="width:33%;text-align:center;padding:8px 4px;background:rgba(255,255,255,.05);border-radius:4px;margin-right:4px">
+          <div style="font-size:15px;font-weight:700;color:#C9A84C">{{sector_metric1_num}}</div>
+          <div style="font-size:8px;color:rgba(245,240,232,.4);margin-top:3px;line-height:1.4">{{sector_metric1_desc}}</div>
+        </td>
+        <td style="width:4px"></td>
+        <td style="width:33%;text-align:center;padding:8px 4px;background:rgba(255,255,255,.05);border-radius:4px">
+          <div style="font-size:15px;font-weight:700;color:#C9A84C">{{sector_metric2_num}}</div>
+          <div style="font-size:8px;color:rgba(245,240,232,.4);margin-top:3px;line-height:1.4">{{sector_metric2_desc}}</div>
+        </td>
+        <td style="width:4px"></td>
+        <td style="width:33%;text-align:center;padding:8px 4px;background:rgba(255,255,255,.05);border-radius:4px">
+          <div style="font-size:15px;font-weight:700;color:#C9A84C">{{sector_metric3_num}}</div>
+          <div style="font-size:8px;color:rgba(245,240,232,.4);margin-top:3px;line-height:1.4">{{sector_metric3_desc}}</div>
+        </td>
+      </tr>
+    </table>
+    <div style="font-size:9px;color:rgba(245,240,232,.2);margin-top:8px;font-style:italic">All figures estimated based on sector benchmarks.</div>
+  </div>
+
+  <!-- ─── 6. THREE SCENARIOS ─────────────────────────────── -->
+  <div style="border:.5px solid #DDD;border-radius:12px;padding:14px 16px;margin-bottom:12px;background:#FFF">
+    <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;margin-bottom:10px">Three-scenario forecast</div>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:10px">
+      <tr>
+        <td style="width:33%;padding-right:6px;vertical-align:top">
+          <div style="border-radius:8px;padding:10px 12px;border:.5px solid rgba(226,75,74,.3);background:rgba(226,75,74,.04)">
+            <div style="font-size:9px;font-weight:700;color:#E24B4A;text-transform:uppercase;margin-bottom:5px">Do nothing</div>
+            <div style="font-size:11px;color:#555;line-height:1.55">{{scenario_nothing}}</div>
+          </div>
+        </td>
+        <td style="width:33%;padding:0 3px;vertical-align:top">
+          <div style="border-radius:8px;padding:10px 12px;border:.5px solid rgba(239,159,39,.3);background:rgba(239,159,39,.04)">
+            <div style="font-size:9px;font-weight:700;color:#EF9F27;text-transform:uppercase;margin-bottom:5px">Partial fix</div>
+            <div style="font-size:11px;color:#555;line-height:1.55">{{scenario_partial}}</div>
+          </div>
+        </td>
+        <td style="width:33%;padding-left:6px;vertical-align:top">
+          <div style="border-radius:8px;padding:10px 12px;border:.5px solid #C9A84C;background:rgba(201,168,76,.04)">
+            <div style="font-size:9px;font-weight:700;color:#C9A84C;text-transform:uppercase;margin-bottom:5px">Full Auxeira</div>
+            <div style="font-size:11px;color:#555;line-height:1.55">{{scenario_full}}</div>
+          </div>
+        </td>
+      </tr>
+    </table>
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#F0F9F4;border-radius:8px;padding:10px 12px"><tr>
+      <td valign="middle">
+        <div style="font-size:10px;color:#999;margin-bottom:2px">Estimated 3-year funding gap — recoverable</div>
+        <div style="font-size:18px;font-weight:700;color:#1D9E75">{{recovery_value}}</div>
+      </td>
+      <td valign="middle" align="right" style="font-size:11px;color:#1D9E75;font-weight:700">with full evidence<br>architecture in place</td>
+    </tr></table>
+    <div style="font-size:10px;color:#888;margin-top:6px;font-style:italic">Illustrative estimates. Based on sector benchmarks. Not specific financial projections.</div>
+  </div>
+
+  <!-- ─── 7. TOP 3 RISKS ─────────────────────────────────── -->
+  <div style="border:.5px solid #DDD;border-radius:12px;padding:14px 16px;margin-bottom:12px;background:#FFF">
+    <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;margin-bottom:10px">Top 3 risks</div>
+    <table style="width:100%;border-collapse:collapse">
+      <tr style="border-bottom:.5px solid #EEE">
+        <td style="width:28px;vertical-align:top;padding:10px 10px 10px 0">
+          <div style="width:22px;height:22px;border-radius:50%;background:rgba(226,75,74,.12);color:#E24B4A;font-size:11px;font-weight:700;text-align:center;line-height:22px">1</div>
+        </td>
+        <td style="vertical-align:top;padding:10px 0">
+          <div style="font-size:12px;font-weight:700;color:#1A1A2A;margin-bottom:3px">{{risk1_title}}</div>
+          <div style="font-size:12px;color:#555;line-height:1.55">{{risk1_body}}</div>
+        </td>
+      </tr>
+      <tr style="border-bottom:.5px solid #EEE">
+        <td style="vertical-align:top;padding:10px 10px 10px 0">
+          <div style="width:22px;height:22px;border-radius:50%;background:rgba(216,90,48,.12);color:#D85A30;font-size:11px;font-weight:700;text-align:center;line-height:22px">2</div>
+        </td>
+        <td style="vertical-align:top;padding:10px 0">
+          <div style="font-size:12px;font-weight:700;color:#1A1A2A;margin-bottom:3px">{{risk2_title}}</div>
+          <div style="font-size:12px;color:#555;line-height:1.55">{{risk2_body}}</div>
+        </td>
+      </tr>
+      <tr>
+        <td style="vertical-align:top;padding:10px 10px 10px 0">
+          <div style="width:22px;height:22px;border-radius:50%;background:rgba(201,168,76,.12);color:#8B6914;font-size:11px;font-weight:700;text-align:center;line-height:22px">3</div>
+        </td>
+        <td style="vertical-align:top;padding:10px 0">
+          <div style="font-size:12px;font-weight:700;color:#1A1A2A;margin-bottom:3px">{{risk3_title}}</div>
+          <div style="font-size:12px;color:#555;line-height:1.55">{{risk3_body}}</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ─── 8. MARKET LOSS PROJECTION (NEW) ───────────────── -->
+  <div style="background:#0A1628;border-radius:12px;padding:16px 20px;margin-bottom:12px">
+    <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#E24B4A;margin-bottom:8px">Projected market position loss</div>
+    <!-- LEADING QUESTION at START — loss aversion section -->
+    <div style="background:rgba(201,168,76,.1);border-radius:6px;padding:9px 12px;margin-bottom:12px">
+      <div style="font-size:11px;color:#C9A84C;font-style:italic;line-height:1.65">{{market_loss_leading_question}}</div>
+    </div>
+    <div style="font-size:13px;font-weight:700;color:#F5F0E8;margin-bottom:6px">The sector is moving. Standing still is moving backwards.</div>
+    <div style="font-size:11px;color:rgba(245,240,232,.55);line-height:1.65;margin-bottom:14px">{{org_name}} does not need to get worse to lose ground. As peer organisations close their evidence gaps, funder attention and government allocation shifts toward them. These projections show what 48 months of inaction costs.</div>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:14px">
+      <tr>
+        <td style="width:33%;padding-right:5px;vertical-align:top">
+          <div style="background:rgba(226,75,74,.12);border-radius:8px;padding:10px;border-left:3px solid #E24B4A">
+            <div style="font-size:10px;color:rgba(245,240,232,.5);margin-bottom:3px">Leverage erosion by Month 48</div>
+            <div style="font-size:18px;font-weight:700;color:#E24B4A">{{leverage_now}} → {{leverage_48m}}</div>
+            <div style="font-size:10px;color:rgba(245,240,232,.4);margin-top:2px">evidence leverage index</div>
+          </div>
+        </td>
+        <td style="width:33%;padding:0 3px;vertical-align:top">
+          <div style="background:rgba(216,90,48,.12);border-radius:8px;padding:10px;border-left:3px solid #D85A30">
+            <div style="font-size:10px;color:rgba(245,240,232,.5);margin-bottom:3px">Cumulative funding attrition</div>
+            <div style="font-size:18px;font-weight:700;color:#D85A30">{{cumulative_loss}}</div>
+            <div style="font-size:10px;color:rgba(245,240,232,.4);margin-top:2px">shifted to better-evidenced peers</div>
+          </div>
+        </td>
+        <td style="width:33%;padding-left:5px;vertical-align:top">
+          <div style="background:rgba(201,168,76,.12);border-radius:8px;padding:10px;border-left:3px solid #C9A84C">
+            <div style="font-size:10px;color:rgba(245,240,232,.5);margin-bottom:3px">Sector position at Month 48</div>
+            <div style="font-size:18px;font-weight:700;color:#C9A84C">{{sector_position_48m}}</div>
+            <div style="font-size:10px;color:rgba(245,240,232,.4);margin-top:2px">vs {{sector_position_now}} today</div>
+          </div>
+        </td>
+      </tr>
+    </table>
+    <!-- Leverage bar comparison -->
+    <div style="font-size:10px;color:rgba(245,240,232,.4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Evidence leverage vs sector</div>
+    <div style="margin-bottom:6px">
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:3px"><tr><td style="font-size:10px;color:rgba(245,240,232,.5)">{{org_name}} today</td><td align="right" style="font-size:10px;color:rgba(245,240,232,.5)">{{leverage_now}}/100</td></tr></table>
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(255,255,255,.08);border-radius:3px;height:6px"><tr><td width="{{leverage_now}}%" style="background:#C9A84C;border-radius:3px;height:6px;font-size:0;line-height:0">&nbsp;</td><td style="height:6px;font-size:0;line-height:0"></td></tr></table>
+    </div>
+    <div style="margin-bottom:6px">
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:3px"><tr><td style="font-size:10px;color:rgba(245,240,232,.5)">{{org_name}} at Month 48 - no action</td><td align="right" style="font-size:10px;color:rgba(245,240,232,.5)">{{leverage_48m}}/100</td></tr></table>
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(255,255,255,.08);border-radius:3px;height:6px"><tr><td width="{{leverage_48m}}%" style="background:#E24B4A;border-radius:3px;height:6px;font-size:0;line-height:0">&nbsp;</td><td style="height:6px;font-size:0;line-height:0"></td></tr></table>
+    </div>
+    <div style="margin-bottom:10px">
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:3px"><tr><td style="font-size:10px;color:rgba(245,240,232,.5)">Sector average at Month 48</td><td align="right" style="font-size:10px;color:rgba(245,240,232,.5)">74/100</td></tr></table>
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(255,255,255,.08);border-radius:3px;height:6px"><tr><td width="74%" style="background:#1D9E75;border-radius:3px;height:6px;font-size:0;line-height:0">&nbsp;</td><td style="height:6px;font-size:0;line-height:0"></td></tr></table>
+    </div>
+    <!-- Tipping point -->
+    <div style="background:rgba(226,75,74,.15);border-radius:8px;padding:10px 12px">
+      <div style="font-size:11px;font-weight:700;color:#E24B4A;margin-bottom:3px">Tipping point — estimated Month {{tipping_month}}</div>
+      <div style="font-size:11px;color:rgba(245,240,232,.6);line-height:1.6">At Month {{tipping_month}}, the sector average crosses above {{org_name}}'s current position for the first time. Funder shortlisting increasingly weights evidence quality. Being below the sector average in a tightening funding environment reduces shortlisting probability by an estimated 35-45%.</div>
+    </div>
+    <div style="font-size:9px;color:rgba(245,240,232,.2);margin-top:8px;font-style:italic">Sector improvement rates estimated from current evidence investment trends. Illustrative — not a specific forecast.</div>
+  </div>
+
+  <!-- ─── 9. VALUE IDENTITY + POLICY INFLUENCE (NEW) ────── -->
+  <div style="border:.5px solid #DDD;border-radius:12px;padding:14px 16px;margin-bottom:12px;background:#FFF">
+    <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#E24B4A;margin-bottom:6px">What {{org_name}} is actually losing</div>
+    <!-- LEADING QUESTION at START — loss aversion section -->
+    <div style="background:#FFFBF0;border-radius:6px;padding:9px 12px;margin-bottom:10px;border:.5px solid rgba(201,168,76,.35)">
+      <div style="font-size:11px;color:#8B6914;font-style:italic;line-height:1.65">{{value_identity_leading_question}}</div>
+    </div>
+    <div style="font-size:13px;font-weight:700;color:#1A1A2A;margin-bottom:6px">The funding matters. The {{value1_label_lower}} matters more.</div>
+    <div style="background:rgba(226,75,74,.05);border-left:2px solid #E24B4A;border-radius:0 6px 6px 0;padding:8px 12px;margin-bottom:12px;font-size:12px;color:#1A1A2A;line-height:1.65">{{org_name}} does not primarily organise around SROI. It organises around {{value1_label_lower}} and {{value2_label_lower}}. These projections show what inaction costs in {{org_name}}'s own currency.</div>
+
+    <!-- Value 1 -->
+    <div style="border:.5px solid rgba(24,95,165,.25);border-radius:10px;padding:12px;margin-bottom:8px;background:rgba(24,95,165,.04)">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#185FA5;margin-bottom:4px">{{value1_label}}</div>
+      <div style="font-size:10px;color:#888;margin-bottom:10px">{{value1_metric}}</div>
+      <table style="width:100%;border-collapse:collapse">
+        <tr>
+          <td style="width:40%;vertical-align:top">
+            <div style="font-size:10px;color:#888">Today</div>
+            <div style="font-size:28px;font-weight:700;color:#185FA5;line-height:1">{{value1_now}}</div>
+            <div style="font-size:10px;color:#888">{{value1_unit}}</div>
+          </td>
+          <td style="width:20%;text-align:center;vertical-align:middle;font-size:20px;font-weight:700;color:#E24B4A;padding-top:10px">→</td>
+          <td style="width:40%;text-align:right;vertical-align:top">
+            <div style="font-size:10px;color:#888">Month 48</div>
+            <div style="font-size:28px;font-weight:700;color:#E24B4A;line-height:1">{{value1_48m}}</div>
+            <div style="font-size:10px;color:#888">{{value1_unit}}</div>
+          </td>
+        </tr>
+      </table>
+      <div style="height:5px;background:#EEE;border-radius:3px;overflow:hidden;margin:8px 0">
+        <div style="height:100%;width:36%;background:#E24B4A;border-radius:3px"></div>
+      </div>
+      <div style="font-size:11px;color:#E24B4A;font-weight:700">▼ {{value1_pct_decline}} decline in {{value1_label_lower}}</div>
+    </div>
+
+    <!-- Value 2 -->
+    <div style="border:.5px solid rgba(83,74,183,.25);border-radius:10px;padding:12px;margin-bottom:12px;background:rgba(83,74,183,.04)">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#534AB7;margin-bottom:4px">{{value2_label}}</div>
+      <div style="font-size:10px;color:#888;margin-bottom:10px">{{value2_metric}}</div>
+      <table style="width:100%;border-collapse:collapse">
+        <tr>
+          <td style="width:40%;vertical-align:top">
+            <div style="font-size:10px;color:#888">Today</div>
+            <div style="font-size:28px;font-weight:700;color:#534AB7;line-height:1">{{value2_now}}</div>
+            <div style="font-size:10px;color:#888">{{value2_unit}}</div>
+          </td>
+          <td style="width:20%;text-align:center;vertical-align:middle;font-size:20px;font-weight:700;color:#E24B4A;padding-top:10px">→</td>
+          <td style="width:40%;text-align:right;vertical-align:top">
+            <div style="font-size:10px;color:#888">Month 48</div>
+            <div style="font-size:28px;font-weight:700;color:#E24B4A;line-height:1">{{value2_48m}}</div>
+            <div style="font-size:10px;color:#888">{{value2_unit}}</div>
+          </td>
+        </tr>
+      </table>
+      <div style="height:5px;background:#EEE;border-radius:3px;overflow:hidden;margin:8px 0">
+        <div style="height:100%;width:36%;background:#E24B4A;border-radius:3px"></div>
+      </div>
+      <div style="font-size:11px;color:#E24B4A;font-weight:700">▼ {{value2_pct_decline}} decline in {{value2_label_lower}}</div>
+    </div>
+
+    <!-- Policy influence summary -->
+    <div style="height:.5px;background:#EEE;margin:10px 0"></div>
+    <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;margin-bottom:8px">Policy influence — actuarial probability model</div>
+    <div style="background:rgba(226,75,74,.05);border-left:2px solid #E24B4A;border-radius:0 6px 6px 0;padding:8px 12px;margin-bottom:10px;font-size:12px;color:#1A1A2A;line-height:1.65">Policy influence arrives in discrete windows. At the current ERC-B, {{org_name}} is expected to influence approximately {{policy_expected_b}} of {{policy_windows}} relevant decisions over the next 24 months. At ERC-A that rises to {{policy_expected_a}}. The {{policy_gap}}-event gap is the policy cost of inaction.</div>
+
+    <table style="width:100%;border-collapse:collapse;margin-bottom:10px">
+      <tr>
+        <td style="width:33%;padding-right:5px;text-align:center">
+          <div style="background:#F8F5F0;border-radius:8px;padding:10px">
+            <div style="font-size:10px;color:#888;margin-bottom:3px">Relevant windows / 24m</div>
+            <div style="font-size:22px;font-weight:700;color:#1A1A2A">{{policy_windows}}</div>
+          </div>
+        </td>
+        <td style="width:33%;padding:0 3px">
+          <div style="background:rgba(226,75,74,.08);border-radius:8px;padding:8px;text-align:center;margin-bottom:4px">
+            <div style="font-size:9px;color:#E24B4A;font-weight:700">No action (ERC-B)</div>
+            <div style="font-size:18px;font-weight:700;color:#E24B4A">~{{policy_expected_b}}</div>
+            <div style="font-size:9px;color:#888">expected events</div>
+          </div>
+          <div style="background:rgba(29,158,117,.08);border-radius:8px;padding:8px;text-align:center">
+            <div style="font-size:9px;color:#1D9E75;font-weight:700">With Auxeira (ERC-A)</div>
+            <div style="font-size:18px;font-weight:700;color:#1D9E75">~{{policy_expected_a}}</div>
+            <div style="font-size:9px;color:#888">expected events</div>
+          </div>
+        </td>
+        <td style="width:33%;padding-left:5px;text-align:center">
+          <div style="background:rgba(201,168,76,.1);border:.5px solid rgba(201,168,76,.3);border-radius:8px;padding:10px">
+            <div style="font-size:10px;color:#8B6914;font-weight:700;margin-bottom:3px">Foregone influence</div>
+            <div style="font-size:22px;font-weight:700;color:#C9A84C">{{policy_gap}}</div>
+            <div style="font-size:10px;color:#888">policy events missed</div>
+            <div style="font-size:10px;color:#8B6914;font-weight:700;margin-top:4px">{{policy_value_low}}-{{policy_value_high}} est. value</div>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- Compound effect -->
+    <div style="background:rgba(226,75,74,.06);border:.5px solid rgba(226,75,74,.25);border-radius:8px;padding:10px 12px;margin-bottom:10px">
+      <div style="font-size:11px;font-weight:700;color:#E24B4A;margin-bottom:4px">The compound effect</div>
+      <div style="font-size:11px;color:#555;line-height:1.65">Policy influence events are not independent. Each successful event increases the probability of the next through credibility, relationship access, and citation momentum. The probability of being cited in three consecutive DBE budget consultations is {{compound_b_pct}} at ERC-B versus {{compound_a_pct}} at ERC-A. The gap is exponential, not linear.</div>
+    </div>
+
+    <!-- Stakeholder decay summary -->
+    <div style="height:.5px;background:#EEE;margin:10px 0"></div>
+    <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;margin-bottom:8px">Key stakeholder attention — projected decay</div>
+    <div style="font-size:11px;color:#555;line-height:1.6;margin-bottom:10px">Aggregate engagement across {{stakeholder_count}} key stakeholders declines from {{stakeholder_now_pct}} to {{stakeholder_48m_pct}} by Month 48 without intervention. Once stakeholder attention lapses, re-engagement takes an estimated 3-5 years of consistent, high-quality evidence to restore.</div>
+    <!-- Stakeholder rows — built dynamically by Lambda from Claude stakeholders_json -->
+    <table style="width:100%;border-collapse:collapse">
+      <tr style="border-bottom:.5px solid #EEE">
+        <td style="font-size:10px;color:#888;padding:4px 8px 4px 0;width:50%">Stakeholder</td>
+        <td style="font-size:10px;color:#888;padding:4px 8px;width:50%">Now &nbsp;→&nbsp; Month 48</td>
+      </tr>
+      {{stakeholder_rows}}
+    </table>
+    <div style="font-size:10px;color:#999;margin-top:6px;font-style:italic">Stakeholder engagement probabilities estimated from sector patterns. Specific stakeholders identified from Grok research. Illustrative projections.</div>
+  </div>
+
+  <!-- ─── 10. MARKET CONTEXT BENCHMARKS ─────────────────── -->
+  <div style="background:#0A1628;border-radius:12px;padding:16px 20px;margin-bottom:12px">
+    <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;margin-bottom:8px">Market context — {{sector_label}}</div>
+    <div style="font-size:12px;color:rgba(245,240,232,.7);line-height:1.7;margin-bottom:12px">{{market_context_body}}</div>
+    <table style="width:100%;border-collapse:collapse">
+      <tr style="border-bottom:.5px solid rgba(255,255,255,.08)">
+        <td style="font-size:11px;color:rgba(245,240,232,.5);padding:6px 0">{{mkt_metric1_desc}}</td>
+        <td style="font-size:11px;font-weight:700;color:#1D9E75;text-align:right;padding:6px 0">{{mkt_metric1_num}}</td>
+      </tr>
+      <tr style="border-bottom:.5px solid rgba(255,255,255,.08)">
+        <td style="font-size:11px;color:rgba(245,240,232,.5);padding:6px 0">{{mkt_metric2_desc}}</td>
+        <td style="font-size:11px;font-weight:700;color:#E24B4A;text-align:right;padding:6px 0">{{mkt_metric2_num}}</td>
+      </tr>
+      <tr>
+        <td style="font-size:11px;color:rgba(245,240,232,.5);padding:6px 0">{{mkt_metric3_desc}}</td>
+        <td style="font-size:11px;font-weight:700;color:#D85A30;text-align:right;padding:6px 0">{{mkt_metric3_num}}</td>
+      </tr>
+    </table>
+    <div style="font-size:9px;color:rgba(245,240,232,.2);margin-top:8px;font-style:italic">Based on publicly available sector funding data. All figures estimated.</div>
+  </div>
+
+  <!-- ─── 11. SECTOR INTELLIGENCE INSIGHT ───────────────── -->
+  <div style="border:.5px solid #DDD;border-radius:12px;padding:14px 16px;margin-bottom:12px;background:#FFF">
+    <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;margin-bottom:10px">Sector intelligence insight</div>
+    <div style="font-size:12px;color:#555;line-height:1.7">
+      <div style="margin-bottom:6px"><strong style="color:#1A1A2A;font-size:11px">LANDSCAPE:</strong> {{intel_landscape}}</div>
+      <div style="margin-bottom:6px"><strong style="color:#1A1A2A;font-size:11px">RISK:</strong> {{intel_risk}}</div>
+      <div><strong style="color:#1A1A2A;font-size:11px">OPPORTUNITY:</strong> {{intel_opportunity}}</div>
+    </div>
+  </div>
+
+  <!-- ─── 12. PROOF POINT ────────────────────────────────── -->
+  <div style="border:.5px solid #DDD;border-radius:12px;padding:14px 16px;margin-bottom:12px;background:#FFF">
+    <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;margin-bottom:8px">Proof point</div>
+    <div style="font-size:13px;color:#1A1A2A;line-height:1.7;margin-bottom:10px">{{proof_bridge}}</div>
+    <table style="width:100%;border-collapse:collapse">
+      <tr>
+        <td style="width:25%;text-align:center;padding:8px"><div style="font-size:15px;font-weight:700;color:#C9A84C">152,664</div><div style="font-size:9px;color:#888;margin-top:2px">Children reached</div></td>
+        <td style="width:25%;text-align:center;padding:8px"><div style="font-size:15px;font-weight:700;color:#C9A84C">14,740</div><div style="font-size:9px;color:#888;margin-top:2px">Enterprises surfaced</div></td>
+        <td style="width:25%;text-align:center;padding:8px"><div style="font-size:15px;font-weight:700;color:#C9A84C">3.3x</div><div style="font-size:9px;color:#888;margin-top:2px">Verified SROI</div></td>
+        <td style="width:25%;text-align:center;padding:8px"><div style="font-size:15px;font-weight:700;color:#C9A84C">$2M</div><div style="font-size:9px;color:#888;margin-top:2px">Skoll Award 2026</div></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ─── 13. RECOMMENDATION ────────────────────────────── -->
+  <div style="background:#FDF8EE;border:1px solid #C9A84C;border-radius:12px;padding:14px 16px;margin-bottom:12px">
+    <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#8B6914;margin-bottom:8px">Recommended engagement</div>
+    <div style="margin-bottom:8px">
+      <span style="background:#C9A84C;color:#0A1628;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-right:6px">{{tier_label}}</span>
+      <span style="background:rgba(226,75,74,.12);color:#E24B4A;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px">{{urgency_label}}</span>
+    </div>
+    <div style="font-size:13px;color:#6B4F0A;line-height:1.7;margin-bottom:10px">{{rec_body}}</div>
+    <div style="font-size:11px;color:#8B6914;margin-bottom:10px">Indicative investment: {{tier_price}} &nbsp;·&nbsp; Timeline: {{tier_timeline}}</div>
+
+    <!-- PILOT DIAGNOSTIC — show only when {{org_type}} == 'foundation_funder' -->
+    <div style="background:#F0F9F4;border:.5px solid rgba(29,158,117,.35);border-radius:8px;padding:9px 12px;margin-bottom:10px">
+      <div style="font-size:10px;font-weight:700;color:#1D9E75;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Entry option</div>
+      <div style="font-size:11px;color:#555;line-height:1.65">{{pilot_diagnostic_text}}</div>
+    </div>
+
+    <!-- LEADING QUESTION at END of recommendation section -->
+    <div style="height:.5px;background:rgba(201,168,76,.3);margin:10px 0"></div>
+    <div style="font-size:12px;color:#8B6914;font-style:italic;line-height:1.65">"{{closing_question}}"</div>
+  </div>
+
+  <!-- ─── 14. FORWARD BOX (conditional — not executive) ─── -->
+  <!-- Show only when {{seniority}} != 'executive' -->
+  <div style="background:#EFF7FF;border:.5px solid #B5D4F4;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:#185FA5;line-height:1.6">
+    This report is most relevant to {{org_name}}'s executive leadership. The evidence gaps identified here directly affect <strong style="font-weight:700">{{programme_name}}</strong>'s {{primary_audience_label}} positioning. Forward this report to {{ceo_name}} — or reply to this email and we will take it from there.
+  </div>
+
+  <!-- ─── 15. HONEST TRUTH ───────────────────────────────── -->
+  <div style="background:#FDF8EE;border:1px solid #C9A84C;border-radius:12px;padding:14px 16px;margin-bottom:12px">
+    <div style="font-size:13px;font-weight:700;color:#8B6914;margin-bottom:8px">The honest truth</div>
+    <div style="font-size:13px;color:#6B4F0A;line-height:1.75;margin-bottom:10px">The evidence gap {{org_name}} has today is quietly costing the organisation influence, funding, and impact. Every funding round without a fiscal impact narrative. Every policy window without an economic case. Every funder conversation without an SROI. These have a cumulative cost that compounds. The good news is that this is fixable. Auxeira fixes it in weeks, not years.</div>
+    <div style="font-size:12px;color:#8B6914;font-style:italic;line-height:1.6">"The question is not whether you can afford Auxeira. It is what a misallocated funding round, a missed policy window, or an unseen SROI is costing {{org_name}} right now."</div>
+  </div>
+
+  <!-- ─── 16. CTAS ───────────────────────────────────────── -->
+  <table style="width:100%;border-collapse:collapse;margin-bottom:8px">
+    <tr><td>
+      <a href="https://calendly.com/lante007" style="display:block;background:#C9A84C;color:#0A1628;text-decoration:none;padding:13px;border-radius:8px;font-size:13px;font-weight:700;text-align:center">Book your Evidence Strategy Call — calendly.com/lante007</a>
+    </td></tr>
+  </table>
+  <table style="width:100%;border-collapse:collapse;margin-bottom:8px">
+    <tr><td>
+      <a href="https://auxeira.com/capability-overview.pdf" style="display:block;background:transparent;color:#555;text-decoration:none;padding:11px;border-radius:8px;font-size:12px;text-align:center;border:.5px solid #BBB">Download the Auxeira Capability Overview</a>
+    </td></tr>
+  </table>
+  <div style="text-align:center;font-size:11px;color:#888;margin-bottom:16px">30 minutes. Free. No pitch. &nbsp;·&nbsp; info@auxeira.com</div>
+
+  <!-- ─── 17. SCORING BREAKDOWN ──────────────────────────── -->
+  <div style="border:.5px solid #DDD;border-radius:12px;padding:14px 16px;margin-bottom:12px;background:#FFF">
+    <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;margin-bottom:10px">Diagnostic answers — scoring breakdown</div>
+    <table style="width:100%;border-collapse:collapse;font-size:12px">
+      <tr style="border-bottom:.5px solid #EEE"><td style="color:#888;padding:5px 8px;width:45%">Organisation type</td><td style="padding:5px 8px;width:40%">{{q1_answer}}</td><td style="padding:5px 8px;width:15%;text-align:right;font-weight:700;color:#C9A84C">{{q1_pts}}</td></tr>
+      <tr style="border-bottom:.5px solid #EEE"><td style="color:#888;padding:5px 8px">Primary audience</td><td style="padding:5px 8px">{{q2_answer}}</td><td style="padding:5px 8px;text-align:right;font-weight:700;color:#C9A84C">{{q2_pts}}</td></tr>
+      <tr style="border-bottom:.5px solid #EEE"><td style="color:#888;padding:5px 8px">Years of data</td><td style="padding:5px 8px">{{q3_answer}}</td><td style="padding:5px 8px;text-align:right;font-weight:700;color:#C9A84C">{{q3_pts}}</td></tr>
+      <tr style="border-bottom:.5px solid #EEE"><td style="color:#888;padding:5px 8px">Last report shared</td><td style="padding:5px 8px">{{q4_answer}}</td><td style="padding:5px 8px;text-align:right;font-weight:700;color:#C9A84C">{{q4_pts}}</td></tr>
+      <tr style="border-bottom:.5px solid #EEE"><td style="color:#888;padding:5px 8px">SROI / economic analysis</td><td style="padding:5px 8px">{{q5_answer}}</td><td style="padding:5px 8px;text-align:right;font-weight:700;color:#C9A84C">{{q5_pts}}</td></tr>
+      <tr style="border-bottom:.5px solid #EEE"><td style="color:#888;padding:5px 8px">Biggest challenge</td><td style="padding:5px 8px">{{q6_answer}}</td><td style="padding:5px 8px;text-align:right;font-weight:700;color:#C9A84C">{{q6_pts}}</td></tr>
+      <tr style="border-bottom:.5px solid #EEE"><td style="color:#888;padding:5px 8px">Asked to simplify</td><td style="padding:5px 8px">{{q7_answer}}</td><td style="padding:5px 8px;text-align:right;font-weight:700;color:#C9A84C">{{q7_pts}}</td></tr>
+      <tr style="border-bottom:.5px solid #EEE"><td style="color:#888;padding:5px 8px">Annual budget</td><td style="padding:5px 8px">{{q8_answer}}</td><td style="padding:5px 8px;text-align:right;font-weight:700;color:#C9A84C">{{q8_pts}}</td></tr>
+      <tr style="font-weight:700;border-top:.5px solid #CCC"><td style="padding:5px 8px;color:#1A1A2A">Total raw score</td><td style="padding:5px 8px;color:#1A1A2A">{{raw_score}} / 104</td><td style="padding:5px 8px;text-align:right;color:#1A1A2A">{{score}}%</td></tr>
+    </table>
+  </div>
+
+  <!-- ─── 18. FOOTER ─────────────────────────────────────── -->
+  <div style="text-align:center;padding:12px 0;font-size:11px;color:#888">
+    Auxeira &nbsp;·&nbsp; info@auxeira.com &nbsp;·&nbsp; auxeira.com<br>
+    Johannesburg — Global from Africa
+  </div>
+
+</div>
+</body>
+</html>
