@@ -29,7 +29,6 @@ async function sendEmail({ to, subject, html, text }) {
       subject,
       htmlbody: html,
       textbody: text ?? subject,
-      headers: { "List-Unsubscribe": "<mailto:info@auxeira.com?subject=unsubscribe>" },
     }),
   });
   if (!res.ok) {
@@ -232,8 +231,19 @@ async function processSubmission(sub) {
       proof_bridge: s2("proof_bridge"),
       tier_label: tier, urgency_label: s2("urgency_label","Within 3 months"),
       rec_body: s2("rec_body"), closing_question: s2("closing_question"),
-      tier_price: s>=75?"R85,000 - R150,000":"R180,000 - R350,000",
-      tier_timeline: s>=75?"3-6 weeks":"6-10 weeks",
+      honest_truth_body: s2("honest_truth_body", oType === "foundation_funder"
+        ? `The portfolio contribution ${orgName} has built remains unmeasured in the language that moves Treasury and co-funders to act. Every allocation cycle without a fiscal multiplier framework is a cycle where that contribution is invisible. Auxeira fixes it in weeks, not years.`
+        : `The evidence gap ${orgName} has today is quietly costing the organisation influence, funding, and impact. Every funding round without a fiscal impact narrative. Every policy window without an economic case. Every funder conversation without an SROI. These compound. Auxeira fixes it in weeks, not years.`),
+      honest_truth_close: s2("honest_truth_close", `The question is not whether you can afford Auxeira. It is what ${oType === "foundation_funder" ? "the unmeasured contribution" : "an unseen SROI"} is costing ${orgName} right now.`),
+      // FIX-06: Derive price and timeline from tier label, not score.
+      // Score and tier can diverge — tier is the authoritative source.
+      tier_price: tier.startsWith("Tier 1") ? "R85,000 - R150,000"
+                : tier.startsWith("Tier 3") ? "R35,000/month retainer"
+                : "R180,000 - R350,000",
+      tier_timeline: tier.startsWith("Tier 1") ? "3-6 weeks"
+                   : tier.startsWith("Tier 3") ? "Ongoing"
+                   : "6-10 weeks",
+      pilot_diagnostic_block: pilot ? `<div style="background:#F0F9F4;border:.5px solid #8ECFBA;border-radius:8px;padding:9px 12px;margin-bottom:10px"><div style="font-size:10px;font-weight:700;color:#1D9E75;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Entry option</div><div style="font-size:11px;color:#555;line-height:1.65">{{pilot_diagnostic_text}}</div></div>` : "",
       pilot_diagnostic_text: pilot ? "A 3-week Portfolio Evidence Diagnostic at R85,000 - R150,000 provides the evidence base for the full partnership conversation." : "",
       ceo_name: research.ceo_name ?? "", programme_name: prog,
       primary_audience_label: audience,
@@ -258,9 +268,10 @@ async function processSubmission(sub) {
     console.error("[processor] Claude failed:", e.message);
   }
 
-  // Step 3: Email delay 25-55 minutes
-  const delayMs = (25 + Math.floor(Math.random() * 31)) * 60 * 1000;
-  console.log(`[processor] Waiting ${Math.round(delayMs/60000)} min before sending report email`);
+  // Step 3: Email delay 25-55 minutes (override via EMAIL_DELAY_OVERRIDE_MINUTES for testing)
+  const delayOverride = process.env.EMAIL_DELAY_OVERRIDE_MINUTES ? parseInt(process.env.EMAIL_DELAY_OVERRIDE_MINUTES, 10) : null;
+  const delayMs = delayOverride != null ? delayOverride * 60 * 1000 : (25 + Math.floor(Math.random() * 31)) * 60 * 1000;
+  console.log(`[processor] Waiting ${Math.round(delayMs/60000)} min before sending report email${delayOverride != null ? " (override)" : ""}`);
   await new Promise(r => setTimeout(r, delayMs));
 
   // Step 4: Send report email
@@ -412,13 +423,19 @@ function sanitise(t){
     // FIX-H2: Remove duplicate consecutive words (e.g. "Month Month 26" → "Month 26")
     .replace(/\bMonth Month\b/gi,"Month")
     .replace(/\b(\w+) \1\b/g,"$1")
+    // FIX-20: Strip trailing question references from gap titles e.g. "(Q5)" or "(Q7)"
+    .replace(/\s*\(Q\d+\)/gi,"")
+    // FIX-15: Normalise SmartStart capitalisation drift
+    .replace(/\bSmartstart\b/g,"SmartStart")
+    .replace(/\bSMARTSTART\b/g,"SmartStart")
+    .replace(/\bSmart\s+Start\b/g,"SmartStart")
     .trim();
   // FIX-H1: Warn on past dates cited as future events
   if (/\b(Jan|Feb|Mar|Apr|May)\w*\s+202[56]\b/gi.test(out)) {
     console.warn("[sanitise] Past date detected in output — review before sending:", out.slice(0,120));
   }
   // FIX-P2: Warn on unverifiable quantified Auxeira credential claims
-  if (/validated across \d+|applied to \d+/gi.test(out)) {
+  if (/validated across \d+|applied to \d+|validated with \d+|across \d+ (organisations|foundations|clients|ngos)/gi.test(out)) {
     console.warn("[sanitise] Unverifiable Auxeira claim detected — review:", out.slice(0,120));
   }
   return out;
@@ -514,12 +531,14 @@ async function claudeReport(sub, research) {
     .map(k=>`${qLabels[k]}: ${ANSWER_TEXT[k]?.[answers[k]]} (${pts(k,answers[k])} pts)`)
     .join("\n");
 
+  const isSmartStart = /smartstart/i.test(orgName);
   const system = `You are a senior evidence intelligence consultant at Auxeira, Johannesburg.
 Tone: warm, intelligent, non-salesy, evidence-forward.
 Never use exclamation marks. Never use em dashes. Never use bullet points in body copy.
 Never reference AI, Claude, or any technology. Write as a trusted human advisor.
 SURVEILLANCE RULE: Never say "we researched you" or "we found" or "we noticed."
 PROOF POINT BRIDGE: For education and ECD sector organisations, the proof_bridge field must reference the SmartStart methodology via "a South African ECD delivery network" — never name SmartStart directly. The required framing is: "The same approach that surfaced R18M in unmeasured economic contribution for a South African ECD delivery network — recognised with a $2M Skoll Award in 2026 — applies directly to [sector] work, where the policy influence pathways are equally strong and equally undocumented." Adapt the sector reference to match the subscriber's sector. Never use generic language like "deployed with early childhood education organisations" or "translation methodology applied across organisations".
+SMARTSTART CIRCULAR REFERENCE RULE: ${isSmartStart ? "This submission IS from SmartStart South Africa. Do NOT reference SmartStart as the proof point. Use instead: 'The economic evidence framework applied to comparable ECD delivery organisations in South Africa has demonstrated that cost-per-outcome analysis increases co-funder commitment rates by an estimated 35-50% within 18 months.'" : "If the submitting organisation is SmartStart South Africa, do not use SmartStart as the proof point."}
 ORG TYPE REGISTER: org_type=${oType}. ${oType==="foundation_funder"?"Never use 'gap' or 'problem' as primary framing. Use 'unmeasured' or 'not yet visible'. Replace 'fix' with 'unlock'.":""}
 DATE RULE: Current date is ${new Date().toLocaleDateString("en-ZA",{day:"numeric",month:"long",year:"numeric"})}. Never reference a specific past month or year as a future deadline. Never cite any date before June 2026 as a future event. Use "the upcoming cycle" or reference the next known cycle by year (e.g. "October 2026 MTEF cycle", "2027 curriculum review window").
 SECTOR INTELLIGENCE RULE: Never claim a specific number of Auxeira clients, validation cases, or engagements unless explicitly provided in the submission data. Incorrect: "validated across seven education foundations". Correct: "validated through engagements with South African education and ECD organisations".
@@ -527,7 +546,8 @@ PROGRAMME NAME RULE: flagship_programme must be one name only, maximum 4 words. 
 
   const user = `Generate all 18 report sections for ${orgName}.
 
-SUBSCRIBER: ${firstName} ${lastName} | ${oType} | seniority: ${research.seniority}
+SUBSCRIBER: ${firstName} ${lastName} | org_type: ${oType} | seniority: ${research.seniority}
+ORG TYPE LANGUAGE: ${oType === "foundation_funder" ? "Use foundation/funder register throughout — 'unmeasured asset' not 'gap', 'unlock' not 'fix', 'portfolio opportunity' not 'problem', 'partnership' not 'intervention'." : oType === "consultant" ? "Use consultant/intermediary register." : "Use delivery organisation register."}
 CEO: ${research.ceo_name||"not identified"} | Programme: ${prog} | Audience: ${audience}
 Score: ${s}/100 | Band: ${scoreBandLabel(s)} | Tier: ${tier}
 Gap 1: ${gaps[0]?.q} (deficit ${gaps[0]?.deficit}) | Gap 2: ${gaps[1]?.q} (deficit ${gaps[1]?.deficit})
@@ -542,10 +562,10 @@ Return JSON with exactly these keys (all strings, no markdown, no line breaks in
   "funding_at_risk":"Rand range e.g. R8M-R18M",
   "influence_gap":"Percentage range e.g. 35-50%",
   "opportunity_cost":"Rand range over 3 years",
-  "gap1_title":"3-5 words",
+  "gap1_title":"3-5 words. State the gap name only. Never append a question reference like (Q4) or (Q5).",
   "gap1_body":"3-4 sentences specific to this org.",
   "gap1_cost":"1 sentence cost estimate.",
-  "gap2_title":"3-5 words",
+  "gap2_title":"3-5 words. State the gap name only. Never append a question reference like (Q4) or (Q7).",
   "gap2_body":"3-4 sentences specific to this org.",
   "gap2_cost":"1 sentence cost estimate.",
   "sector_context":"4-5 sentences SA-specific with one data point.",
@@ -576,7 +596,7 @@ Return JSON with exactly these keys (all strings, no markdown, no line breaks in
   "policy_value_low":"e.g. R10M","policy_value_high":"e.g. R28M",
   "compound_b_pct":"e.g. 3%","compound_a_pct":"e.g. 31%",
   "stakeholder_count":"number","stakeholder_now_pct":"e.g. 60%","stakeholder_48m_pct":"e.g. 25%",
-  "stakeholders_json":"[{name,role,now_pct,m48_pct}] 4-6 rows",
+  "stakeholders_json":"JSON array of 4-6 objects: [{\"name\":\"string\",\"role\":\"string\",\"now_pct\":integer 0-100,\"m48_pct\":integer 0-100}]. now_pct and m48_pct MUST be integers, never empty strings, never null, never 'N/A'. now_pct should reflect current engagement level (40-90). m48_pct should be meaningfully lower than now_pct to show decay.",
   "policy_windows_json":"[{name,body,freq,deadline,count,prob_b_pct}] 4-6 rows",
   "market_context_body":"3-4 sentences.",
   "mkt_metric1_num":"","mkt_metric1_desc":"","mkt_metric2_num":"","mkt_metric2_desc":"","mkt_metric3_num":"","mkt_metric3_desc":"",
@@ -587,7 +607,9 @@ Return JSON with exactly these keys (all strings, no markdown, no line breaks in
   "urgency_label":"Urgent OR Within 3 months OR Within 6 months",
   "rec_body":"3-4 sentences concrete output for this org.",
   "closing_question":"1 sentence naming ${prog} and a specific upcoming cycle.",
-  "forward_box_body":"${research.seniority!=="executive"&&research.ceo_name?`Forward box text referencing ${research.ceo_name} and ${prog}.`:""}"
+  "honest_truth_body":"3-4 sentences calibrated to org_type. For delivery orgs: frame around the evidence gap costing influence, funding, and impact — every funding round without a fiscal narrative, every policy window without an economic case, every funder conversation without an SROI, these compound. For foundation_funder orgs: frame around the portfolio contribution built over years remaining unmeasured in the language that moves Treasury and co-funders — every allocation cycle without a fiscal multiplier framework is a cycle where that contribution is invisible. End both with: 'Auxeira fixes it in weeks, not years.'",
+  "honest_truth_close":"1 sentence. Must be: 'The question is not whether you can afford Auxeira. It is what [choose most relevant: the unmeasured contribution / a missed policy window / an unseen SROI] is costing ${orgName} right now.'",
+  "forward_box_body":"${research.seniority!=="executive"&&research.ceo_name?`2 sentences max. Reference ${research.ceo_name} by name and mention the programme '${prog}' (use this exact short name — do not expand it). Suggest forwarding the report for a conversation about the evidence opportunity.`:""}"
 }`;
 
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
