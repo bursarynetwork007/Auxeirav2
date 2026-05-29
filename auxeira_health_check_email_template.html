@@ -495,13 +495,13 @@
           <td style="width:40%;vertical-align:top">
             <div style="font-size:10px;color:#888">Today</div>
             <div style="font-size:28px;font-weight:700;color:#185FA5;line-height:1">{{value1_now}}</div>
-            <div style="font-size:10px;color:#888">per year</div>
+            <div style="font-size:10px;color:#888">{{value1_unit}}</div>
           </td>
           <td style="width:20%;text-align:center;vertical-align:middle;font-size:20px;font-weight:700;color:#E24B4A;padding-top:10px">→</td>
           <td style="width:40%;text-align:right;vertical-align:top">
             <div style="font-size:10px;color:#888">Month 48</div>
             <div style="font-size:28px;font-weight:700;color:#E24B4A;line-height:1">{{value1_48m}}</div>
-            <div style="font-size:10px;color:#888">per year</div>
+            <div style="font-size:10px;color:#888">{{value1_unit}}</div>
           </td>
         </tr>
       </table>
@@ -520,13 +520,13 @@
           <td style="width:40%;vertical-align:top">
             <div style="font-size:10px;color:#888">Today</div>
             <div style="font-size:28px;font-weight:700;color:#534AB7;line-height:1">{{value2_now}}</div>
-            <div style="font-size:10px;color:#888">practitioners</div>
+            <div style="font-size:10px;color:#888">{{value2_unit}}</div>
           </td>
           <td style="width:20%;text-align:center;vertical-align:middle;font-size:20px;font-weight:700;color:#E24B4A;padding-top:10px">→</td>
           <td style="width:40%;text-align:right;vertical-align:top">
             <div style="font-size:10px;color:#888">Month 48</div>
             <div style="font-size:28px;font-weight:700;color:#E24B4A;line-height:1">{{value2_48m}}</div>
-            <div style="font-size:10px;color:#888">practitioners</div>
+            <div style="font-size:10px;color:#888">{{value2_unit}}</div>
           </td>
         </tr>
       </table>
@@ -582,21 +582,13 @@
     <div style="height:.5px;background:#EEE;margin:10px 0"></div>
     <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#C9A84C;margin-bottom:8px">Key stakeholder attention — projected decay</div>
     <div style="font-size:11px;color:#555;line-height:1.6;margin-bottom:10px">Aggregate engagement across {{stakeholder_count}} key stakeholders declines from {{stakeholder_now_pct}} to {{stakeholder_48m_pct}} by Month 48 without intervention. Once stakeholder attention lapses, re-engagement takes an estimated 3-5 years of consistent, high-quality evidence to restore.</div>
-    <!-- Stakeholder rows — repeat block per stakeholder from Grok research -->
+    <!-- Stakeholder rows — built dynamically by Lambda from Claude stakeholders_json -->
     <table style="width:100%;border-collapse:collapse">
       <tr style="border-bottom:.5px solid #EEE">
-        <td style="font-size:11px;font-weight:500;color:#1A1A2A;padding:7px 0;width:50%">{{sh1_name}}<div style="font-size:10px;color:#888;font-weight:400">{{sh1_role}}</div></td>
-        <td style="padding:7px 8px;width:50%">
-          <table width="100%" cellpadding="0" cellspacing="0"><tr>
-            <td width="38%"><table width="100%" cellpadding="0" cellspacing="0" style="background:#EEE;border-radius:3px;height:5px"><tr><td width="{{sh1_now}}%" style="background:#1D9E75;border-radius:3px;height:5px;font-size:0;line-height:0">&nbsp;</td><td style="height:5px;font-size:0;line-height:0"></td></tr></table></td>
-            <td width="14%" align="right" style="font-size:11px;font-weight:700;color:#1D9E75;padding:0 4px">{{sh1_now}}%</td>
-            <td width="4%" align="center" style="font-size:11px;color:#888">→</td>
-            <td width="38%"><table width="100%" cellpadding="0" cellspacing="0" style="background:#EEE;border-radius:3px;height:5px"><tr><td width="{{sh1_48m}}%" style="background:#E24B4A;border-radius:3px;height:5px;font-size:0;line-height:0">&nbsp;</td><td style="height:5px;font-size:0;line-height:0"></td></tr></table></td>
-            <td width="14%" align="right" style="font-size:11px;font-weight:700;color:#E24B4A;padding:0 4px">{{sh1_48m}}%</td>
-          </tr></table>
-        </td>
+        <td style="font-size:10px;color:#888;padding:4px 8px 4px 0;width:50%">Stakeholder</td>
+        <td style="font-size:10px;color:#888;padding:4px 8px;width:50%">Now &nbsp;→&nbsp; Month 48</td>
       </tr>
-      <!-- Repeat above row for sh2, sh3, sh4, sh5 -->
+      {{stakeholder_rows}}
     </table>
     <div style="font-size:10px;color:#999;margin-top:6px;font-style:italic">Stakeholder engagement probabilities estimated from sector patterns. Specific stakeholders identified from Grok research. Illustrative projections.</div>
   </div>

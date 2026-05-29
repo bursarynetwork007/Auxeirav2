@@ -105,6 +105,25 @@ async function processSubmission(sub) {
     };
   }
 
+  // FIX-B1: Override seniority to 'executive' if title or name match indicates CEO/Director level.
+  // Prevents the forward box from telling a CEO to forward the report to themselves.
+  const EXECUTIVE_TITLES = [
+    "CEO","Chief Executive","Executive Director","Director","Founder",
+    "President","Chairperson","Managing Director","Head of","Country Director",
+  ];
+  const titleIsExecutive = EXECUTIVE_TITLES.some(t =>
+    (research.person_title ?? "").toLowerCase().includes(t.toLowerCase())
+  );
+  // Safety net: if Grok identified the CEO and it matches the submitter, force executive.
+  const submitterFullName = `${firstName} ${lastName}`.toLowerCase().trim();
+  const ceoNameMatches = research.ceo_name
+    ? research.ceo_name.toLowerCase().trim() === submitterFullName
+    : false;
+  if (titleIsExecutive || ceoNameMatches) {
+    research = { ...research, seniority: "executive" };
+    console.log(`[processor] Seniority overridden to executive (titleMatch=${titleIsExecutive} ceoMatch=${ceoNameMatches})`);
+  }
+
   // Step 2: Claude report
   let vars = null;
   try {
@@ -117,7 +136,27 @@ async function processSubmission(sub) {
     let policyWindowsHtml = "";
     try {
       const sh = JSON.parse(raw.stakeholders_json ?? "[]");
-      stakeholderRowsHtml = sh.map(r=>`<tr><td style="padding:6px 8px;font-size:11px;border-bottom:.5px solid #EEE">${r.name}</td><td style="padding:6px 8px;font-size:11px;color:#555;border-bottom:.5px solid #EEE">${r.role}</td><td style="padding:6px 8px;font-size:11px;font-weight:700;color:#1D9E75;text-align:center;border-bottom:.5px solid #EEE">${r.now_pct}%</td><td style="padding:6px 8px;font-size:11px;font-weight:700;color:#E24B4A;text-align:center;border-bottom:.5px solid #EEE">${r.m48_pct}%</td></tr>`).join("");
+      // FIX-H3: Build full stakeholder rows with name, role, and bar-chart columns.
+      // Replaces the old static {{sh1_name}} / {{sh1_now}} / {{sh1_48m}} placeholders.
+      stakeholderRowsHtml = sh.map(r => {
+        const nowPct  = Math.min(100, Math.max(0, Number(r.now_pct)  || 0));
+        const m48Pct  = Math.min(100, Math.max(0, Number(r.m48_pct) || 0));
+        return `<tr style="border-bottom:.5px solid #EEE">` +
+          `<td style="font-size:11px;font-weight:500;color:#1A1A2A;padding:7px 0;width:50%">${r.name}` +
+          `<div style="font-size:10px;color:#888;font-weight:400">${r.role}</div></td>` +
+          `<td style="padding:7px 8px;width:50%">` +
+          `<table width="100%" cellpadding="0" cellspacing="0"><tr>` +
+          `<td width="38%"><table width="100%" cellpadding="0" cellspacing="0" style="background:#EEE;border-radius:3px;height:5px"><tr>` +
+          `<td width="${nowPct}%" style="background:#1D9E75;border-radius:3px;height:5px;font-size:0;line-height:0">&nbsp;</td>` +
+          `<td style="height:5px;font-size:0;line-height:0"></td></tr></table></td>` +
+          `<td width="14%" align="right" style="font-size:11px;font-weight:700;color:#1D9E75;padding:0 4px">${nowPct}%</td>` +
+          `<td width="4%" align="center" style="font-size:11px;color:#888">&#8594;</td>` +
+          `<td width="38%"><table width="100%" cellpadding="0" cellspacing="0" style="background:#EEE;border-radius:3px;height:5px"><tr>` +
+          `<td width="${m48Pct}%" style="background:#E24B4A;border-radius:3px;height:5px;font-size:0;line-height:0">&nbsp;</td>` +
+          `<td style="height:5px;font-size:0;line-height:0"></td></tr></table></td>` +
+          `<td width="14%" align="right" style="font-size:11px;font-weight:700;color:#E24B4A;padding:0 4px">${m48Pct}%</td>` +
+          `</tr></table></td></tr>`;
+      }).join("");
     } catch {}
     try {
       const pw = JSON.parse(raw.policy_windows_json ?? "[]");
@@ -164,10 +203,12 @@ async function processSubmission(sub) {
       value1_label: s2("value1_label","Evidence influence"),
       value1_label_lower: s2("value1_label","evidence influence").toLowerCase(),
       value1_metric: s2("value1_metric","Policy decisions informed annually"),
+      value1_unit: s2("value1_unit","per year"),
       value1_now: s2("value1_now","14"), value1_48m: s2("value1_48m","5"), value1_pct_decline: s2("value1_pct_decline","64%"),
       value2_label: s2("value2_label","Knowledge reach"),
       value2_label_lower: s2("value2_label","knowledge reach").toLowerCase(),
       value2_metric: s2("value2_metric","Practitioners using your findings"),
+      value2_unit: s2("value2_unit","practitioners"),
       value2_now: s2("value2_now","2840"), value2_48m: s2("value2_48m","1020"), value2_pct_decline: s2("value2_pct_decline","64%"),
       policy_windows: s2("policy_windows","26"), policy_expected_b: s2("policy_expected_b","9"),
       policy_expected_a: s2("policy_expected_a","16"), policy_gap: s2("policy_gap","7"),
@@ -191,7 +232,16 @@ async function processSubmission(sub) {
       primary_audience_label: audience,
       forward_box_html: forwardBoxHtml,
       calendly_url: process.env.NEXT_PUBLIC_CALENDLY_URL ?? "https://auxeira.com/#cta",
-      scoring_rows: "", raw_score: String(sub.rawScore ?? 0),
+      // FIX-B2: Scoring table — inject answer labels and point values from submission data.
+      // These are deterministic from the answers object; they must not come from Claude.
+      ...Object.fromEntries(
+        ["q1","q2","q3","q4","q5","q6","q7","q8"].flatMap(q => [
+          [`${q}_answer`, ANSWER_TEXT[q]?.[answers[q]] ?? ""],
+          [`${q}_pts`,    String(pts(q, answers[q]))],
+        ])
+      ),
+      raw_score: String(rawScore(answers)),
+      scoring_rows: "",
       above_below: s >= 52 ? "above" : "below",
       score_vs_avg: String(Math.abs(s - 52)),
       sector_label: research.sector_label ?? "social sector",
@@ -371,10 +421,22 @@ function tierLabel(a){
   return "Tier 1 - Evidence Translation";
 }
 function sanitise(t){
-  return (t||"")
+  const out = (t||"")
     .replace(/\s*—\s*/g," - ").replace(/–/g,"-").replace(/!/g,".")
     .replace(/\bleverage\b/gi,"use").replace(/\bsynergies\b/gi,"shared strengths")
+    // FIX-H2: Remove duplicate consecutive words (e.g. "Month Month 26" → "Month 26")
+    .replace(/\bMonth Month\b/gi,"Month")
+    .replace(/\b(\w+) \1\b/g,"$1")
     .trim();
+  // FIX-H1: Warn on past dates cited as future events
+  if (/\b(Jan|Feb|Mar|Apr|May)\w*\s+202[56]\b/gi.test(out)) {
+    console.warn("[sanitise] Past date detected in output — review before sending:", out.slice(0,120));
+  }
+  // FIX-P2: Warn on unverifiable quantified Auxeira credential claims
+  if (/validated across \d+|applied to \d+/gi.test(out)) {
+    console.warn("[sanitise] Unverifiable Auxeira claim detected — review:", out.slice(0,120));
+  }
+  return out;
 }
 
 // ── Grok research ─────────────────────────────────────────────────────────────
@@ -397,7 +459,7 @@ Return JSON only:
   "person_title": "Exact job title of ${firstName} ${lastName} or empty string",
   "sector_key": "ecd OR education OR health OR econ OR foundation OR policy OR government OR other",
   "sector_label": "Human-readable sector label",
-  "flagship_programme": "Most prominent named programme or focus area",
+  "flagship_programme": "Most prominent named programme — one name only, maximum 4 words. No parenthetical descriptions, grade ranges, or sub-programme lists. Correct: 'Base-10 Mathematics Project'. Incorrect: 'Early Grades Language and Mathematics (Grades R-6 focus...)'",
   "leadership_team": "Comma-separated names and titles",
   "evidence_maturity": "outcome OR output OR activity",
   "has_sroi": true or false,
@@ -472,8 +534,11 @@ Tone: warm, intelligent, non-salesy, evidence-forward.
 Never use exclamation marks. Never use em dashes. Never use bullet points in body copy.
 Never reference AI, Claude, or any technology. Write as a trusted human advisor.
 SURVEILLANCE RULE: Never say "we researched you" or "we found" or "we noticed."
-PROOF POINT BRIDGE: Never compare subscriber to SmartStart directly. Bridge via methodology only.
-ORG TYPE REGISTER: org_type=${oType}. ${oType==="foundation_funder"?"Never use 'gap' or 'problem' as primary framing. Use 'unmeasured' or 'not yet visible'. Replace 'fix' with 'unlock'.":""}`;
+PROOF POINT BRIDGE: For education and ECD sector organisations, the proof_bridge field must reference the SmartStart methodology via "a South African ECD delivery network" — never name SmartStart directly. The required framing is: "The same approach that surfaced R18M in unmeasured economic contribution for a South African ECD delivery network — recognised with a $2M Skoll Award in 2026 — applies directly to [sector] work, where the policy influence pathways are equally strong and equally undocumented." Adapt the sector reference to match the subscriber's sector. Never use generic language like "deployed with early childhood education organisations" or "translation methodology applied across organisations".
+ORG TYPE REGISTER: org_type=${oType}. ${oType==="foundation_funder"?"Never use 'gap' or 'problem' as primary framing. Use 'unmeasured' or 'not yet visible'. Replace 'fix' with 'unlock'.":""}
+DATE RULE: Current date is ${new Date().toLocaleDateString("en-ZA",{day:"numeric",month:"long",year:"numeric"})}. Never reference a specific past month or year as a future deadline. Never cite any date before June 2026 as a future event. Use "the upcoming cycle" or reference the next known cycle by year (e.g. "October 2026 MTEF cycle", "2027 curriculum review window").
+SECTOR INTELLIGENCE RULE: Never claim a specific number of Auxeira clients, validation cases, or engagements unless explicitly provided in the submission data. Incorrect: "validated across seven education foundations". Correct: "validated through engagements with South African education and ECD organisations".
+PROGRAMME NAME RULE: flagship_programme must be one name only, maximum 4 words. Never include a parenthetical description, grade range, or sub-programme list. Extract the primary programme name only. Correct: "Base-10 Mathematics Project". Incorrect: "Early Grades Language and Mathematics (Grades R-6 focus, including Base-10 Mathematics Project and structured learning programmes)".`;
 
   const user = `Generate all 18 report sections for ${orgName}.
 
@@ -511,14 +576,16 @@ Return JSON with exactly these keys (all strings, no markdown, no line breaks in
   "risk3_title":"4-6 words","risk3_body":"2-3 sentences.",
   "market_loss_leading_question":"1 sentence at START of section.",
   "leverage_now":"${s}","leverage_48m":"projected score at month 48",
-  "tipping_month":"month sector avg crosses their score",
+  "tipping_month":"integer only — the month number when sector avg crosses their score. Do NOT include the word Month. Example: 22 not 'Month 22'.",
   "cumulative_loss":"total 4-year attrition",
   "sector_position_now":"e.g. Top 40%","sector_position_48m":"e.g. Bottom 35%",
   "loss_year1":"millions","loss_year2":"millions","loss_year3":"millions","loss_year4":"millions",
   "value_identity_leading_question":"1 sentence at START of section.",
-  "value1_label":"metric label","value1_metric":"unit",
+  "value1_label":"metric label","value1_metric":"description of what is being measured",
+  "value1_unit":"short unit label for the number shown (e.g. 'decisions per year', 'documented pathways', 'R million per year'). Must match value1_label. Never use 'practitioners' for a score or index metric.",
   "value1_now":"current figure","value1_48m":"month 48 figure","value1_pct_decline":"e.g. 64%",
-  "value2_label":"metric label","value2_metric":"unit",
+  "value2_label":"metric label","value2_metric":"description of what is being measured",
+  "value2_unit":"short unit label for the number shown (e.g. 'practitioners', 'renewal certainty score', 'months', 'enterprises'). Must match value2_label. Use 'renewal certainty score' for Co-funder Confidence Index, not 'practitioners'.",
   "value2_now":"current figure","value2_48m":"month 48 figure","value2_pct_decline":"e.g. 64%",
   "policy_windows":"number","policy_expected_b":"number","policy_expected_a":"number","policy_gap":"number",
   "policy_value_low":"e.g. R10M","policy_value_high":"e.g. R28M",
