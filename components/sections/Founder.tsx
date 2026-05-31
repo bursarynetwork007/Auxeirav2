@@ -10,7 +10,7 @@ const ACCORDION_ITEMS = [
     tag: "Quantitative Rigour",
     title: "MIT Economics & Data",
     source: "MicroMasters · DEDP · 2021",
-    body: "When we model your SROI, project fiscal impact, or run an econometric evaluation, it is built to withstand Treasury scrutiny — not just look credible in a funder deck. MIT-trained rigour means the numbers we produce are citable, auditable, and defensible at the highest institutional level.",
+    body: "When we model your SROI, project fiscal impact, or run an econometric evaluation, it is built to withstand Treasury scrutiny, not just look credible in a funder deck. MIT-trained rigour means the numbers we produce are citable, auditable, and defensible at the highest institutional level.",
     bold: "built to withstand Treasury scrutiny",
   },
   {
@@ -18,7 +18,7 @@ const ACCORDION_ITEMS = [
     tag: "Risk & Actuarial Precision",
     title: "Discovery Holdings",
     source: "Actuarial Specialist · Former",
-    body: "We do not do static risk matrices. We quantify, price, and engineer mitigation for systemic and tail risks — the kind that derail programmes and erode funder confidence before scale. Actuarial discipline applied to social sector execution is rare. It is what makes our models hold up under scrutiny.",
+    body: "We do not do static risk matrices. We quantify, price, and engineer mitigation for systemic and tail risks: the kind that derail programmes and erode funder confidence before scale. Actuarial discipline applied to social sector execution is rare. It is what makes our models hold up under scrutiny.",
     bold: "quantify, price, and engineer mitigation",
   },
   {
@@ -26,7 +26,7 @@ const ACCORDION_ITEMS = [
     tag: "Pan-African Leadership",
     title: "Mandela Washington Fellow",
     source: "YALI · Dartmouth · 2017",
-    body: "A credential and a network that open doors across government, philanthropy, and development finance on the continent. Your evidence travels further with us — into rooms that require institutional trust before the conversation can begin.",
+    body: "A credential and a network that open doors across government, philanthropy, and development finance on the continent. Your evidence travels further with us, into rooms that require institutional trust before the conversation can begin.",
     bold: "Your evidence travels further with us",
   },
   {
@@ -34,7 +34,7 @@ const ACCORDION_ITEMS = [
     tag: "Behavioural Architecture",
     title: "Decision-Maker Psychology",
     source: "Kahneman · Thaler · Ariely · Applied",
-    body: "We embed cognitive and structural behavioural science directly into how evidence is designed and presented — so every knowledge product is built for how funders and ministers actually process information, not how researchers prefer to share it.",
+    body: "We embed cognitive and structural behavioural science directly into how evidence is designed and presented, so every knowledge product is built for how funders and ministers actually process information, not how researchers prefer to share it.",
     bold: "directly into how evidence is designed and presented",
   },
   {
@@ -42,7 +42,7 @@ const ACCORDION_ITEMS = [
     tag: "Strategic Narrative",
     title: "Evidence Translation at Scale",
     source: "RCTs · Quasi-experimental · M&E",
-    body: "We turn complex econometric findings into board-ready narratives and policy briefs that move funding decisions and shift institutional attention. The SmartStart 10-year report — 49 interviews, 207-quote Evidence Index, delivered in six weeks — is what this looks like in practice.",
+    body: "We turn complex econometric findings into board-ready narratives and policy briefs that move funding decisions and shift institutional attention. The SmartStart 10-year report (49 interviews, 207-quote Evidence Index, delivered in six weeks) is what this looks like in practice.",
     bold: "board-ready narratives and policy briefs",
   },
   {
@@ -50,7 +50,7 @@ const ACCORDION_ITEMS = [
     tag: "Financial Architecture",
     title: "SROI & Sustainability Valuation",
     source: "Contingent Forecasts · Long-Term Present Value",
-    body: "We model Social Return on Investment and long-term cash flow sustainability with the precision of someone who has built, funded, and exited ventures — not just evaluated them. SmartStart's SROI was 3.3x. That number had existed in the data for a decade. Auxeira found it.",
+    body: "We model Social Return on Investment and long-term cash flow sustainability with the precision of someone who has built, funded, and exited ventures, not just evaluated them. SmartStart's SROI was 3.3x. That number had existed in the data for a decade. Auxeira found it.",
     bold: "built, funded, and exited ventures",
   },
 ];
@@ -59,7 +59,7 @@ const STATS = [
   {
     num: "3",
     label: "Successful Exits",
-    detail: "LanteOTC · SeeADoctor · BursaryNetwork. We know what execution risk feels like — because we have carried it.",
+    detail: "LanteOTC · SeeADoctor · BursaryNetwork. We know what execution risk feels like because we have carried it.",
   },
   {
     num: "12+",
