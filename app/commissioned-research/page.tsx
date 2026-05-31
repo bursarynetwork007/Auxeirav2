@@ -64,7 +64,7 @@ const RESEARCH_TYPES = [
     num: "03",
     title: "Longitudinal Evidence Synthesis",
     tag: "For organisations at major milestones",
-    what: "Synthesis of 5 to 15 years of programme data into a coherent evidence narrative. Auxeira processes evaluations, annual reports, monitoring data, and stakeholder interviews into a single authoritative impact document using the Auxeira Evidence Index. The SmartStart 10-year impact report — 49 interviews, 207-quote Evidence Index, 3.3x SROI established — was delivered in six weeks.",
+    what: "Synthesis of 5 to 15 years of programme data into a coherent evidence narrative. Auxeira processes evaluations, annual reports, monitoring data, and stakeholder interviews into a single authoritative impact document using the Auxeira Evidence Index. The SmartStart 10-year impact report (49 interviews, 207-quote Evidence Index, 3.3x SROI) was delivered in six weeks.",
     produces: [
       "Long-form impact report with full evidence architecture",
       "Executive brief for funder audiences",

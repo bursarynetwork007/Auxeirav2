@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Methodology | Auxeira Evidence Intelligence Johannesburg",
     description:
-      "SROI methodology South Africa: three pillars — evidence science, development economics, and financial architecture. Built for the African social sector.",
+      "SROI methodology South Africa: three pillars: evidence science, development economics, and financial architecture. Built for the African social sector.",
     url: "https://auxeira.com/methodology",
     siteName: "Auxeira",
     locale: "en_ZA",
@@ -41,12 +41,12 @@ const PILLARS = [
     num: "01",
     tag: "Pillar One",
     title: "Evidence & Evaluation Science",
-    intro: "The foundation of every Auxeira engagement is causal rigour. We isolate what the programme actually caused — not what happened alongside it.",
+    intro: "The foundation of every Auxeira engagement is causal rigour. We isolate what the programme actually caused, not what happened alongside it.",
     methods: [
       { term: "Randomised Controlled Trials (RCTs) and quasi-experimental design", def: "For causal impact isolation where experimental conditions are available or can be approximated. Difference-in-differences, propensity score matching, and regression discontinuity designs for non-experimental contexts." },
       { term: "Longitudinal data synthesis", def: "Structured analysis of multi-year datasets to identify trends, attribute change, and build the evidence base for long-term impact claims. Applied in the SmartStart 10-year synthesis across a full decade of programme data." },
       { term: "Econometric modelling", def: "Regression analysis, difference-in-differences, and propensity score matching to establish programme attribution with statistical defensibility. Every model is documented and auditable." },
-      { term: "Thematic coding frameworks", def: "Grounded theory and framework analysis for qualitative synthesis at scale. The Auxeira Evidence Index — applied in the SmartStart engagement — codes stakeholder interviews into a structured, citable evidence base." },
+      { term: "Thematic coding frameworks", def: "Grounded theory and framework analysis for qualitative synthesis at scale. The Auxeira Evidence Index, applied in the SmartStart engagement, codes stakeholder interviews into a structured, citable evidence base." },
     ],
     standards: "Campbell Collaboration · CONSORT · What Works Clearinghouse",
     when: "Baseline-endline evaluations, 10-year impact synthesis, programme attribution studies, longitudinal economic contribution assessments.",
@@ -58,9 +58,9 @@ const PILLARS = [
     intro: "Evidence that is technically correct but behaviourally wrong does not move decisions. We design evidence for how funders and ministers actually process information.",
     methods: [
       { term: "Macro-level structural analysis for developing economy contexts", def: "We do not import Northern frameworks. South African and African public sector contexts have specific institutional dynamics, resource constraints, and political economy considerations that require adapted analytical frameworks." },
-      { term: "Behavioural economics applied to evidence design", def: "Cognitive bias mapping, loss aversion framing, and social proof architecture embedded directly into how evidence is structured and presented. The goal is not to manipulate — it is to ensure that accurate evidence is processed accurately by decision-makers." },
+      { term: "Behavioural economics applied to evidence design", def: "Cognitive bias mapping, loss aversion framing, and social proof architecture embedded directly into how evidence is structured and presented. The goal is not to manipulate. It is to ensure that accurate evidence is processed accurately by decision-makers." },
       { term: "Institutional scaling dynamics", def: "Resource allocation modelling for African public sector contexts: how budget decisions are made, what evidence formats are credible to different institutional audiences, and how policy influence pathways actually work." },
-      { term: "Policy influence pathway mapping", def: "Systematic documentation of the route from programme evidence to budget decision to implementation. This is the evidence that demonstrates institutional impact — not just programme impact." },
+      { term: "Policy influence pathway mapping", def: "Systematic documentation of the route from programme evidence to budget decision to implementation. This is the evidence that demonstrates institutional impact, not just programme impact." },
     ],
     standards: "Kahneman · Thaler · Ariely · Applied behavioural science",
     when: "Funder narrative design, policy brief development, stakeholder mapping, evidence architecture for government co-investment conversations.",
@@ -69,13 +69,13 @@ const PILLARS = [
     num: "03",
     tag: "Pillar Three",
     title: "Financial Architecture & Risk",
-    intro: "The economic case for a programme must be built with the precision of someone who has carried financial risk — not just evaluated it.",
+    intro: "The economic case for a programme must be built with the precision of someone who has carried financial risk, not just evaluated it.",
     methods: [
       { term: "SROI calculation using HACT/SROI Network standards", def: "Social Return on Investment calculated to the standard required by institutional funders and development finance institutions. Every assumption documented. Every figure auditable. SmartStart: 3.3x." },
       { term: "Long-term present value modelling", def: "Fiscal sustainability forecasting that projects the economic value of programme outcomes over time, discounted to present value. Used in investment cases for Treasury and development finance institutions." },
       { term: "Contingent financial scenario modelling", def: "Monte Carlo approaches where appropriate for tail risk quantification. Scenario analysis for funding sustainability, programme scale-up, and government co-investment cases." },
       { term: "Actuarial risk quantification", def: "Programme execution and funding tail risk analysis using actuarial discipline from Discovery Holdings training. We quantify, price, and model the risks that derail programmes before they reach scale." },
-      { term: "Counterfactual economic analysis", def: "What would have happened without the programme. This is the analytical foundation of a credible SROI — and the most frequently missing component in social sector evidence work." },
+      { term: "Counterfactual economic analysis", def: "What would have happened without the programme. This is the analytical foundation of a credible SROI, and the most frequently missing component in social sector evidence work." },
     ],
     standards: "HACT · SROI Network · Discovery Holdings actuarial training",
     when: "SROI reports, investment cases for Treasury, economic contribution assessments, fiscal sustainability analysis, development finance institution submissions.",
@@ -125,7 +125,7 @@ export default function MethodologyPage() {
                 Standard M&E consultancy produces monitoring reports. Auxeira produces economic evidence. The distinction matters because monitoring reports inform programme management. Economic evidence moves funding decisions, unlocks government co-investment, and positions organisations for the next phase of scale.
               </p>
               <p>
-                The three foundations of Auxeira&apos;s methodology are actuarial precision, econometric modelling, and randomised evaluation. These are not credentials listed for credibility. They are the specific disciplines that make the difference between evidence that is technically correct and evidence that is institutionally credible — the kind that withstands Treasury scrutiny, satisfies development finance institution requirements, and travels into rooms that programme reports cannot reach.
+                The three foundations of Auxeira&apos;s methodology are actuarial precision, econometric modelling, and randomised evaluation. These are not credentials listed for credibility. They are the specific disciplines that make the difference between evidence that is technically correct and evidence that is institutionally credible, the kind that withstands Treasury scrutiny, satisfies development finance institution requirements, and travels into rooms that programme reports cannot reach.
               </p>
             </div>
           </div>
@@ -182,15 +182,15 @@ export default function MethodologyPage() {
                 Auxeira operates a strict source hierarchy. Audited financial statements are the primary source. Annual reports and published evaluations are secondary. Management data and programme records are tertiary. Manually constructed estimates are clearly labelled as estimates, with methodology documented, and require client sign-off before publication.
               </p>
               <p>
-                No figure in an Auxeira output is presented without a source. No claim is made that cannot be traced to a specific data point. This is not a quality aspiration — it is the operational standard that makes Auxeira&apos;s outputs credible to Treasury, development finance institutions, and institutional funders who will scrutinise every number.
+                No figure in an Auxeira output is presented without a source. No claim is made that cannot be traced to a specific data point. This is not a quality aspiration. It is the operational standard that makes Auxeira&apos;s outputs credible to Treasury, development finance institutions, and institutional funders who will scrutinise every number.
               </p>
             </div>
             <div className="space-y-3">
               {[
-                { rank: "1", label: "Audited financial statements", note: "Primary source — always preferred" },
+                { rank: "1", label: "Audited financial statements", note: "Primary source, always preferred" },
                 { rank: "2", label: "Annual reports and published evaluations", note: "Secondary source" },
                 { rank: "3", label: "Programme monitoring data and records", note: "Tertiary source" },
-                { rank: "4", label: "Manually constructed estimates", note: "Clearly labelled — client sign-off required before publication" },
+                { rank: "4", label: "Manually constructed estimates", note: "Clearly labelled, client sign-off required before publication" },
               ].map((s) => (
                 <div key={s.rank} className="flex items-start gap-4 border border-[#F5F0E8]/10 px-5 py-4">
                   <span className="font-mono text-[9px] text-[#C9A84C] tracking-wider flex-shrink-0 mt-0.5">{s.rank}</span>
@@ -213,7 +213,7 @@ export default function MethodologyPage() {
             </h2>
             <div className="space-y-5 text-[#1A1A2A]/75 text-[15px] leading-[1.85]">
               <p>
-                Standard qualitative synthesis produces themes and quotes. The Auxeira Evidence Index produces a structured, citable evidence base. Each interview is coded against a thematic framework derived from the programme&apos;s theory of change. Quotes are indexed by theme, stakeholder type, and evidence strength. The result is a qualitative evidence architecture that functions like a database — searchable, auditable, and defensible to institutional audiences.
+                Standard qualitative synthesis produces themes and quotes. The Auxeira Evidence Index produces a structured, citable evidence base. Each interview is coded against a thematic framework derived from the programme&apos;s theory of change. Quotes are indexed by theme, stakeholder type, and evidence strength. The result is a qualitative evidence architecture that functions like a database: searchable, auditable, and defensible to institutional audiences.
               </p>
               <p>
                 In the SmartStart 10-year impact report, the Evidence Index processed 49 stakeholder interviews into 207 indexed quotes across the full thematic framework. The qualitative evidence in that report is not illustrative. It is systematic. Every claim is traceable to a specific coded source.
@@ -235,17 +235,17 @@ export default function MethodologyPage() {
             <div className="space-y-6">
               {[
                 {
-                  credential: "MIT DEDP MicroMasters — 2021",
+                  credential: "MIT DEDP MicroMasters, 2021",
                   name: "Lante Emmanuel Luthuli",
                   capability: "Econometric modelling, randomised evaluation design, causal inference, and development economics applied to African social sector contexts. The quantitative rigour in every Auxeira SROI and impact evaluation draws directly on this training.",
                 },
                 {
-                  credential: "Discovery Holdings Actuarial Specialist — Former",
+                  credential: "Discovery Holdings Actuarial Specialist (former)",
                   name: "Lante Emmanuel Luthuli",
-                  capability: "Risk quantification, financial modelling, and tail risk analysis. The actuarial discipline that makes Auxeira&apos;s financial architecture work — SROI calculation, fiscal sustainability modelling, counterfactual analysis — is grounded in actuarial training, not adapted from standard M&E practice.",
+                  capability: "Risk quantification, financial modelling, and tail risk analysis. The actuarial discipline that makes Auxeira&apos;s financial architecture work, including SROI calculation, fiscal sustainability modelling, and counterfactual analysis, is grounded in actuarial training, not adapted from standard M&E practice.",
                 },
                 {
-                  credential: "YALI Mandela Washington Fellow — Dartmouth 2017",
+                  credential: "YALI Mandela Washington Fellow, Dartmouth 2017",
                   name: "Lante Emmanuel Luthuli",
                   capability: "African policy context, institutional network, and government engagement methodology. Evidence that needs to travel into government budget processes and policy rooms requires institutional credibility. This credential and the network it represents open those doors.",
                 },
